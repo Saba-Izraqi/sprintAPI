@@ -34,11 +34,11 @@ export const ensureDatabaseExists = async ({
     );
 
     if (res.rowCount === 0) {
-      console.log(`📦 Database "${dbName}" not found. Creating...`);
+      console.warn(`📦 Database "${dbName}" not found. Creating...`);
       await client.query(`CREATE DATABASE "${dbName}"`);
-      console.log(`✅ Database "${dbName}" created.`);
+      console.success(`✅ Database "${dbName}" created.`);
     } else {
-      console.log(`✅ Database "${dbName}" already exists.`);
+      console.info(`✅ Database "${dbName}" already exists.`);
     }
   } catch (err) {
     console.error(`❌ Failed to check/create database "${dbName}"`, err);

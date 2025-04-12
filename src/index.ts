@@ -11,6 +11,6 @@ import { ensureDatabaseExists } from "./infrastructure/init-db";
   });
 
   await AppDataSource.initialize();
-  console.log("📦 DB connected & schema synced");
+  console.success("📦 DB connected & schema synced");
   startServer(4000);
 })();
