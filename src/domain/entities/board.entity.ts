@@ -8,12 +8,12 @@ export class Board extends BaseEntity {
   // Shared PK to enforce 1:1 relationship with the project
   // Each project should has 1 board, and each board should relate to 1 project.
   // Future Work: should add an Id for the board when offer multiple board feat  for each project
-  @PrimaryColumn()
+  @PrimaryColumn('uuid')
   projectId!: string;
 
   // NOTE: Currently this field may doesn't make sense,
   // but I am build a schema that has the ability to allow multiple board for each project
-  @Column({ length })
+  @Column({ length: 25 })
   name!: string;
 
   @OneToMany(() => Sprint, (sprint) => sprint.board)
