@@ -1,9 +1,16 @@
+import "reflect-metadata";
+import { AppDataSource } from "./infrastructure/data-source";
 import startServer from "./API";
+import { ensureDatabaseExists } from "./infrastructure/init-db";
 
-// TODO: Implement the logic below.
-// Check DB Health
-// if(!database) {
-//   createDatabase();
-// }
+(async () => {
+  await ensureDatabaseExists({
+    dbName: "sprintify",
+    user: "postgres",
+    password: "saba@1234",
+  });
 
-startServer(4000); // start the server on port 3000
+  await AppDataSource.initialize();
+  console.log("📦 DB connected & schema synced");
+  startServer(4000);
+})();

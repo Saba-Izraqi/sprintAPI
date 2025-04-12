@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { Issue } from "./issue.entity";
+import { ProjectMember } from "./project-members.entity";
 
 export enum Permission {
   MEMBER = 0,
@@ -32,9 +33,8 @@ export class User extends BaseEntity {
   @Column({ nullable: true, length: 500 })
   image?: string;
 
-  @Column({ type: "int", default: Permission.MEMBER })
-  status!: Permission;
-
   @OneToMany(() => Issue, (issue) => issue.assigneeUser)
   issues!: Issue[];
+
+  projectMemberships!: ProjectMember[];
 }

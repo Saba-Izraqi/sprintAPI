@@ -5,10 +5,12 @@ import {
   ManyToOne,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { User } from "./user.entity";
 import { Board } from "./board.entity";
+import { ProjectMember } from "./project-members.entity";
 
 @Entity("projects")
 export class Project extends BaseEntity {
@@ -27,4 +29,7 @@ export class Project extends BaseEntity {
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: false })
   @JoinColumn({ name: "createdBy" })
   createdBy?: User;
+
+  @OneToMany(() => ProjectMember, (member) => member.project)
+  members!: ProjectMember[];
 }
