@@ -1,19 +1,55 @@
-import express from "express";
-import './loggerOverwrite';
+// src/API/AppServer.ts
+import "./loggerOverwrite";
+import express, { Application } from "express";
+import { BaseRoute } from "./routes/base.route";
+import { glob } from "glob";
+import path from "path";
 
-const app = express();
-const DEFAULT_PORT = 3000;
+export class AppServer {
+  public app: Application;
+  private readonly apiPrefix = "/api/v1";
 
-app.use(express.json());
+  constructor() {
+    this.app = express();
+    this.setupMiddleware();
+  }
 
-app.get("/health-check", (req, res) => {
-  res.status(200).send({ status: "success" });
-});
+  private setupMiddleware() {
+    this.app.use(express.json());
+  }
 
-const startServer = (port: number = DEFAULT_PORT) => {
-  app.listen(port, () => {
-    console.info("server is listening at localhost:", port);
-  });
-};
+  private async setupRoutes() {
+    this.app.get("/health-check", (_, res) => {
+      res.send({ status: "ok" });
+    });
 
-export default startServer;
+    const routeFiles = await glob(
+      path.resolve(__dirname, "routes/*.ts").replace(/\\/g, "/")
+    );
+
+    for (const filePath of routeFiles) {
+      const module = await import(filePath);
+      for (const exportedName in module) {
+        const RouteClass = module[exportedName];
+        if (
+          typeof RouteClass === "function" &&
+          Object.getPrototypeOf(RouteClass).name === "BaseRoute"
+        ) {
+          const routeInstance: BaseRoute = new RouteClass();
+          this.app.use(
+            `${this.apiPrefix}${routeInstance.path}`,
+            routeInstance.router
+          );
+          console.success(`Loaded route: ${routeInstance.path}`);
+        }
+      }
+    }
+  }
+
+  public async listen(port: number) {
+    await this.setupRoutes();
+    this.app.listen(port, () =>
+      console.info(`🚀 Server running at http://localhost:${port}`)
+    );
+  }
+}

@@ -1,9 +1,11 @@
 import "reflect-metadata";
-import { AppDataSource } from "./infrastructure/data-source";
-import startServer from "./API";
-import { ensureDatabaseExists } from "./infrastructure/init-db";
+import { AppDataSource } from "./infrastructure/database/data-source";
+import { ensureDatabaseExists } from "./infrastructure/database/init-db";
+import { registerDependencies } from "./infrastructure/database/container";
+import { AppServer } from "./API";
 
 (async () => {
+  await registerDependencies();
   await ensureDatabaseExists({
     dbName: "sprintify",
     user: "postgres",
@@ -12,5 +14,7 @@ import { ensureDatabaseExists } from "./infrastructure/init-db";
 
   await AppDataSource.initialize();
   console.success("📦 DB connected & schema synced");
-  startServer(4000);
+
+  const API = new AppServer();
+  API.listen(4000);
 })();
