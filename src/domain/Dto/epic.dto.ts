@@ -9,7 +9,7 @@ export interface CreateEpicDto {
   export interface UpdateEpicDto {
     title?: string;
     description?: string;
-    assignee?: string | null;
+    assignee?: string ;
   }
   
   export interface EpicResponseDto {

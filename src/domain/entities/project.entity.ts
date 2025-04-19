@@ -26,9 +26,9 @@ export class Project extends BaseEntity {
   @OneToOne(() => Board, (board) => board.project)
   board!: Board;
 
-  @ManyToOne(() => User, { onDelete: "SET NULL", nullable: false })
-  @JoinColumn({ name: "createdBy" })
-  createdBy?: User;
+  @ManyToOne(() => User, {  nullable: false })
+  @JoinColumn({ name: "createdByUserId" })
+  createdBy!: User; 
 
   @OneToMany(() => ProjectMember, (member) => member.project)
   members!: ProjectMember[];

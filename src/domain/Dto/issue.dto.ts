@@ -15,9 +15,9 @@ export interface CreateIssueDto {
     description?: string;
     storyPoint?: number;
     statusId?: string;
-    assignee?: string | null;
-    epicId?: string | null;
-    sprintId?: string | null;
+    assignee?: string ;
+    epicId?: string ;
+    sprintId?: string ;
   }
   
   export interface IssueResponseDto {
