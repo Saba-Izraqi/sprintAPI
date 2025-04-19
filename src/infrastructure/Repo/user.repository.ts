@@ -53,3 +53,9 @@ export class UserRepository implements IUserRepository {
     };
   }
 }
+
+//  // Note: The above code assumes that the User entity has the following properties:
+//  // id, email, fullName, image, createdAt, updatedAt
+//  // Adjust the properties in the UserResponseDto and the toResponseDto method accordingly.
+//  // Also, make sure to handle any potential null values appropriately in your application logic.
+//  // You may need to add additional methods to handle more complex queries or operations.
