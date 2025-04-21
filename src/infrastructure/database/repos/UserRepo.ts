@@ -1,8 +1,9 @@
 // src/infrastructure/database/repos/UserRepo.ts
 import { injectable } from "tsyringe";
-import { User } from "../../../domain/entities/user.entity";
+import { RegisterUserDto } from "../../../domain/DTOs/userDTO";
 import { IUserRepo } from "../../../domain/IRepos/IUserRepo";
 import { AppDataSource } from "../data-source";
+import { User } from '../../../domain/entities/user.entity';
 
 @injectable()
 export class UserRepo implements IUserRepo {
@@ -12,8 +13,12 @@ export class UserRepo implements IUserRepo {
     this._userRepo = AppDataSource.getRepository(User);
   }
 
-  createUser(user: any) {
-    console.debug('hello from repo');
-    return null //this._userRepo.create(user)?.[0];
+  createUser(user: RegisterUserDto) {
+    const newUser = this._userRepo.create(user);
+    return this._userRepo.save(newUser);
+  }
+
+  findByEmail(email: string) {
+    return this._userRepo.findOneBy({ email });
   }
 }
