@@ -21,4 +21,18 @@ export class UserRepo implements IUserRepo {
   findByEmail(email: string) {
     return this._userRepo.findOneBy({ email });
   }
+
+  async updateEmailVerification(email: string, isEmailVerified: boolean): Promise<User> {
+    const affectedRows = (await this._userRepo.update({ email }, { isEmailVerified })).affected;
+    console.debug(`Affected rows: ${affectedRows}`);
+    const updatedUser = await this._userRepo.findOneBy({ email });
+    if (!updatedUser) {
+      throw new Error(`User with email ${email} not found after update.`);
+    }
+    return updatedUser;
+  }
+
+  async updatePassword(email: string, newPassword: string): Promise<void> {
+    await this._userRepo.update({ email }, { password: newPassword });
+  }
 }
