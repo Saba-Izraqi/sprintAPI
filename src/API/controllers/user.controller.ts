@@ -70,11 +70,18 @@ export class UserController {
   }
 
   async verifyEmail(req: Request, res: Response) {
-    const { email } = req.body;
+    const { email, tokenType } = req.body;
+    if(tokenType !== Token.EMAIL_VERIFICATION) {
+      res.status(400).json({ error: "Invalid token type", success: false });
+      return;
+    }
     try {
       const user = await this.userService.updateEmailVerification(email, true);
-      res.status(200).json({ message: "Email verified successfully" });
+      res
+        .status(200)
+        .json({ message: "Email verified successfully", success: true, user });
     } catch (error) {
+      console.error("Error verifying email:", error);
       res.status(500).json({ error: "Internal server error", success: false });
     }
   }
@@ -97,11 +104,27 @@ export class UserController {
   }
 
   async resetPassword(req: Request, res: Response) {
-    const { oldPassword, password, email, forget } = req.body;
+    const { oldPassword, password, email, tokenType } = req.body;
+
+    if(tokenType !== Token.RESET_PASSWORD && tokenType !== Token.ACCESS) {
+      console.debug("refunding token type", tokenType);
+      res.status(400).json({ error: "Invalid token type", success: false });
+      return;
+    }
+
+    const dto = Object.assign(new LoginUserDto(), {
+      email: req.body.email,
+      password: req.body.password,
+    });
+    const errors = await validate(dto);
+    if (errors.length > 0) {
+      res.status(400).json({ errors, success: false });
+      return;
+    }
     await this.userService.resetPassword(
       email,
       password,
-      !forget ? oldPassword : null
+      tokenType === Token.ACCESS ? oldPassword : null
     );
     res.status(200).json({
       success: true,

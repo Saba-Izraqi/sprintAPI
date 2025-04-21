@@ -24,7 +24,9 @@ export class UserRepo implements IUserRepo {
 
   async updateEmailVerification(email: string, isEmailVerified: boolean): Promise<User> {
     const affectedRows = (await this._userRepo.update({ email }, { isEmailVerified })).affected;
-    console.debug(`Affected rows: ${affectedRows}`);
+    if(!affectedRows) {
+      throw new Error(`User with email ${email} not found.`);
+    }
     const updatedUser = await this._userRepo.findOneBy({ email });
     if (!updatedUser) {
       throw new Error(`User with email ${email} not found after update.`);

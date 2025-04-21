@@ -17,7 +17,7 @@ export class UserRoutes extends BaseRoute {
       controller.verifyEmail.bind(controller)
     );
     this.router.post(
-      "forget-password",
+      "/forget-password",
       controller.forgetPassword.bind(controller)
     );
     this.router.post(

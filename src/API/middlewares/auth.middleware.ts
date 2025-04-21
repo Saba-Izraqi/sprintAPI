@@ -31,6 +31,7 @@ export const authenticate = (
     res
       .status(401)
       .json({ message: "Not authorized, token not found", success: false });
+    console.error('"Not authorized, token not found"');
     return;
   }
 
@@ -47,7 +48,7 @@ export const authenticate = (
 
     req.body = {
       ...req.body,
-      decoded,
+      ...decoded,
     };
     if (decoded.tokenType === Token.RESET_PASSWORD) {
       req.body.forget = true; // to skip oldPassword check when token is reset token
