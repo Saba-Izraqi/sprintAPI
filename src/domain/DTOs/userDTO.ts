@@ -5,7 +5,7 @@ export class RegisterUserDto {
   email!: string;
 
   @IsString()
-  @Length(6, 255)
+  @Length(8, 255)
   password!: string;
 
   @IsString()
@@ -26,7 +26,7 @@ export class UserResponseDto {
   id: string;
   fullName: string;
   email: string;
-  isEmailVerified?: boolean;
+  isEmailVerified: boolean;
   image?: string;
 
   constructor(user: any) {

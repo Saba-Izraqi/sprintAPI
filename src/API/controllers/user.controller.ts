@@ -7,9 +7,8 @@ import {
   LoginUserDto,
   UserResponseDto,
 } from "../../domain/DTOs/userDTO";
-import { sign } from "jsonwebtoken";
-import { success } from "console";
 import { Token } from "../enums/token";
+import { genToken } from "../utils/token";
 
 @injectable()
 export class UserController {
@@ -23,26 +22,20 @@ export class UserController {
       return;
     }
     const user = await this.userService.registerUser(dto);
-    const token = sign(
-      {
-        userId: user.id,
-        email: user.email,
-        isEmailVerified: user.isEmailVerified,
-        tokenType: Token.ACCESS,
-      },
-      "secretKeyPlaceHolderWillReplaceLater",
-      { expiresIn: "24h" }
-    );
+    const token = genToken({
+      id: user.id,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+      tokenType: Token.ACCESS,
+    });
 
-    const emailVerificationToken = sign(
-      {
-        userId: user.id,
-        email: user.email,
-        tokenType: Token.EMAIL_VERIFICATION,
-      },
-      "secretKeyPlaceHolderWillReplaceLater",
-      { expiresIn: "24h" }
-    );
+    const emailVerificationToken = genToken({
+      id: user.id,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+      tokenType: Token.EMAIL_VERIFICATION,
+    });
+
     res
       .status(201)
       .json({ user, token, emailVerificationToken, success: true });
@@ -56,22 +49,18 @@ export class UserController {
       return;
     }
     const user = await this.userService.loginUser(dto);
-    const token = sign(
-      {
-        userId: user.id,
-        email: user.email,
-        isEmailVerified: user.isEmailVerified,
-        tokenType: Token.ACCESS,
-      },
-      "secretKeyPlaceHolderWillReplaceLater",
-      { expiresIn: "24h" }
-    );
+    const token = genToken({
+      id: user.id,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+      tokenType: Token.ACCESS,
+    });
     res.status(200).json({ user, token, success: true });
   }
 
   async verifyEmail(req: Request, res: Response) {
     const { email, tokenType } = req.body;
-    if(tokenType !== Token.EMAIL_VERIFICATION) {
+    if (tokenType !== Token.EMAIL_VERIFICATION) {
       res.status(400).json({ error: "Invalid token type", success: false });
       return;
     }
@@ -88,14 +77,12 @@ export class UserController {
 
   async forgetPassword(req: Request, res: Response) {
     const { email } = req.body;
-    const token = sign(
-      {
-        email,
-        tokenType: Token.RESET_PASSWORD,
-      },
-      "secretKeyPlaceHolderWillReplaceLater",
-      { expiresIn: "24h" }
-    );
+    const token = genToken({
+      email,
+      id: "unknown",
+      isEmailVerified: false,
+      tokenType: Token.RESET_PASSWORD,
+    });
 
     res.status(200).json({
       token,
@@ -106,7 +93,7 @@ export class UserController {
   async resetPassword(req: Request, res: Response) {
     const { oldPassword, password, email, tokenType } = req.body;
 
-    if(tokenType !== Token.RESET_PASSWORD && tokenType !== Token.ACCESS) {
+    if (tokenType !== Token.RESET_PASSWORD && tokenType !== Token.ACCESS) {
       console.debug("refunding token type", tokenType);
       res.status(400).json({ error: "Invalid token type", success: false });
       return;
