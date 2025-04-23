@@ -50,9 +50,6 @@ export const authenticate = (
       ...req.body,
       ...decoded,
     };
-    if (decoded.tokenType === Token.RESET_PASSWORD) {
-      req.body.forget = true; // to skip oldPassword check when token is reset token
-    }
 
     next();
   } catch (err) {
