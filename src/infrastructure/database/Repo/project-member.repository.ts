@@ -1,9 +1,11 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../database/data-source";
-import { ProjectMember } from "../../domain/entities/project-members.entity";
-import { IProjectMemberRepository } from "../../domain/IRepos/project-member-repo";
-import { CreateProjectMemberDto, UpdateProjectMemberDto, ProjectMemberResponseDto } from "../../domain/Dto/project-member.dto";
+import { AppDataSource } from "../data-source";
+import { ProjectMember } from "../../../domain/entities/project-members.entity";
+import { IProjectMemberRepository } from "../../../domain/IRepos/project-member-repo";
+import { CreateProjectMemberDto, UpdateProjectMemberDto, ProjectMemberResponseDto } from "../../../domain/Dto/project-member.dto";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class ProjectMemberRepository implements IProjectMemberRepository {
   private repository: Repository<ProjectMember>;
 

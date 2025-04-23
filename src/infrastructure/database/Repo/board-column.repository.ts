@@ -1,9 +1,11 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../database/data-source";
-import { BoardColumn } from "../../domain/entities/board-column.entity";
-import { IBoardColumnRepository } from "../../domain/IRepos/board-column.irepo";
-import { CreateBoardColumnDto, UpdateBoardColumnDto, BoardColumnResponseDto } from "../../domain/Dto/board-column.dto";
+import { AppDataSource } from "../data-source";
+import { BoardColumn } from "../../../domain/entities/board-column.entity";
+import { IBoardColumnRepository } from "../../../domain/IRepos/board-column.irepo";
+import { CreateBoardColumnDto, UpdateBoardColumnDto, BoardColumnResponseDto } from "../../../domain/Dto/board-column.dto";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class BoardColumnRepository implements IBoardColumnRepository {
   private repository: Repository<BoardColumn>;
 

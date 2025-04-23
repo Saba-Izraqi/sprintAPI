@@ -1,11 +1,12 @@
 
 import { Repository } from "typeorm";
-import { AppDataSource } from "../database/data-source";
-import { Epic } from "../../domain/entities/epic.entity";
-import { IEpicRepository } from "../../domain/IRepos/epic.irepo";
-import { CreateEpicDto, UpdateEpicDto, EpicResponseDto } from "../../domain/Dto/epic.dto";
+import { AppDataSource } from "../data-source";
+import { Epic } from "../../../domain/entities/epic.entity";
+import { IEpicRepository } from "../../../domain/IRepos/epic.irepo";
+import { CreateEpicDto, UpdateEpicDto, EpicResponseDto } from "../../../domain/Dto/epic.dto";
+import { injectable } from "tsyringe";
 
-
+@injectable()
 export class EpicRepository implements IEpicRepository {
   private repository: Repository<Epic>;
 
@@ -24,18 +25,25 @@ export class EpicRepository implements IEpicRepository {
     return epic ? this.toResponseDto(epic) : null;
   }
 
-  async findByKey(key: string, projectId: string): Promise<EpicResponseDto | null> {
-    const epic = await this.repository.findOneBy({ key, boardProjectId: projectId });
+  async findByKey(
+    key: string,
+    projectId: string
+  ): Promise<EpicResponseDto | null> {
+    const epic = await this.repository.findOneBy({
+      key,
+      boardProjectId: projectId,
+    });
     return epic ? this.toResponseDto(epic) : null;
   }
 
-  async update(id: string, updates: UpdateEpicDto): Promise<EpicResponseDto | null> {
-    // Handle potential null values
-    const updateData: Partial<Epic> = { ...updates };
-    
-    if (updates.assignee === null) {
-      updateData.assignee = null as any; // TypeORM will handle this
-    }
+  async update(
+    id: string,
+    updates: UpdateEpicDto
+  ): Promise<EpicResponseDto | null> {
+    const updateData: Partial<Epic> = {
+      ...updates,
+      assignee: updates.assignee ?? undefined, // Convert null to undefined explicitly
+    };
 
     await this.repository.update(id, updateData);
     return this.findById(id);

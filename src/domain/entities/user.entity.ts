@@ -24,6 +24,9 @@ export class User extends BaseEntity {
   @Index() // typeOrm already create index for unique attr - this is mostly for clarity
   email!: string;
 
+  @Column({ default: false })
+  isEmailVerified!: boolean;
+
   @Column({ length: 255 })
   password!: string;
 

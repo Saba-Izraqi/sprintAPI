@@ -1,8 +1,12 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../database/data-source";
-import { Sprint } from "../../domain/entities/sprint.entity";
-import { ISprintRepository } from "../../domain/IRepos/sprint.repo";
-import { CreateSprintDto, UpdateSprintDto, SprintResponseDto } from "../../domain/Dto/sprint.dto";
+import { AppDataSource } from "../data-source";
+import { Sprint } from "../../../domain/entities/sprint.entity";
+import { ISprintRepository } from "../../../domain/IRepos/sprint.repo";
+import { CreateSprintDto, UpdateSprintDto, SprintResponseDto } from "../../../domain/Dto/sprint.dto";
+import { injectable } from "tsyringe";
+
+
+@injectable()
 
 export class SprintRepository implements ISprintRepository {
   private repository: Repository<Sprint>;
@@ -22,7 +26,10 @@ export class SprintRepository implements ISprintRepository {
     return sprint ? this.toResponseDto(sprint) : null;
   }
 
-  async update(id: string, updates: UpdateSprintDto): Promise<SprintResponseDto | null> {
+  async update(
+    id: string,
+    updates: UpdateSprintDto
+  ): Promise<SprintResponseDto | null> {
     await this.repository.update(id, updates);
     return this.findById(id);
   }

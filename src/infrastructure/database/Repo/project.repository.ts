@@ -1,10 +1,12 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../../infrastructure/database/data-source";
-import { Project } from "../../domain/entities/project.entity";
-import { User } from "../../domain/entities/user.entity";
-import { IProjectRepository } from "../../domain/IRepos/project.repository";
-import { CreateProjectDto, UpdateProjectDto, ProjectResponseDto } from "../../domain/Dto/project.dto";
+import { AppDataSource } from "../data-source";
+import { Project } from "../../../domain/entities/project.entity";
+import { User } from "../../../domain/entities/user.entity";
+import { IProjectRepository } from "../../../domain/IRepos/project.repository";
+import { CreateProjectDto, UpdateProjectDto, ProjectResponseDto } from "../../../domain/Dto/project.dto";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class ProjectRepository implements IProjectRepository {
   private repository: Repository<Project>;
   private userRepository: Repository<User>;

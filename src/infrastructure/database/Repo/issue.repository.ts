@@ -1,9 +1,11 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../database/data-source";
-import { Issue } from "../../domain/entities/issue.entity";
-import { IIssueRepository } from "../../domain/IRepos/issue.irepo";
-import { CreateIssueDto, UpdateIssueDto, IssueResponseDto } from "../../domain/Dto/issue.dto";
+import { AppDataSource } from "../data-source";
+import { Issue } from "../../../domain/entities/issue.entity";
+import { IIssueRepository } from "../../../domain/IRepos/issue.irepo";
+import { CreateIssueDto, UpdateIssueDto, IssueResponseDto } from "../../../domain/Dto/issue.dto";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class IssueRepository implements IIssueRepository {
   private repository: Repository<Issue>;
 
@@ -28,7 +30,7 @@ export class IssueRepository implements IIssueRepository {
   }
 
   async update(id: string, updates: UpdateIssueDto): Promise<IssueResponseDto | null> {
-    await this.repository.update(id, updates);
+    await this.repository.update(id, updates as object);
     return this.findById(id);
   }
 
