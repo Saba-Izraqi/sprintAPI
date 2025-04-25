@@ -4,6 +4,8 @@ import express, { Application } from "express";
 import { BaseRoute } from "./routes/base.route";
 import { glob } from "glob";
 import path from "path";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
 
 export class AppServer {
   public app: Application;
@@ -16,6 +18,10 @@ export class AppServer {
 
   private setupMiddleware() {
     this.app.use(express.json());
+  }
+
+  private setupSwagger() {
+    this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   }
 
   private async setupRoutes() {
@@ -48,6 +54,7 @@ export class AppServer {
 
   public async listen(port: number) {
     await this.setupRoutes();
+    this.setupSwagger();
     this.app.listen(port, () =>
       console.info(`🚀 Server running at http://localhost:${port}`)
     );
