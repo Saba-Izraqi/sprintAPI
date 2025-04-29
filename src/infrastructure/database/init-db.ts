@@ -15,8 +15,8 @@ export const ensureDatabaseExists = async ({
   user,
   password,
   host = "localhost",
-  port = 5432,
-}: IDatabaseConfig) => {
+  port = 5001,
+}: IDatabaseConfig) => { 
   const client = new Client({
     user,
     password,
@@ -24,7 +24,7 @@ export const ensureDatabaseExists = async ({
     port,
     database: DEFAULT_DB,
   });
-
+ 
   try {
     await client.connect();
 
@@ -37,6 +37,7 @@ export const ensureDatabaseExists = async ({
       console.warn(`📦 Database "${dbName}" not found. Creating...`);
       await client.query(`CREATE DATABASE "${dbName}"`);
       console.success(`✅ Database "${dbName}" created.`);
+      
     } else {
       console.info(`✅ Database "${dbName}" already exists.`);
     }
@@ -44,7 +45,8 @@ export const ensureDatabaseExists = async ({
     console.error(`❌ Failed to check/create database "${dbName}"`, err);
     throw err;
   } finally {
-    await client.end();
+    await client.end(); 
   }
 };
 
+ 

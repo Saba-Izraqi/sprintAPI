@@ -9,8 +9,8 @@ import { AppServer } from "./API";
   await ensureDatabaseExists({
     dbName: "sprintify",
     user: "postgres",
-    password: "123456",
-  });
+    password: "20032003",
+  }); 
 
   await AppDataSource.initialize();
   console.success("📦 DB connected & schema synced");
@@ -18,3 +18,4 @@ import { AppServer } from "./API";
   const API = new AppServer();
   API.listen(4000);
 })();
+ 
