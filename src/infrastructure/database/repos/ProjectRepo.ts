@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Project } from "../../../domain/entities/project.entity";
 import { User } from "../../../domain/entities/user.entity";
-import { IProjectRepository } from "../../../domain/IRepos/IProjectkRepo";
+import { IProjectRepository } from "../../../domain/IRepos/IProjectRepo";
 import { CreateProjectDto, UpdateProjectDto, ProjectResponseDto } from "../../../domain/DTOs/projectDTO";
 import { injectable } from "tsyringe";
 

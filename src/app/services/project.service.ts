@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { IProjectRepository } from '../../domain/IRepos/IProjectkRepo';
+import { IProjectRepository } from '../../domain/IRepos/IProjectRepo';
 import { CreateProjectDto, UpdateProjectDto, ProjectResponseDto } from '../../domain/DTOs/projectDTO';
 
 @injectable()
