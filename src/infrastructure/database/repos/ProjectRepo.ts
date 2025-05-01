@@ -2,12 +2,12 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Project } from "../../../domain/entities/project.entity";
 import { User } from "../../../domain/entities/user.entity";
-import { IProjectRepository } from "../../../domain/IRepos/IProhectRepo";
+import { IProjectRepository } from "../../../domain/IRepos/IProjectkRepo";
 import { CreateProjectDto, UpdateProjectDto, ProjectResponseDto } from "../../../domain/DTOs/projectDTO";
 import { injectable } from "tsyringe";
 
 @injectable()
-export class ProjectRepository implements IProjectRepository {
+export class ProjectRepo implements IProjectRepository {
   private repository: Repository<Project>;
   private userRepository: Repository<User>;
 
@@ -17,7 +17,7 @@ export class ProjectRepository implements IProjectRepository {
   }
 
   async create(project: CreateProjectDto): Promise<ProjectResponseDto> {
-    // First get the user entity
+    
     const user = await this.userRepository.findOneBy({ id: project.createdBy });
     if (!user) {
       throw new Error(`User with ID ${project.createdBy} not found`);
@@ -37,7 +37,7 @@ export class ProjectRepository implements IProjectRepository {
   async findById(id: string): Promise<ProjectResponseDto | null> {
     const project = await this.repository.findOne({ 
       where: { id },
-      relations: ["createdBy"] // Include the user relation
+      relations: ["createdBy"] 
     });
     return project ? this.toResponseDto(project) : null;
   }
@@ -61,7 +61,7 @@ export class ProjectRepository implements IProjectRepository {
     const projects = await this.repository
       .createQueryBuilder("project")
       .innerJoin("project.members", "member")
-      .leftJoinAndSelect("project.createdBy", "user") // Include createdBy user
+      .leftJoinAndSelect("project.createdBy", "user") 
       .where("member.userId = :userId", { userId })
       .getMany();
     return projects.map(this.toResponseDto);
@@ -72,7 +72,7 @@ export class ProjectRepository implements IProjectRepository {
       id: project.id,
       name: project.name,
       keyPrefix: project.keyPrefix,
-      createdBy: project.createdBy!.id, // Now safe to access
+      createdBy: project.createdBy!.id, 
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
     };

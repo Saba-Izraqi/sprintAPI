@@ -8,17 +8,18 @@ import { Issue } from "../../domain/entities/issue.entity";
 import { Epic } from "../../domain/entities/epic.entity";
 import { Board } from "../../domain/entities/board.entity";
 import { ProjectMember } from "../../domain/entities/project-members.entity";
-
+import dotenv from "dotenv";
+dotenv.config();
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
-  port: 5001,
-  username: "postgres", 
-  password: "20032003",
+  port: Number(process.env.DB_PORT) ,
+  username: "postgres",
+  password: process.env.DB_PASSWORD,
   database: "sprintify",
   synchronize: true, // dev only! disable in prod
   // logging: true, // comment this line in prod
-  logging: ['error', 'warn'], // comment out in prod
+  logging: ["error", "warn"], // comment out in prod
   entities: [
     Board,
     BoardColumn,

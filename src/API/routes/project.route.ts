@@ -17,7 +17,7 @@ export class ProjectRoutes extends BaseRoute {
   protected initRoutes(): void {
     const controller = container.resolve(ProjectController);
 
-    // Using arrow functions to properly bind 'this' and satisfy Express types
+    
     this.router.post("/", authenticate, (req, res) => controller.createProject(req, res));
     this.router.get("/", (req, res) => controller.getAllProjects(req, res));
     this.router.get("/:id", (req, res) => controller.getProject(req, res));
