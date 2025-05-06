@@ -8,19 +8,17 @@ export class ProjectService {
         @inject('IProjectRepo') private readonly ProjectRepo: IProjectRepository
     ) {}
 
-    async createProject(createProjectDto: CreateProjectDto): Promise<ProjectResponseDto> {
-        // Check if project with same keyPrefix already exists
-        const existingProject = await this.ProjectRepo.getAll();
-        const keyPrefixExists = existingProject.some(
-            project => project.keyPrefix.toLowerCase() === createProjectDto.keyPrefix.toLowerCase()
-        );
+    
+    async create(createProjectDto: CreateProjectDto): Promise<ProjectResponseDto> {
+        const existingProject = await this.ProjectRepo.findByKeyPrefix(createProjectDto.keyPrefix);
 
-        if (keyPrefixExists) {
+        if (existingProject) {
             throw new Error('A project with this key prefix already exists');
         }
 
         return await this.ProjectRepo.create(createProjectDto);
     }
+
 
     async getProjectById(id: string): Promise<ProjectResponseDto> {
         const project = await this.ProjectRepo.findById(id);
@@ -31,23 +29,15 @@ export class ProjectService {
     }
 
     async updateProject(id: string, updateProjectDto: UpdateProjectDto): Promise<ProjectResponseDto> {
-        // First check if project exists
         const existingProject = await this.ProjectRepo.findById(id);
         if (!existingProject) {
             throw new Error('Project not found');
         }
 
-        // If keyPrefix is being updated, check for conflicts
-        if (updateProjectDto.keyPrefix) {
-            const allProjects = await this.ProjectRepo.getAll();
-            const keyPrefixExists = allProjects.some(
-                project => 
-                    project.id !== id && 
-                    project.keyPrefix.toLowerCase() === updateProjectDto.keyPrefix?.toLowerCase()
-            );
-
-            if (keyPrefixExists) {
-                throw new Error('A project with this key prefix already exists');
+        if (updateProjectDto.keyPrefix && updateProjectDto.keyPrefix.toLowerCase() !== existingProject.keyPrefix.toLowerCase()) {
+            const projectWithSamePrefix = await this.ProjectRepo.findByKeyPrefix(updateProjectDto.keyPrefix);
+            if (projectWithSamePrefix && projectWithSamePrefix.id !== id) {
+                 throw new Error('A project with this key prefix already exists');
             }
         }
 
@@ -59,7 +49,6 @@ export class ProjectService {
     }
 
     async deleteProject(id: string): Promise<boolean> {
-        // First check if project exists
         const existingProject = await this.ProjectRepo.findById(id);
         if (!existingProject) {
             throw new Error('Project not found');
