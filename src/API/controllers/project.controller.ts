@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import { ProjectService } from "../../app/services/project.service";
 import { validate } from "class-validator";
 import { CreateProjectDto, UpdateProjectDto } from "../../domain/DTOs/projectDTO";
-import { authenticate } from "../middlewares/auth.middleware";
 
 @injectable()
 export class ProjectController {

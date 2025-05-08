@@ -20,10 +20,9 @@ export class StatusController {
     return { message: "An unexpected error occurred" };
   }
 
- 
   async createStatus(req: Request, res: Response): Promise<void> {
     try {
-      const dto: CreateStatusDto = req.body;
+      const dto = Object.assign(new CreateStatusDto(), req.body);
       const result = await this.statusService.createStatus(dto);
       
       res.status(201).json(result);
@@ -50,11 +49,9 @@ export class StatusController {
   async getAllStatuses(req: Request, res: Response): Promise<void> {
     try {
       const result = await this.statusService.getAllStatuses();
-      // --- REMOVED 'return' ---
       res.status(200).json(result);
     } catch (error) {
       const { message } = this.handleError(error);
-      // --- REMOVED 'return' ---
       res.status(500).json({ error: message });
     }
   }
