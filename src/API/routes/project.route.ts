@@ -1,19 +1,19 @@
 // src/API/routes/project.route.ts
 
 import { container } from "tsyringe";
-import { BaseRoute } from "./base.route"; // Adjust path as necessary
-import { ProjectController } from "../controllers/project.controller"; // Adjust path as necessary
-import { authenticate } from "../middlewares/auth.middleware"; // Adjust path as necessary
+import { BaseRoute } from "./base.route"; 
+import { ProjectController } from "../controllers/project.controller"; 
+import { authenticate } from "../middlewares/auth.middleware"; 
 
 export class ProjectRoutes extends BaseRoute {
-  public path = "/projects"; // Removed leading slash
+  public path = "/projects"; 
 
   protected initRoutes(): void {
     const controller = container.resolve(ProjectController);
 
   
     this.router.post(
-        '/', // Relative to /projects
+        '/', 
         authenticate,
         controller.createProject.bind(controller)
     );

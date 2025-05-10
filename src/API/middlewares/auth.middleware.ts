@@ -39,22 +39,17 @@ export const authenticate = (
     const decoded = jwt.verify(
       token,
       "secretKeyPlaceHolderWillReplaceLater" // TODO: Replace with environment variable process.env.JWT_SECRET
-    ) as JwtPayload & { id: string; email: string }; // Ensure id and email are expected in the type
+    ) as JwtPayload & { id: string; email: string }; 
 
-    // It's good practice to check for the properties you expect to use
     if (!decoded || !decoded.id || !decoded.email) {
       res.status(401).json({ message: "Not authorized, token payload is invalid (missing id or email)", success: false });
       return;
     }
 
-    // Attach the decoded payload to req.user
-    // Your controller expects (req as any).user.id
+    
     (req as any).user = decoded; 
 
-    // If you were previously relying on decoded properties being in req.body for other routes,
-    // you might need to adjust those routes or explicitly add them back if necessary.
-    // For the ProjectController, (req as any).user = decoded; is the key change.
-
+    
     next();
   } catch (err) {
     console.error("Token verification error:", err); // Log the actual error

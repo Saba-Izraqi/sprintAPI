@@ -12,14 +12,14 @@ export class ProjectController {
   ) {}
 
   async createProject(req: Request, res: Response): Promise<void> {
-    const userId = (req as any).user?.id; // This is where it's looking for the ID
+    const userId = (req as any).user?.id; 
 
-    if (!userId) { // And this is why you're getting the error
+    if (!userId) { 
       res.status(401).json({ error: "Unauthorized: User ID not found in request.", success: false });
       return;
     }
 
-    // Use plainToClass to transform req.body to CreateProjectDto
+   
     const createDto = plainToClass(CreateProjectDto, req.body);
 
     const errors = await validate(createDto);
@@ -34,7 +34,7 @@ export class ProjectController {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to create project';
       if (errorMessage.toLowerCase().includes('key prefix already exists')) {
-        res.status(409).json({ error: errorMessage, success: false }); // 409 Conflict
+        res.status(409).json({ error: errorMessage, success: false }); 
       } else {
         res.status(500).json({ error: errorMessage, success: false });
       }
@@ -56,8 +56,7 @@ export class ProjectController {
   }
 
   async updateProject(req: Request, res: Response): Promise<void> {
-    // Use plainToClass to transform req.body to UpdateProjectDto
-    // Pass { excludeExtraneousValues: true } if you want to strip properties not defined in UpdateProjectDto
+    
     const updateDto = plainToClass(UpdateProjectDto, req.body, { excludeExtraneousValues: true });
 
 
@@ -67,14 +66,12 @@ export class ProjectController {
       return;
     }
 
-    // Check if updateDto is empty after transformation and validation
-    // This means no valid fields for UpdateProjectDto were provided in req.body
+    
     if (Object.keys(updateDto).length === 0) {
-      // If req.body itself was not empty, it means it contained invalid fields
+     
       if (req.body && Object.keys(req.body).length > 0) {
         res.status(400).json({ error: "No valid fields provided for update or invalid fields.", success: false });
       } else {
-        // If req.body was empty, and thus updateDto is empty, just return the project
         const project = await this.projectService.getProjectById(req.params.id);
         if (project) {
             res.status(200).json({ project, success: true });
