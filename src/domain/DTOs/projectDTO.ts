@@ -6,7 +6,9 @@ import {
     MaxLength, 
     Matches,
     IsUUID,
-    IsAlphanumeric
+    IsAlphanumeric,
+    isNotEmpty,
+     
     
   } from 'class-validator';
   import { Expose, Type } from 'class-transformer';
@@ -17,7 +19,8 @@ import {
     @MinLength(3)
     @MaxLength(50)
     name!: string;
-  
+    
+    
     @IsString()
     @IsNotEmpty()
     @IsAlphanumeric()
@@ -26,9 +29,7 @@ import {
     @Matches(/^[A-Za-z]+$/)
     keyPrefix!: string;
   
-    @IsUUID()
-    @IsNotEmpty()
-    createdBy!: string;
+  
   }
   
   export class UpdateProjectDto {

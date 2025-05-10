@@ -12,10 +12,10 @@ import { Token } from "../enums/token";
  * @remarks
  * - The token is expected to be provided in the `Authorization` header as a Bearer token.
  * - If the token is missing or invalid, the middleware responds with a 401 status code and an error message.
- * - If the token is valid, the decoded payload is attached to the `req.body` object.
+ * - If the token is valid, the decoded payload is attached to the `req.user` object.
  * - If the token type is `RESET_PASSWORD`, a `forget` flag is added to the request body to skip old password checks.
  *
- * @throws {401} If the token is missing, invalid, or the decoded payload lacks an email.
+ * @throws {401} If the token is missing, invalid, or the decoded payload lacks an email or id.
  *
  * @example
  * // Example of using the middleware in an Express route
@@ -38,22 +38,27 @@ export const authenticate = (
   try {
     const decoded = jwt.verify(
       token,
-      "secretKeyPlaceHolderWillReplaceLater"
-    ) as JwtPayload;
+      "secretKeyPlaceHolderWillReplaceLater" // TODO: Replace with environment variable process.env.JWT_SECRET
+    ) as JwtPayload & { id: string; email: string }; // Ensure id and email are expected in the type
 
-    if (!decoded || !decoded.email) {
-      res.status(401).json({ message: "Not authorized, email not found" });
+    // It's good practice to check for the properties you expect to use
+    if (!decoded || !decoded.id || !decoded.email) {
+      res.status(401).json({ message: "Not authorized, token payload is invalid (missing id or email)", success: false });
       return;
     }
 
-    req.body = {
-      ...req.body,
-      ...decoded,
-    };
+    // Attach the decoded payload to req.user
+    // Your controller expects (req as any).user.id
+    (req as any).user = decoded; 
+
+    // If you were previously relying on decoded properties being in req.body for other routes,
+    // you might need to adjust those routes or explicitly add them back if necessary.
+    // For the ProjectController, (req as any).user = decoded; is the key change.
 
     next();
   } catch (err) {
-    res.status(401).json({ message: "Not authorized, invalid token" });
+    console.error("Token verification error:", err); // Log the actual error
+    res.status(401).json({ message: "Not authorized, invalid token", success: false });
     return;
   }
 };

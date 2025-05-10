@@ -6,14 +6,14 @@ import { ProjectController } from "../controllers/project.controller"; // Adjust
 import { authenticate } from "../middlewares/auth.middleware"; // Adjust path as necessary
 
 export class ProjectRoutes extends BaseRoute {
-  public path = "/projects"; // Base path for all project-related routes
+  public path = "/projects"; // Removed leading slash
 
   protected initRoutes(): void {
     const controller = container.resolve(ProjectController);
 
   
     this.router.post(
-        '/',
+        '/', // Relative to /projects
         authenticate,
         controller.createProject.bind(controller)
     );

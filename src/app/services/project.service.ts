@@ -9,14 +9,14 @@ export class ProjectService {
     ) {}
 
     
-    async create(createProjectDto: CreateProjectDto): Promise<ProjectResponseDto> {
+    async create(createProjectDto: CreateProjectDto, userId: string): Promise<ProjectResponseDto> {
         const existingProject = await this.ProjectRepo.findByKeyPrefix(createProjectDto.keyPrefix);
 
         if (existingProject) {
             throw new Error('A project with this key prefix already exists');
         }
 
-        return await this.ProjectRepo.create(createProjectDto);
+        return await this.ProjectRepo.create(createProjectDto, userId); // Pass userId
     }
 
 

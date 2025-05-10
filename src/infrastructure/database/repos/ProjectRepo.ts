@@ -24,16 +24,16 @@ export class ProjectRepo implements IProjectRepository {
         return project ? this.toResponseDto(project) : null;
     }
 
-    async create(project: CreateProjectDto): Promise<ProjectResponseDto> {
-        const user = await this.userRepository.findOneBy({ id: project.createdBy });
+    async create(projectDto: CreateProjectDto, userId: string): Promise<ProjectResponseDto> { // Modified signature
+        const user = await this.userRepository.findOneBy({ id: userId }); // Use userId parameter
         if (!user) {
-            throw new Error(`User with ID ${project.createdBy} not found`);
+            throw new Error(`User with ID ${userId} not found`);
         }
 
         const newProject = this.repository.create({
-            name: project.name,
-            keyPrefix: project.keyPrefix,
-            createdBy: user
+            name: projectDto.name,
+            keyPrefix: projectDto.keyPrefix,
+            createdBy: user // Assign the fetched user entity
         });
 
         await this.repository.save(newProject);

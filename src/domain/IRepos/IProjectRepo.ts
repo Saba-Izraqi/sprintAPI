@@ -1,7 +1,7 @@
 import { CreateProjectDto, UpdateProjectDto, ProjectResponseDto } from "../DTOs/projectDTO";
 
 export interface IProjectRepository {
-  create(project: CreateProjectDto): Promise<ProjectResponseDto>;
+  create(projectDto: CreateProjectDto, userId: string): Promise<ProjectResponseDto>; // Modified signature
   findById(id: string): Promise<ProjectResponseDto | null>;
   update(id: string, updates: UpdateProjectDto): Promise<ProjectResponseDto | null>;
   delete(id: string): Promise<boolean>;
