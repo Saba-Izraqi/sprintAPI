@@ -7,6 +7,7 @@ import {
     Matches,
     IsUUID,
     IsAlphanumeric
+    
   } from 'class-validator';
   import { Expose, Type } from 'class-transformer';
   
@@ -22,7 +23,7 @@ import {
     @IsAlphanumeric()
     @MinLength(2)
     @MaxLength(5)
-    @Matches(/^[A-Z0-9]+$/)
+    @Matches(/^[A-Za-z]+$/)
     keyPrefix!: string;
   
     @IsUUID()
@@ -42,7 +43,7 @@ import {
     @IsAlphanumeric()
     @MinLength(2)
     @MaxLength(5)
-    @Matches(/^[A-Z0-9]+$/)
+    @Matches(/^[A-Za-z]+$/)
     keyPrefix?: string;
   }
   

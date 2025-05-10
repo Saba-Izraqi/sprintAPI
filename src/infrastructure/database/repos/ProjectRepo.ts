@@ -1,4 +1,5 @@
-import { Repository } from "typeorm";
+// src/infrastructure/repos/ProjectRepo.ts (Revised)
+import { Repository, FindOneOptions } from "typeorm"; // Import FindOneOptions if needed for more complex queries
 import { AppDataSource } from "../data-source";
 import { Project } from "../../../domain/entities/project.entity";
 import { User } from "../../../domain/entities/user.entity";
@@ -8,73 +9,78 @@ import { injectable } from "tsyringe";
 
 @injectable()
 export class ProjectRepo implements IProjectRepository {
-  private repository: Repository<Project>;
-  private userRepository: Repository<User>;
+    private repository: Repository<Project>;
+    private userRepository: Repository<User>;
 
-  constructor() {
-    this.repository = AppDataSource.getRepository(Project);
-    this.userRepository = AppDataSource.getRepository(User);
-  }
-
-  async create(project: CreateProjectDto): Promise<ProjectResponseDto> {
-    
-    const user = await this.userRepository.findOneBy({ id: project.createdBy });
-    if (!user) {
-      throw new Error(`User with ID ${project.createdBy} not found`);
+    constructor() {
+        this.repository = AppDataSource.getRepository(Project);
+        this.userRepository = AppDataSource.getRepository(User);
     }
 
-    // Create the project with the user entity
-    const newProject = this.repository.create({
-      name: project.name,
-      keyPrefix: project.keyPrefix,
-      createdBy: user
-    });
+    async findByKeyPrefix(keyPrefix: string): Promise<ProjectResponseDto | null> {
+        const project = await this.repository.findOneBy({ 
+            keyPrefix: keyPrefix.toLowerCase() 
+        });
+        return project ? this.toResponseDto(project) : null;
+    }
 
-    await this.repository.save(newProject);
-    return this.toResponseDto(newProject);
-  }
+    async create(project: CreateProjectDto): Promise<ProjectResponseDto> {
+        const user = await this.userRepository.findOneBy({ id: project.createdBy });
+        if (!user) {
+            throw new Error(`User with ID ${project.createdBy} not found`);
+        }
 
-  async findById(id: string): Promise<ProjectResponseDto | null> {
-    const project = await this.repository.findOne({ 
-      where: { id },
-      relations: ["createdBy"] 
-    });
-    return project ? this.toResponseDto(project) : null;
-  }
+        const newProject = this.repository.create({
+            name: project.name,
+            keyPrefix: project.keyPrefix,
+            createdBy: user
+        });
 
-  async update(id: string, updates: UpdateProjectDto): Promise<ProjectResponseDto | null> {
-    await this.repository.update(id, updates);
-    return this.findById(id);
-  }
+        await this.repository.save(newProject);
+        return this.toResponseDto(newProject);
+    }
 
-  async delete(id: string): Promise<boolean> {
-    const result = await this.repository.delete(id);
-    return result.affected !== 0;
-  }
+    async findById(id: string): Promise<ProjectResponseDto | null> {
+        const project = await this.repository.findOne({
+            where: { id },
+            relations: ["createdBy"]
+        });
+        return project ? this.toResponseDto(project) : null;
+    }
 
-  async getAll(): Promise<ProjectResponseDto[]> {
-    const projects = await this.repository.find({ relations: ["createdBy"] });
-    return projects.map(this.toResponseDto);
-  }
+    async update(id: string, updates: UpdateProjectDto): Promise<ProjectResponseDto | null> {
+        await this.repository.update(id, updates);
+        return this.findById(id);
+    }
 
-  async getProjectsByUser(userId: string): Promise<ProjectResponseDto[]> {
-    const projects = await this.repository
-      .createQueryBuilder("project")
-      .innerJoin("project.members", "member")
-      .leftJoinAndSelect("project.createdBy", "user") 
-      .where("member.userId = :userId", { userId })
-      .getMany();
-    return projects.map(this.toResponseDto);
-  }
+    async delete(id: string): Promise<boolean> {
+        const result = await this.repository.delete(id);
+        return result.affected !== 0;
+    }
 
-  private toResponseDto(project: Project): ProjectResponseDto {
-    return {
-      id: project.id,
-      name: project.name,
-      keyPrefix: project.keyPrefix,
-      createdBy: project.createdBy!.id, 
-      createdAt: project.createdAt,
-      updatedAt: project.updatedAt,
-    };
+    async getAll(): Promise<ProjectResponseDto[]> {
+        const projects = await this.repository.find({ relations: ["createdBy"] });
+        return projects.map(this.toResponseDto);
+    }
+
+    async getProjectsByUser(userId: string): Promise<ProjectResponseDto[]> {
+        const projects = await this.repository
+            .createQueryBuilder("project")
+            .innerJoin("project.members", "member")
+            .leftJoinAndSelect("project.createdBy", "user")
+            .where("member.userId = :userId", { userId })
+            .getMany();
+        return projects.map(this.toResponseDto);
+    }
+
+    private toResponseDto(project: Project): ProjectResponseDto {
+        return {
+            id: project.id,
+            name: project.name,
+            keyPrefix: project.keyPrefix,
+            createdBy: project.createdBy!.id, // Use the ID from the relation
+            createdAt: project.createdAt,
+            updatedAt: project.updatedAt,
+        };
+    }
 }
-  }

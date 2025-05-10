@@ -5,7 +5,6 @@ import {
   UpdateStatusDto, 
   StatusResponseDto 
 } from "../../domain/DTOs/statusDTO";
-import { Status } from "../../domain/entities/status.entity";
 import { StatusType } from "../../domain/entities/status.entity";
 
 @injectable()
