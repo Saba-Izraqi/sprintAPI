@@ -23,7 +23,7 @@ import {
     @IsAlphanumeric()
     @MinLength(2)
     @MaxLength(5)
-    @Matches(/^[A-Za-z0-9]+$/)
+    @Matches(/^[A-Za-z]+$/)
     keyPrefix!: string;
   
     @IsUUID()
@@ -43,7 +43,7 @@ import {
     @IsAlphanumeric()
     @MinLength(2)
     @MaxLength(5)
-    @Matches(/^[A-Za-z0-9]+$/)
+    @Matches(/^[A-Za-z]+$/)
     keyPrefix?: string;
   }
   
