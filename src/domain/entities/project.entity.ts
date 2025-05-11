@@ -6,6 +6,7 @@ import {
   JoinColumn,
   OneToOne,
   OneToMany,
+  
 } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { User } from "./user.entity";
@@ -20,7 +21,7 @@ export class Project extends BaseEntity {
   @Column({ length: 100 })
   name!: string;
 
-  @Column({ length: 5 })
+  @Column({ length: 5 , unique: true})
   keyPrefix!: string;
 
   @OneToOne(() => Board, (board) => board.project)
