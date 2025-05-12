@@ -7,5 +7,5 @@ export interface IProjectRepository {
   delete(id: string): Promise<boolean>;
   getAll(): Promise<ProjectResponseDto[]>;
   getProjectsByUser(userId: string): Promise<ProjectResponseDto[]>;
-  findByKeyPrefix(keyPrefix: string): Promise<ProjectResponseDto | null>;
+  findByKeyPrefixAndUser(keyPrefix: string, userId: string): Promise<ProjectResponseDto | null>; // Modified method
 }
