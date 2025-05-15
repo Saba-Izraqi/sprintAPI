@@ -17,9 +17,12 @@ export class ProjectRepo implements IProjectRepository {
         this.userRepository = AppDataSource.getRepository(User);
     }
 
-    async findByKeyPrefix(keyPrefix: string): Promise<ProjectResponseDto | null> {
-        const project = await this.repository.findOneBy({ 
-            keyPrefix: keyPrefix.toLowerCase() 
+    async findByKeyPrefixAndUser(keyPrefix: string, userId: string): Promise<ProjectResponseDto | null> {
+        const project = await this.repository.findOne({ 
+            where: { 
+                keyPrefix: keyPrefix.toLowerCase(),
+                createdBy: { id: userId } 
+            }
         });
         return project ? this.toResponseDto(project) : null;
     }
@@ -33,7 +36,7 @@ export class ProjectRepo implements IProjectRepository {
         const newProject = this.repository.create({
             name: projectDto.name,
             keyPrefix: projectDto.keyPrefix,
-            createdBy: user // Assign the fetched user entity
+            createdBy: user 
         });
 
         await this.repository.save(newProject);
@@ -78,7 +81,7 @@ export class ProjectRepo implements IProjectRepository {
             id: project.id,
             name: project.name,
             keyPrefix: project.keyPrefix,
-            createdBy: project.createdBy!.id, // Use the ID from the relation
+            createdBy: project.createdBy!.id, 
             createdAt: project.createdAt,
             updatedAt: project.updatedAt,
         };

@@ -10,13 +10,13 @@ export class ProjectService {
 
     
     async create(createProjectDto: CreateProjectDto, userId: string): Promise<ProjectResponseDto> {
-        const existingProject = await this.ProjectRepo.findByKeyPrefix(createProjectDto.keyPrefix);
+        const existingProject = await this.ProjectRepo.findByKeyPrefixAndUser(createProjectDto.keyPrefix, userId);
 
         if (existingProject) {
-            throw new Error('A project with this key prefix already exists');
+            throw new Error('You already have a project with this key prefix.');
         }
 
-        return await this.ProjectRepo.create(createProjectDto, userId); // Pass userId
+        return await this.ProjectRepo.create(createProjectDto, userId); 
     }
 
 
@@ -34,10 +34,12 @@ export class ProjectService {
             throw new Error('Project not found');
         }
 
+       
         if (updateProjectDto.keyPrefix && updateProjectDto.keyPrefix.toLowerCase() !== existingProject.keyPrefix.toLowerCase()) {
-            const projectWithSamePrefix = await this.ProjectRepo.findByKeyPrefix(updateProjectDto.keyPrefix);
-            if (projectWithSamePrefix && projectWithSamePrefix.id !== id) {
-                 throw new Error('A project with this key prefix already exists');
+            
+            const projectWithSamePrefixForUser = await this.ProjectRepo.findByKeyPrefixAndUser(updateProjectDto.keyPrefix, existingProject.createdBy);
+            if (projectWithSamePrefixForUser && projectWithSamePrefixForUser.id !== id) { 
+                 throw new Error('You already have another project with this key prefix.');
             }
         }
 

@@ -6,7 +6,7 @@ import {
   JoinColumn,
   OneToOne,
   OneToMany,
-  
+  Unique, 
 } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { User } from "./user.entity";
@@ -14,6 +14,7 @@ import { Board } from "./board.entity";
 import { ProjectMember } from "./project-members.entity";
 
 @Entity("projects")
+@Unique(["keyPrefix", "createdBy"])
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
@@ -21,7 +22,7 @@ export class Project extends BaseEntity {
   @Column({ length: 100 })
   name!: string;
 
-  @Column({ length: 5 , unique: true})
+  @Column({ length: 5 }) 
   keyPrefix!: string;
 
   @OneToOne(() => Board, (board) => board.project)
