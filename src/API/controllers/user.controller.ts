@@ -9,6 +9,7 @@ import {
 } from "../../domain/DTOs/userDTO";
 import { Token } from "../enums/token";
 import { genToken } from "../utils/token";
+import PostmarkSender from "../../infrastructure/email/postmarkSender";
 
 @injectable()
 export class UserController {
@@ -17,34 +18,47 @@ export class UserController {
   async registerUser(req: Request, res: Response) {
     const dto = Object.assign(new RegisterUserDto(), req.body);
     const errors = await validate(dto);
-    if (errors.length > 0) {
+    if (errors.length) {
       res.status(400).json({ errors, success: false });
       return;
     }
-    const user = await this.userService.registerUser(dto);
-    const token = genToken({
-      id: user.id,
-      email: user.email,
-      isEmailVerified: user.isEmailVerified,
-      tokenType: Token.ACCESS,
-    });
+    try {
+      const user = await this.userService.registerUser(dto);
+      const token = genToken({
+        id: user.id,
+        email: user.email,
+        isEmailVerified: user.isEmailVerified,
+        tokenType: Token.ACCESS,
+      });
 
-    const emailVerificationToken = genToken({
-      id: user.id,
-      email: user.email,
-      isEmailVerified: user.isEmailVerified,
-      tokenType: Token.EMAIL_VERIFICATION,
-    });
+      const emailVerificationToken = genToken({
+        id: user.id,
+        email: user.email,
+        isEmailVerified: user.isEmailVerified,
+        tokenType: Token.EMAIL_VERIFICATION,
+      });
 
-    res
-      .status(201)
-      .json({ user, token, emailVerificationToken, success: true });
+      const emailConfirmationURL = `http://localhost:5173/verify-email?token=${emailVerificationToken}`;
+      PostmarkSender.instance.send(
+        user.fullName,
+        user.email,
+        emailConfirmationURL,
+        "email-confirmation"
+      );
+      res
+        .status(201)
+        .json({ user, token, emailVerificationToken, success: true });
+    } catch (error) {
+      // TODO: handle this error
+      console.error(error);
+      res.status(500).send();
+    }
   }
 
   async loginUser(req: Request, res: Response) {
     const dto = Object.assign(new LoginUserDto(), req.body);
     const errors = await validate(dto);
-    if (errors.length > 0) {
+    if (errors.length) {
       res.status(400).json({ errors, success: false });
       return;
     }
@@ -63,9 +77,7 @@ export class UserController {
 
     try {
       const user = await this.userService.updateEmailVerification(email, true);
-      res
-        .status(200)
-        .json({ success: true, user });
+      res.status(200).json({ success: true, user });
     } catch (error) {
       console.error("Error verifying email:", error);
       res.status(500).json({ error: "Internal server error", success: false });
@@ -96,7 +108,7 @@ export class UserController {
       password: req.body.password,
     });
     const errors = await validate(dto);
-    if (errors.length > 0) {
+    if (errors.length) {
       res.status(400).json({ errors, success: false });
       return;
     }
