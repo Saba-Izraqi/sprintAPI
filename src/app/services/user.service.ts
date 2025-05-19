@@ -49,4 +49,8 @@ export class UserService {
     await this.userRepo.updatePassword(email, hashedPassword);
     return;
   }
+
+  async getByEmail(email: string) {
+    return await this.userRepo.findByEmail(email);
+  }
 }

@@ -94,10 +94,24 @@ export class UserController {
       tokenType: Token.RESET_PASSWORD,
     });
 
-    res.status(200).json({
-      token,
-      success: true,
-    });
+    try {
+      const user = await this.userService.getByEmail(email);
+      if (user) {
+        const resetURL = `http://localhost:5173/reset-password?token=${token}`;
+        PostmarkSender.instance.send(
+          user.fullName,
+          user.email,
+          resetURL,
+          "forget-password"
+        );
+      }
+      res.status(200).json({
+        success: true,
+        message: "AN email was sent with password recovery instruction.",
+      });
+    } catch (error: Error | any) {
+      // TODO: handle the error later on.
+    }
   }
 
   async resetPassword(req: Request, res: Response) {
