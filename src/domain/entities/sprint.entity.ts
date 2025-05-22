@@ -5,9 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { BaseEntity } from "./base.entity";
-import { Board } from "./board.entity";
-
+import { BaseEntity, Board } from ".";
 @Entity("sprints")
 export class Sprint extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")

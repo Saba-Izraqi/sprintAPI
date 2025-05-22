@@ -7,9 +7,7 @@ import {
   Unique,
   OneToMany,
 } from "typeorm";
-import { BaseEntity } from "./base.entity";
-import { User } from "./user.entity";
-import { Project } from "./project.entity";
+import { BaseEntity, Project, User } from ".";
 
 export enum ProjectPermission {
   MEMBER = 0,

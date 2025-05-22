@@ -6,13 +6,13 @@ import { restrictTokens } from '../middlewares/tokenTypes.middleware';
 import { Token } from '../enums/token';
 
 export class UserRoutes extends BaseRoute {
-  public path = "/auth";
+  public path = "/user";
 
   protected initRoutes(): void {
     const controller = container.resolve(UserController);
 
-    this.router.post("/register", controller.registerUser.bind(controller));
-    this.router.post("/login", controller.loginUser.bind(controller));
+    this.router.post("/register", controller.register.bind(controller));
+    this.router.post("/login", controller.login.bind(controller));
     this.router.post(
       "/verify-email",
       authenticate,

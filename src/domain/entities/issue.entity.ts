@@ -5,12 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { BaseEntity } from "./base.entity";
-import { Board } from "./board.entity";
-import { User } from "./user.entity";
-import { Epic } from "./epic.entity";
-import { Sprint } from "./sprint.entity";
-import { Status } from "./status.entity";
+import { BaseEntity, Board, Epic, Sprint, Status, User } from ".";
 
 @Entity("issues")
 export class Issue extends BaseEntity {

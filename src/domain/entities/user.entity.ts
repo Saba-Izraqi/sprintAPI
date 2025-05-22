@@ -5,9 +5,7 @@ import {
   Index,
   OneToMany,
 } from "typeorm";
-import { BaseEntity } from "./base.entity";
-import { Issue } from "./issue.entity";
-import { ProjectMember } from "./project-members.entity";
+import { BaseEntity, Issue, ProjectMember } from ".";
 
 export enum Permission {
   MEMBER = 0,

@@ -3,7 +3,9 @@ import { injectable } from "tsyringe";
 import { RegisterUserDto } from "../../../domain/DTOs/userDTO";
 import { IUserRepo } from "../../../domain/IRepos/IUserRepo";
 import { AppDataSource } from "../data-source";
-import { User } from '../../../domain/entities/user.entity';
+import { User } from "../../../domain/entities/user.entity";
+import { getDBError } from "../utils/handleDBErrors";
+import { UserError } from "../../../app/exceptions";
 
 @injectable()
 export class UserRepo implements IUserRepo {
@@ -13,28 +15,48 @@ export class UserRepo implements IUserRepo {
     this._userRepo = AppDataSource.getRepository(User);
   }
 
-  createUser(user: RegisterUserDto) {
-    const newUser = this._userRepo.create(user);
-    return this._userRepo.save(newUser);
+  async createUser(user: RegisterUserDto) {
+    try {
+      const newUser = this._userRepo.create(user);
+      return await this._userRepo.save(newUser);
+    } catch (error) {
+      throw getDBError(error);
+    }
   }
 
   findByEmail(email: string) {
     return this._userRepo.findOneBy({ email });
   }
 
-  async updateEmailVerification(email: string, isEmailVerified: boolean): Promise<User> {
-    const affectedRows = (await this._userRepo.update({ email }, { isEmailVerified })).affected;
-    if(!affectedRows) {
-      throw new Error(`User with email ${email} not found.`);
+  async updateEmailVerification(
+    email: string,
+    isEmailVerified: boolean
+  ): Promise<User> {
+    try {
+      const affectedRows = (
+        await this._userRepo.update({ email }, { isEmailVerified })
+      ).affected;
+      if (!affectedRows) {
+        throw new UserError([`User with email ${email} not found.`], 404);
+      }
+      const updatedUser = await this._userRepo.findOneBy({ email });
+      if (!updatedUser) {
+        throw new UserError(
+          [`User with email ${email} not found after update.`],
+          404
+        );
+      }
+      return updatedUser;
+    } catch (error) {
+      throw getDBError(error);
     }
-    const updatedUser = await this._userRepo.findOneBy({ email });
-    if (!updatedUser) {
-      throw new Error(`User with email ${email} not found after update.`);
-    }
-    return updatedUser;
   }
 
   async updatePassword(email: string, newPassword: string): Promise<void> {
-    await this._userRepo.update({ email }, { password: newPassword });
+    try {
+      await this._userRepo.update({ email }, { password: newPassword });
+    } catch (error) {
+      throw getDBError(error);
+    }
   }
 }
