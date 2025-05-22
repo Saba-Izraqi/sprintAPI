@@ -15,12 +15,9 @@ export class UserController {
 
   async register(req: Request, res: Response, next: NextFunction) {
     const dto = plainToInstance(RegisterUserDto, req.body);
-    //*I Wrapped validate() in try-catch to handle unexpected errors and ensure they're forwarded to the error middleware.
-    //* plainToInstance is safe outside try as it doesn't throw errors under normal conditions.
     try {
       const errors = await validate(dto);
       if (errors.length) {
-        console.error(errors);
         throw new UserError(errors);
       }
       const user = await this.userService.registerUser(dto);
