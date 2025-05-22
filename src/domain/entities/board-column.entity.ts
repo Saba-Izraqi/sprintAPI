@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { BaseEntity } from "./base.entity";
-import { Status } from "./status.entity";
+import { BaseEntity, Status } from ".";
 
 @Entity("columns")
 export class BoardColumn extends BaseEntity {

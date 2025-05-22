@@ -1,14 +1,19 @@
-import { Entity, PrimaryColumn, OneToOne, JoinColumn, Column, OneToMany } from "typeorm";
-import { BaseEntity } from "./base.entity";
-import { Project } from "./project.entity";
-import { Sprint } from "./sprint.entity";
+import {
+  Entity,
+  PrimaryColumn,
+  OneToOne,
+  JoinColumn,
+  Column,
+  OneToMany,
+} from "typeorm";
+import { BaseEntity, Project, Sprint } from ".";
 
 @Entity("boards")
 export class Board extends BaseEntity {
   // Shared PK to enforce 1:1 relationship with the project
   // Each project should has 1 board, and each board should relate to 1 project.
   // Future Work: should add an Id for the board when offer multiple board feat  for each project
-  @PrimaryColumn('uuid')
+  @PrimaryColumn("uuid")
   projectId!: string;
 
   // NOTE: Currently this field may doesn't make sense,

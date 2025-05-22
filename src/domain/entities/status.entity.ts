@@ -5,8 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { BaseEntity } from "./base.entity";
-import { BoardColumn } from "./board-column.entity";
+import { BaseEntity, BoardColumn } from ".";
 
 export enum StatusType {
   BACKLOG = 0,
