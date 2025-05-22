@@ -5,7 +5,6 @@ import {
   Index,
   OneToMany,
 } from "typeorm";
-
 import { BaseEntity, Issue, ProjectMember } from ".";
 
 export enum Permission {
