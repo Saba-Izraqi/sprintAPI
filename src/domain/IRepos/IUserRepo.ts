@@ -1,6 +1,6 @@
 // src/domain/IRepos/IUserRepo.ts
 import { RegisterUserDto } from "../DTOs/userDTO";
-import { User } from "../entities/user.entity";
+import { User } from "../entities";
 
 export interface IUserRepo {
   createUser(user: RegisterUserDto): any;
