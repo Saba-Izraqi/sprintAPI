@@ -3,13 +3,14 @@ import { AppDataSource } from "./infrastructure/database/data-source";
 import { ensureDatabaseExists } from "./infrastructure/database/init-db";
 import { registerDependencies } from "./infrastructure/database/container";
 import { AppServer } from "./API";
-
+import dotenv from "dotenv";
+dotenv.config();
 (async () => {
   await registerDependencies();
   await ensureDatabaseExists({
     dbName: "sprintify",
     user: "postgres",
-    password: "root",
+    password: process.env.DB_PASSWORD as string, 
   });
   
   await AppDataSource.initialize();

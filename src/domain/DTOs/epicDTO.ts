@@ -1,0 +1,76 @@
+import { IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import { Epic } from "../entities";
+
+export class CreateEpicDto {
+  @IsString()
+  @Length(1, 100)
+  @IsNotEmpty()
+  key!: string;
+
+  @IsString()
+  @Length(1, 100)
+  @IsNotEmpty()
+  title!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description!: string;
+
+  @IsOptional()
+  @IsUUID()
+  assignee?: string;
+
+  @IsUUID()
+  @IsNotEmpty()
+  boardProjectId!: string;
+}
+
+export class UpdateEpicDto {
+  @IsOptional()
+  @IsString()
+  @Length(1, 100)
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsUUID()
+  assignee?: string;
+}
+
+export class EpicResponseDto {
+  id: string;
+  key: string;
+  title: string;
+  description: string;
+  assignee?: string;
+  assigneeUser?: {
+    id: string;
+    fullName: string;
+    email: string;
+  };
+  boardProjectId: string;
+  createdAt: Date;
+  updatedAt: Date;
+
+  constructor(epic: Epic) {
+    this.id = epic.id;
+    this.key = epic.key;
+    this.title = epic.title;
+    this.description = epic.description;
+    this.assignee = epic.assignee;
+    this.boardProjectId = epic.boardProjectId;
+    this.createdAt = epic.createdAt;
+    this.updatedAt = epic.updatedAt;
+
+    if (epic.assigneeUser) {
+      this.assigneeUser = {
+        id: epic.assigneeUser.id,
+        fullName: epic.assigneeUser.fullName,
+        email: epic.assigneeUser.email
+      };
+    }
+  }
+}
