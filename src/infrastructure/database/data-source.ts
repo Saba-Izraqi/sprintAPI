@@ -1,11 +1,11 @@
 import { DataSource } from "typeorm";
 import {
-  Board,
   BoardColumn,
   Epic,
   Issue,
   Project,
   ProjectMember,
+  RelatedIssue,
   Sprint,
   Status,
   User,
@@ -23,12 +23,12 @@ export const AppDataSource = new DataSource({
   synchronize: true, // dev only! disable in prod
   logging: ["error", "warn"], // comment out in prod
   entities: [
-    Board,
     BoardColumn,
     Epic,
     Issue,
     Project,
     ProjectMember,
+    RelatedIssue,
     Sprint,
     Status,
     User,

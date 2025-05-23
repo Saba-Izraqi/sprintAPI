@@ -3,9 +3,18 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { BaseEntity, Board, Epic, Sprint, Status, User } from ".";
+import {
+  BaseEntity,
+  Epic,
+  Project,
+  RelatedIssue,
+  Sprint,
+  Status,
+  User,
+} from ".";
 
 @Entity("issues")
 export class Issue extends BaseEntity {
@@ -37,15 +46,15 @@ export class Issue extends BaseEntity {
   sprintId!: string;
 
   @Column()
-  boardProjectId!: string;
+  projectId!: string;
 
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "assignee", referencedColumnName: "id" })
   assigneeUser!: User;
 
-  @ManyToOne(() => Board, { onDelete: "CASCADE", nullable: false })
-  @JoinColumn({ name: "boardProjectId", referencedColumnName: "projectId" })
-  board!: Board;
+  @ManyToOne(() => Project, { onDelete: "CASCADE", nullable: false })
+  @JoinColumn({ name: "projectId", referencedColumnName: "id" })
+  project!: Project;
 
   @ManyToOne(() => Epic, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "epicId" })
@@ -58,4 +67,10 @@ export class Issue extends BaseEntity {
   @ManyToOne(() => Status, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "statusId" })
   status!: Status;
+
+  @OneToMany(() => RelatedIssue, (rel) => rel.sourceIssue)
+  outgoingRelations!: RelatedIssue[];
+
+  @OneToMany(() => RelatedIssue, (rel) => rel.targetIssue)
+  incomingRelations!: RelatedIssue[];
 }
