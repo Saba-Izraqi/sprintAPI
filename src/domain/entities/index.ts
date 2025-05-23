@@ -2,7 +2,6 @@ export * from "./base.entity";
 export * from "./user.entity";
 export * from "./project.entity";
 export * from "./project-members.entity";
-export * from "./board.entity";
 export * from "./board-column.entity";
 export * from "./status.entity";
 export * from "./epic.entity";

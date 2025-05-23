@@ -9,7 +9,7 @@ import { AppServer } from "./API";
   await ensureDatabaseExists({
     dbName: "sprintify",
     user: "postgres",
-    password: "root",
+    password: "123456",
   });
   
   await AppDataSource.initialize();

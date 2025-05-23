@@ -1,6 +1,5 @@
 import { DataSource } from "typeorm";
 import {
-  Board,
   BoardColumn,
   Epic,
   Issue,
@@ -16,12 +15,11 @@ export const AppDataSource = new DataSource({
   host: "localhost",
   port: 5432,
   username: "postgres",
-  password: "root",
+  password: "123456",
   database: "sprintify",
   synchronize: true, // dev only! disable in prod
   logging: ["error", "warn"], // comment out in prod
   entities: [
-    Board,
     BoardColumn,
     Epic,
     Issue,
