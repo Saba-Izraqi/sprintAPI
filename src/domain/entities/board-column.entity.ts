@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { BaseEntity, Status } from ".";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
+import { BaseEntity, Project, Status } from ".";
 
 @Entity("columns")
 export class BoardColumn extends BaseEntity {
@@ -11,6 +18,13 @@ export class BoardColumn extends BaseEntity {
 
   @Column({ type: "int" })
   order!: number;
+
+  @Column()
+  projectId!: string;
+
+  @ManyToOne(() => Project, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "projectId", referencedColumnName: "id" })
+  project!: Project;
 
   @OneToMany(() => Status, (status) => status.column, { cascade: true })
   statuses!: Status[];
