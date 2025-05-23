@@ -1,5 +1,6 @@
 import { Client } from "pg";
-
+import dotenv from "dotenv";
+dotenv.config();
 const DEFAULT_DB = "postgres";
 
 interface IDatabaseConfig {
@@ -15,7 +16,8 @@ export const ensureDatabaseExists = async ({
   user,
   password,
   host = "localhost",
-  port = 5432,
+  port = Number(process.env.DB_PORT),
+  
 }: IDatabaseConfig) => {
   const client = new Client({
     user,
@@ -48,3 +50,4 @@ export const ensureDatabaseExists = async ({
   }
 };
 
+ 

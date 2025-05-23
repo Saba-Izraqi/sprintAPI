@@ -6,6 +6,7 @@ import {
   JoinColumn,
   OneToOne,
   OneToMany,
+  Unique,
 } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { User } from "./user.entity";
@@ -13,6 +14,7 @@ import { Board } from "./board.entity";
 import { ProjectMember } from "./project-members.entity";
 
 @Entity("projects")
+@Unique(["keyPrefix", "createdBy"]) // Make keyPrefix unique per user
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
@@ -25,10 +27,9 @@ export class Project extends BaseEntity {
 
   @OneToOne(() => Board, (board) => board.project)
   board!: Board;
-
-  @ManyToOne(() => User, { onDelete: "SET NULL", nullable: false })
+  @ManyToOne(() => User, { onDelete: "SET NULL", nullable: false, eager: true })
   @JoinColumn({ name: "createdBy" })
-  createdBy?: User;
+  createdBy!: User;
 
   @OneToMany(() => ProjectMember, (member) => member.project)
   members!: ProjectMember[];

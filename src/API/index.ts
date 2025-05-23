@@ -6,6 +6,8 @@ import { glob } from "glob";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
+import cors from "cors";
+import { errorHandler, notFoundHandler } from "./middlewares/error.middleware";
 
 export class AppServer {
   public app: Application;
@@ -15,9 +17,18 @@ export class AppServer {
     this.app = express();
     this.setupMiddleware();
   }
-
   private setupMiddleware() {
+    // Enable CORS for all routes
+    this.app.use(cors());
+    
+    // Parse JSON bodies
     this.app.use(express.json());
+    
+    // Parse URL-encoded bodies
+    this.app.use(express.urlencoded({ extended: true }));
+    
+    // Serve static files from the uploads directory
+    this.app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
   }
 
   private setupSwagger() {
@@ -51,10 +62,20 @@ export class AppServer {
       }
     }
   }
+  private setupErrorHandling() {
+    // Register 404 handler for routes that don't exist
+    this.app.use(notFoundHandler);
+    
+    // Global error handler - should be the last middleware
+    this.app.use(errorHandler);
+  }
 
   public async listen(port: number) {
     await this.setupRoutes();
     this.setupSwagger();
+    // Setup error handling middleware after all routes
+    this.setupErrorHandling();
+    
     this.app.listen(port, () =>
       console.info(`🚀 Server running at http://localhost:${port}`)
     );

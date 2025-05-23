@@ -1,5 +1,4 @@
-{
-  "compilerOptions": {
+{  "compilerOptions": {
     "target": "ES2020",
     "module": "CommonJS",
     "rootDir": "src",
@@ -10,7 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types", "./src/API/types"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"],
