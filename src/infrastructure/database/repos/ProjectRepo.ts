@@ -7,6 +7,7 @@ import {
   CreateProjectDto,
   UpdateProjectDTO,
 } from "../../../domain/DTOs/projectDTO";
+import { FindOptionsWhere } from "typeorm";
 @injectable()
 export class ProjectRepo implements IProjectRepo {
   private _projectRepo;
@@ -39,28 +40,10 @@ export class ProjectRepo implements IProjectRepo {
       throw getDBError(error);
     }
   }
-  async getByKeyPrefix(keyPrefix: string): Promise<Project | null> {
+
+  async find(where: FindOptionsWhere<Project>): Promise<Project[]> {
     try {
-      return await this._projectRepo.findOne({ where: { keyPrefix } });
-    } catch (error) {
-      throw getDBError(error);
-    }
-  }
-  async getByName(name: string): Promise<Project[]> {
-    try {
-      return await this._projectRepo.find({ where: { name } });
-    } catch (error) {
-      throw getDBError(error);
-    }
-  }
-  async getByUserId(userId: string): Promise<Project[]> {
-    try {
-      return await this._projectRepo
-        .createQueryBuilder("project")
-        .innerJoin("project.members", "member")
-        .innerJoin("member.user", "user")
-        .where("user.id = :userId", { userId })
-        .getMany();
+      return await this._projectRepo.find({ where });
     } catch (error) {
       throw getDBError(error);
     }

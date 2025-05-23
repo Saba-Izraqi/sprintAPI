@@ -7,7 +7,9 @@ import {
   Matches,
 } from "class-validator";
 import { UserResponseDto } from "./userDTO";
-import { Project, ProjectPermission } from "../entities";
+import { Project } from "../entities";
+import { ProjectPermission } from '../enums/types';
+
 export class CreateProjectDto {
   @IsNotEmpty()
   @IsString()
@@ -17,9 +19,8 @@ export class CreateProjectDto {
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^[A-Z][A-Z0-9]{1,9}$/, {
-    message:
-      "Project key must be 2-10 uppercase letters/numbers, starting with a letter",
+  @Matches(/^[A-Za-z]{1,5}$/, {
+    message: "Project key must be 1-5 letters, not case sensitive",
   })
   keyPrefix!: string;
 
@@ -27,6 +28,7 @@ export class CreateProjectDto {
   @IsUUID()
   createdById!: string;
 }
+
 export class UpdateProjectDTO {
   @IsOptional()
   @IsString()
@@ -36,14 +38,12 @@ export class UpdateProjectDTO {
 
   @IsOptional()
   @IsString()
-  @Matches(/^[A-Z][A-Z0-9]{1,9}$/, {
-    message:
-      "Project key must be 2-10 uppercase letters/numbers, starting with a letter",
+  @Matches(/^[A-Za-z]{1,5}$/, {
+    message: "Project key must be 1-5 letters, not case sensitive",
   })
   keyPrefix?: string;
 }
-//* Defines a type representing allowed permission keys: "MEMBER" | "MODERATOR" | "ADMINISTRATOR"
-type ProjectPermissionKeys = keyof typeof ProjectPermission;
+
 export class ProjectResponseDto {
   id: string;
   name: string;
@@ -51,7 +51,7 @@ export class ProjectResponseDto {
   createdBy?: UserResponseDto;
   members: {
     id: string;
-    permission: ProjectPermissionKeys;
+    permission: ProjectPermission;
     user?: UserResponseDto;
   }[];
   constructor(project: Project) {
@@ -64,9 +64,7 @@ export class ProjectResponseDto {
     this.members =
       project.members?.map((member) => ({
         id: member.id,
-        permission: ProjectPermission[
-          member.permission
-        ] as ProjectPermissionKeys,
+        permission: member.permission,
         user: member.user ? new UserResponseDto(member.user) : undefined,
       })) ?? [];
   }
