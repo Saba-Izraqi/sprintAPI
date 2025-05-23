@@ -6,9 +6,11 @@ import {
   JoinColumn,
   OneToOne,
   OneToMany,
+  Unique,
 } from "typeorm";
 import { BaseEntity, Board, ProjectMember, User } from ".";
 @Entity("projects")
+@Unique(["keyPrefix", "createdBy"])
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
@@ -16,7 +18,7 @@ export class Project extends BaseEntity {
   @Column({ length: 100 })
   name!: string;
 
-  @Column({ length: 5 })
+  @Column({ length: 10 })
   keyPrefix!: string;
 
   @OneToOne(() => Board, (board) => board.project)

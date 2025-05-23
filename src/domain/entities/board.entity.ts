@@ -16,11 +16,6 @@ export class Board extends BaseEntity {
   @PrimaryColumn("uuid")
   projectId!: string;
 
-  // NOTE: Currently this field may doesn't make sense,
-  // but I am build a schema that has the ability to allow multiple board for each project
-  @Column({ length: 25 })
-  name!: string;
-
   @OneToMany(() => Sprint, (sprint) => sprint.board)
   sprints!: Sprint[];
 

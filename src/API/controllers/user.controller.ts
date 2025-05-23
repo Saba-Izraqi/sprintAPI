@@ -20,7 +20,7 @@ export class UserController {
       if (errors.length) {
         throw new UserError(errors);
       }
-      const user = await this.userService.registerUser(dto);
+      const user = await this.userService.register(dto);
       const token = genToken({
         id: user.id,
         email: user.email,
@@ -58,7 +58,7 @@ export class UserController {
         throw new UserError(errors);
       }
 
-      const user = await this.userService.loginUser(dto);
+      const user = await this.userService.login(dto);
       const token = genToken({
         id: user.id,
         email: user.email,

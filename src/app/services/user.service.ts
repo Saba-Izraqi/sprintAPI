@@ -12,16 +12,16 @@ import { UserError } from "../exceptions";
 export class UserService {
   constructor(@inject("IUserRepo") private userRepo: IUserRepo) {}
 
-  async registerUser(dto: RegisterUserDto) {
+  async register(dto: RegisterUserDto) {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
-    const user = await this.userRepo.createUser({
+    const user = await this.userRepo.create({
       ...dto,
       password: hashedPassword,
     });
     return new UserResponseDto(user);
   }
 
-  async loginUser(dto: LoginUserDto) {
+  async login(dto: LoginUserDto) {
     const user = await this.userRepo.findByEmail(dto.email);
     const isValid = user && (await bcrypt.compare(dto.password, user.password));
 

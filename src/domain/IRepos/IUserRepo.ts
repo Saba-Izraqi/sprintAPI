@@ -2,7 +2,7 @@ import { RegisterUserDto } from "../DTOs/userDTO";
 import { User } from "../entities";
 
 export interface IUserRepo {
-  createUser(user: RegisterUserDto): any;
+  create(user: RegisterUserDto): any;
   findByEmail(email: string): Promise<any>;
   updateEmailVerification(
     email: string,
