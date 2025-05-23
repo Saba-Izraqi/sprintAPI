@@ -38,10 +38,16 @@ export class EpicController {
     } catch (error) {
       next(error);
     }
-  }
-
-  async createEpic(req: Request, res: Response, next: NextFunction) {
+  }   async createEpic(req: Request, res: Response, next: NextFunction) {
     try {
+      if (req.params.projectId) {
+        req.body.projectId = req.params.projectId;
+      }
+      
+      if (!req.body.projectId) {
+        throw new UserError(["Project ID is required"], 400);
+      }
+      
       const dto = plainToInstance(CreateEpicDto, req.body);
       const errors = await validate(dto);
       if (errors.length) {
@@ -54,7 +60,7 @@ export class EpicController {
       next(error);
     }
   }
-
+  
   async updateEpic(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
@@ -71,6 +77,7 @@ export class EpicController {
     }
   }
 
+  
   async deleteEpic(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
