@@ -5,8 +5,10 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  Unique,
 } from "typeorm";
 import { BaseEntity, ProjectMember, Sprint, User } from ".";
+
 @Entity("projects")
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -15,7 +17,7 @@ export class Project extends BaseEntity {
   @Column({ length: 100 })
   name!: string;
 
-  @Column({ length: 5 })
+  @Column({ length: 5, unique: true })
   keyPrefix!: string;
 
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: false })

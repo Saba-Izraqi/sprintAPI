@@ -10,3 +10,9 @@ export enum RelatedIssueType {
   DUPLICATES = 2,
   DUPLICATED_BY = -2,
 }
+
+export enum ProjectPermission {
+  MEMBER = 0,
+  MODERATOR = 1,
+  ADMINISTRATOR = 2,
+}
