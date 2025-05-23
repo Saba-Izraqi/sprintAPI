@@ -22,7 +22,7 @@ export class CreateEpicDto {
 
   @IsUUID()
   @IsNotEmpty()
-  boardProjectId!: string;
+  projectId!: string;
 }
 
 export class UpdateEpicDto {
@@ -51,7 +51,7 @@ export class EpicResponseDto {
     fullName: string;
     email: string;
   };
-  boardProjectId: string;
+  projectId: string;
   createdAt: Date;
   updatedAt: Date;
 
@@ -61,7 +61,7 @@ export class EpicResponseDto {
     this.title = epic.title;
     this.description = epic.description;
     this.assignee = epic.assignee;
-    this.boardProjectId = epic.boardProjectId;
+    this.projectId = epic.projectId;
     this.createdAt = epic.createdAt;
     this.updatedAt = epic.updatedAt;
 

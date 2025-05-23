@@ -13,11 +13,11 @@ export class EpicRepo implements IEpicRepo {
     this._epicRepo = AppDataSource.getRepository(Epic);
   }
 
-  async findAll(boardProjectId: string): Promise<Epic[]> {
+  async findAll(projectId: string): Promise<Epic[]> {
     try {
       return await this._epicRepo.find({
-        where: { boardProjectId },
-        relations: ["assigneeUser", "board"],
+        where: { projectId },
+        relations: ["assigneeUser", "project"],
       });
     } catch (error) {
       throw getDBError(error);
@@ -28,7 +28,7 @@ export class EpicRepo implements IEpicRepo {
     try {
       const epic = await this._epicRepo.findOne({
         where: { id },
-        relations: ["assigneeUser", "board"],
+        relations: ["assigneeUser", "project"],
       });
       return epic;
     } catch (error) {
@@ -54,7 +54,7 @@ export class EpicRepo implements IEpicRepo {
       
       const updatedEpic = await this._epicRepo.findOne({
         where: { id },
-        relations: ["assigneeUser", "board"],
+        relations: ["assigneeUser", "project"],
       });
       
       if (!updatedEpic) {
@@ -76,11 +76,11 @@ export class EpicRepo implements IEpicRepo {
     }
   }
 
-  async findByKey(key: string, boardProjectId: string): Promise<Epic | null> {
+  async findByKey(key: string, projectId: string): Promise<Epic | null> {
     try {
       return await this._epicRepo.findOne({
-        where: { key, boardProjectId },
-        relations: ["assigneeUser", "board"],
+        where: { key, projectId },
+        relations: ["assigneeUser", "project"],
       });
     } catch (error) {
       throw getDBError(error);

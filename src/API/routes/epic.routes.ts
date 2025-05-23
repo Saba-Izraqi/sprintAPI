@@ -12,14 +12,14 @@ export class EpicRoutes extends BaseRoute {
     // Apply authentication middleware to all epic routes
     this.router.use(authenticate);
     
-    // Get all epics for a board
-    this.router.get("/board/:boardProjectId", controller.getAllEpics.bind(controller));
+    // Get all epics for a project
+    this.router.get("/project/:projectId", controller.getAllEpics.bind(controller));
     
     // Get a specific epic by ID
     this.router.get("/:id", controller.getEpicById.bind(controller));
     
-    // Get a specific epic by key and board
-    this.router.get("/key/:key/board/:boardProjectId", controller.getEpicByKey.bind(controller));
+    // Get a specific epic by key and project
+    this.router.get("/key/:key/project/:projectId", controller.getEpicByKey.bind(controller));
     
     // Create a new epic
     this.router.post("/", controller.createEpic.bind(controller));

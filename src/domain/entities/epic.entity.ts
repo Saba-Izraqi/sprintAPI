@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from "typeorm";
-import { BaseEntity, Board, User } from ".";
+import { BaseEntity, Project, User } from ".";
 
 @Entity("epics")
-@Unique("Key_uniqueness_scoped_per_board", ["key", "boardProjectId"])
+@Unique("Key_uniqueness_scoped_per_board", ["key", "projectId"])
 export class Epic extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
@@ -31,9 +31,9 @@ export class Epic extends BaseEntity {
   assigneeUser!: User;
 
   @Column()
-  boardProjectId!: string;
+  projectId!: string;
 
-  @ManyToOne(() => Board, { onDelete: "CASCADE", nullable: false })
-  @JoinColumn({ name: "boardProjectId", referencedColumnName: "projectId" })
-  board!: Board;
+  @ManyToOne(() => Project, { onDelete: "CASCADE", nullable: false })
+  @JoinColumn({ name: "projectId", referencedColumnName: "id" })
+  project!: Project;
 }

@@ -12,8 +12,8 @@ export class EpicController {
 
   async getAllEpics(req: Request, res: Response, next: NextFunction) {
     try {
-      const { boardProjectId } = req.params;
-      const epics = await this.epicService.getAllEpics(boardProjectId);
+      const { projectId } = req.params;
+      const epics = await this.epicService.getAllEpics(projectId);
       res.status(200).json({ epics, success: true });
     } catch (error) {
       next(error);
@@ -32,8 +32,8 @@ export class EpicController {
 
   async getEpicByKey(req: Request, res: Response, next: NextFunction) {
     try {
-      const { key, boardProjectId } = req.params;
-      const epic = await this.epicService.getEpicByKey(key, boardProjectId);
+      const { key, projectId } = req.params;
+      const epic = await this.epicService.getEpicByKey(key, projectId);
       res.status(200).json({ epic, success: true });
     } catch (error) {
       next(error);

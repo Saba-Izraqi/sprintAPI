@@ -8,8 +8,8 @@ import { UserError } from "../exceptions";
 export class EpicService {
   constructor(@inject("IEpicRepo") private epicRepo: IEpicRepo) {}
 
-  async getAllEpics(boardProjectId: string): Promise<EpicResponseDto[]> {
-    const epics = await this.epicRepo.findAll(boardProjectId);
+  async getAllEpics(projectId: string): Promise<EpicResponseDto[]> {
+    const epics = await this.epicRepo.findAll(projectId);
     return epics.map(epic => new EpicResponseDto(epic));
   }
 
@@ -21,19 +21,19 @@ export class EpicService {
     return new EpicResponseDto(epic);
   }
 
-  async getEpicByKey(key: string, boardProjectId: string): Promise<EpicResponseDto> {
-    const epic = await this.epicRepo.findByKey(key, boardProjectId);
+  async getEpicByKey(key: string, projectId: string): Promise<EpicResponseDto> {
+    const epic = await this.epicRepo.findByKey(key, projectId);
     if (!epic) {
-      throw new UserError([`Epic with key ${key} not found in this board.`], 404);
+      throw new UserError([`Epic with key ${key} not found in this project.`], 404);
     }
     return new EpicResponseDto(epic);
   }
 
   async createEpic(dto: CreateEpicDto): Promise<EpicResponseDto> {
-    // Check if the key is already in use on this board
-    const existingEpic = await this.epicRepo.findByKey(dto.key, dto.boardProjectId);
+    // Check if the key is already in use in this project
+    const existingEpic = await this.epicRepo.findByKey(dto.key, dto.projectId);
     if (existingEpic) {
-      throw new UserError([`Epic with key ${dto.key} already exists on this board.`], 409);
+      throw new UserError([`Epic with key ${dto.key} already exists in this project.`], 409);
     }
 
     const epicData: Partial<Epic> = {
