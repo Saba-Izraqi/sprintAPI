@@ -5,6 +5,7 @@ import {
   Issue,
   Project,
   ProjectMember,
+  RelatedIssue,
   Sprint,
   Status,
   User,
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
   host: "localhost",
   port: 5432,
   username: "postgres",
-  password: "123456",
+  password: "root",
   database: "sprintify",
   synchronize: true, // dev only! disable in prod
   logging: ["error", "warn"], // comment out in prod
@@ -25,6 +26,7 @@ export const AppDataSource = new DataSource({
     Issue,
     Project,
     ProjectMember,
+    RelatedIssue,
     Sprint,
     Status,
     User,
