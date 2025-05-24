@@ -1,4 +1,3 @@
-// src/infrastructure/database/repos/UserRepo.ts
 import { injectable } from "tsyringe";
 import { RegisterUserDto } from "../../../domain/DTOs/userDTO";
 import { IUserRepo } from "../../../domain/IRepos/IUserRepo";
@@ -30,7 +29,7 @@ export class UserRepo implements IUserRepo {
 
   async updateEmailVerification(
     email: string,
-    isEmailVerified: boolean
+    isEmailVerified: boolean,
   ): Promise<User> {
     try {
       const affectedRows = (
@@ -43,7 +42,7 @@ export class UserRepo implements IUserRepo {
       if (!updatedUser) {
         throw new UserError(
           [`User with email ${email} not found after update.`],
-          404
+          404,
         );
       }
       return updatedUser;

@@ -2,8 +2,8 @@ import { container } from "tsyringe";
 import { BaseRoute } from "./base.route";
 import { UserController } from "../controllers/user.controller";
 import { authenticate } from "../middlewares/auth.middleware";
-import { restrictTokens } from '../middlewares/tokenTypes.middleware';
-import { Token } from '../enums/token';
+import { restrictTokens } from "../middlewares/tokenTypes.middleware";
+import { Token } from "../enums/token";
 
 export class UserRoutes extends BaseRoute {
   public path = "/user";
@@ -17,17 +17,17 @@ export class UserRoutes extends BaseRoute {
       "/verify-email",
       authenticate,
       restrictTokens(Token.EMAIL_VERIFICATION),
-      controller.verifyEmail.bind(controller)
+      controller.verifyEmail.bind(controller),
     );
     this.router.post(
       "/forget-password",
-      controller.forgetPassword.bind(controller)
+      controller.forgetPassword.bind(controller),
     );
     this.router.post(
       "/password-reset",
       authenticate,
       restrictTokens(Token.RESET_PASSWORD, Token.ACCESS),
-      controller.resetPassword.bind(controller)
+      controller.resetPassword.bind(controller),
     );
   }
 }

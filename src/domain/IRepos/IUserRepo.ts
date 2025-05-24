@@ -6,7 +6,7 @@ export interface IUserRepo {
   findByEmail(email: string): Promise<any>;
   updateEmailVerification(
     email: string,
-    isEmailVerified: boolean
+    isEmailVerified: boolean,
   ): Promise<User>;
   updatePassword(userId: string, newPassword: string): Promise<void>;
 }
