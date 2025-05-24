@@ -1,11 +1,17 @@
-import { IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Length,
+} from "class-validator";
 import { Epic } from "../entities";
 
 export class CreateEpicDto {
+  @IsOptional()
   @IsString()
   @Length(1, 100)
-  @IsNotEmpty()
-  key!: string;
+  key?: string;
 
   @IsString()
   @Length(1, 100)
@@ -45,7 +51,6 @@ export class EpicResponseDto {
   key: string;
   title: string;
   description: string;
-  assignee?: string;
   assigneeUser?: {
     id: string;
     fullName: string;
@@ -60,7 +65,6 @@ export class EpicResponseDto {
     this.key = epic.key;
     this.title = epic.title;
     this.description = epic.description;
-    this.assignee = epic.assignee;
     this.projectId = epic.projectId;
     this.createdAt = epic.createdAt;
     this.updatedAt = epic.updatedAt;
@@ -69,7 +73,7 @@ export class EpicResponseDto {
       this.assigneeUser = {
         id: epic.assigneeUser.id,
         fullName: epic.assigneeUser.fullName,
-        email: epic.assigneeUser.email
+        email: epic.assigneeUser.email,
       };
     }
   }

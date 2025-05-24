@@ -40,7 +40,7 @@ export class UserController {
         user.fullName,
         user.email,
         emailConfirmationURL,
-        "email-confirmation"
+        "email-confirmation",
       );
       res
         .status(201)
@@ -99,7 +99,7 @@ export class UserController {
           user.fullName,
           user.email,
           resetURL,
-          "forget-password"
+          "forget-password",
         );
       }
       res.status(200).json({
@@ -127,7 +127,7 @@ export class UserController {
       await this.userService.resetPassword(
         email,
         password,
-        tokenType === Token.ACCESS ? oldPassword : null
+        tokenType === Token.ACCESS ? oldPassword : null,
       );
       res.status(200).json({
         success: true,

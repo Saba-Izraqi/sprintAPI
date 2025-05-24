@@ -1,66 +1,58 @@
 import { injectable, inject } from "tsyringe";
 import { IEpicRepo } from "../../domain/IRepos/IEpicRepo";
-import { CreateEpicDto, EpicResponseDto, UpdateEpicDto } from "../../domain/DTOs/epicDTO";
 import { Epic } from "../../domain/entities";
+import {
+  CreateEpicDto,
+  UpdateEpicDto,
+  EpicResponseDto,
+} from "../../domain/DTOs/epicDTO";
 import { UserError } from "../exceptions";
 
 @injectable()
 export class EpicService {
   constructor(@inject("IEpicRepo") private epicRepo: IEpicRepo) {}
 
-  async getAllEpics(projectId: string): Promise<EpicResponseDto[]> {
-    const epics = await this.epicRepo.findAll(projectId);
-    return epics.map(epic => new EpicResponseDto(epic));
+  async getAll(projectId: string): Promise<EpicResponseDto[]> {
+    const epics = await this.epicRepo.get(projectId);
+    return epics.map((epic) => new EpicResponseDto(epic));
   }
 
-  async getEpicById(id: string): Promise<EpicResponseDto> {
-    const epic = await this.epicRepo.findById(id);
+  async getById(id: string): Promise<EpicResponseDto> {
+    const epic = await this.epicRepo.getById(id);
     if (!epic) {
-      throw new UserError([`Epic with ID ${id} not found.`], 404);
+      throw new UserError([`Epic with ID ${id} not found`], 404);
     }
     return new EpicResponseDto(epic);
   }
 
-  async getEpicByKey(key: string, projectId: string): Promise<EpicResponseDto> {
-    const epic = await this.epicRepo.findByKey(key, projectId);
-    if (!epic) {
-      throw new UserError([`Epic with key ${key} not found in this project.`], 404);
+  async getByKey(key: string, projectId: string): Promise<EpicResponseDto> {
+    const epics = await this.epicRepo.find({ key, projectId });
+    if (epics.length === 0) {
+      throw new UserError(
+        [`Epic with key ${key} not found in project ${projectId}`],
+        404,
+      );
     }
-    return new EpicResponseDto(epic);
+    return new EpicResponseDto(epics[0]);
   }
-
-  async createEpic(dto: CreateEpicDto): Promise<EpicResponseDto> {
-    // Check if the key is already in use in this project
-    const existingEpic = await this.epicRepo.findByKey(dto.key, dto.projectId);
-    if (existingEpic) {
-      throw new UserError([`Epic with key ${dto.key} already exists in this project.`], 409);
-    }
-
-    const epicData: Partial<Epic> = {
-      ...dto
-    };
-
-    const newEpic = await this.epicRepo.create(epicData);
+  async create(dto: CreateEpicDto): Promise<EpicResponseDto> {
+    const newEpic = await this.epicRepo.create(dto);
     return new EpicResponseDto(newEpic);
   }
 
-  async updateEpic(id: string, dto: UpdateEpicDto): Promise<EpicResponseDto> {
-    // Check if the epic exists
-    const existingEpic = await this.epicRepo.findById(id);
-    if (!existingEpic) {
-      throw new UserError([`Epic with ID ${id} not found.`], 404);
-    }
-
+  async update(id: string, dto: UpdateEpicDto): Promise<EpicResponseDto> {
     const updatedEpic = await this.epicRepo.update(id, dto);
+    if (!updatedEpic) {
+      throw new UserError([`Epic with ID ${id} not found`], 404);
+    }
     return new EpicResponseDto(updatedEpic);
   }
 
-  async deleteEpic(id: string): Promise<boolean> {
-    const existingEpic = await this.epicRepo.findById(id);
-    if (!existingEpic) {
-      throw new UserError([`Epic with ID ${id} not found.`], 404);
+  async delete(id: string): Promise<boolean> {
+    const result = await this.epicRepo.delete(id);
+    if (!result) {
+      throw new UserError([`Cannot find an epic with id ${id}`], 404);
     }
-
-    return await this.epicRepo.delete(id);
+    return result;
   }
 }

@@ -10,58 +10,55 @@ import { UserError } from "../../app/exceptions";
 export class EpicController {
   constructor(@inject(EpicService) private epicService: EpicService) {}
 
-  async getAllEpics(req: Request, res: Response, next: NextFunction) {
+  async get(req: Request, res: Response, next: NextFunction) {
     try {
       const { projectId } = req.params;
-      const epics = await this.epicService.getAllEpics(projectId);
+      const epics = await this.epicService.getAll(projectId);
       res.status(200).json({ epics, success: true });
     } catch (error) {
       next(error);
     }
   }
 
-  async getEpicById(req: Request, res: Response, next: NextFunction) {
+  async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const epic = await this.epicService.getEpicById(id);
+      const epic = await this.epicService.getById(id);
       res.status(200).json({ epic, success: true });
     } catch (error) {
       next(error);
     }
   }
 
-  async getEpicByKey(req: Request, res: Response, next: NextFunction) {
+  async getByKey(req: Request, res: Response, next: NextFunction) {
     try {
       const { key, projectId } = req.params;
-      const epic = await this.epicService.getEpicByKey(key, projectId);
+      const epic = await this.epicService.getByKey(key, projectId);
       res.status(200).json({ epic, success: true });
     } catch (error) {
       next(error);
     }
-  }   async createEpic(req: Request, res: Response, next: NextFunction) {
+  }
+
+  async create(req: Request, res: Response, next: NextFunction) {
     try {
-      if (req.params.projectId) {
-        req.body.projectId = req.params.projectId;
-      }
-      
-      if (!req.body.projectId) {
-        throw new UserError(["Project ID is required"], 400);
-      }
-      
+      const { projectId } = req.params;
+      req.body.projectId = projectId;
+
       const dto = plainToInstance(CreateEpicDto, req.body);
       const errors = await validate(dto);
       if (errors.length) {
         throw new UserError(errors);
       }
-      
-      const epic = await this.epicService.createEpic(dto);
+
+      const epic = await this.epicService.create(dto);
       res.status(201).json({ epic, success: true });
     } catch (error) {
       next(error);
     }
   }
-  
-  async updateEpic(req: Request, res: Response, next: NextFunction) {
+
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       const dto = plainToInstance(UpdateEpicDto, req.body);
@@ -69,20 +66,21 @@ export class EpicController {
       if (errors.length) {
         throw new UserError(errors);
       }
-      
-      const updatedEpic = await this.epicService.updateEpic(id, dto);
+
+      const updatedEpic = await this.epicService.update(id, dto);
       res.status(200).json({ epic: updatedEpic, success: true });
     } catch (error) {
       next(error);
     }
   }
 
-  
-  async deleteEpic(req: Request, res: Response, next: NextFunction) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      await this.epicService.deleteEpic(id);
-      res.status(200).json({ success: true, message: "Epic deleted successfully" });
+      await this.epicService.delete(id);
+      res
+        .status(200)
+        .json({ success: true, message: "Epic deleted successfully" });
     } catch (error) {
       next(error);
     }
