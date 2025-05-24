@@ -32,16 +32,44 @@ export class EpicRepo implements IEpicRepo {
     });
   }
   async create(epicData: Partial<Epic>): Promise<Epic> {
-    if (!epicData.key && epicData.projectId) {
-      epicData.key = await this.generateEpicKey(epicData.projectId);
-    }
+    try {
+      if (!epicData.key && epicData.projectId) {
+        epicData.key = await this.generateEpicKey(epicData.projectId);
+      }
 
-    const epic = this._epicRepo.create(epicData);
-    return await this._epicRepo.save(epic);
+      // Remove unwanted fields that might come from JWT token or other sources
+      const cleanEpicData = {
+        key: epicData.key,
+        title: epicData.title,
+        description: epicData.description,
+        assignee: epicData.assignee,
+        projectId: epicData.projectId
+      };
+      
+      const epic = this._epicRepo.create(cleanEpicData);
+      const savedEpic = await this._epicRepo.save(epic);
+      
+      // Fetch the saved epic with relations to include assigneeUser
+      const fullEpic = await this.getById(savedEpic.id);
+      
+      return fullEpic || savedEpic;
+    } catch (error) {
+      console.error('Error creating epic:', error);
+      throw error;
+    }
   }
 
   async update(id: string, epicData: Partial<Epic>): Promise<Epic | null> {
-    const result = await this._epicRepo.update(id, epicData);
+    // Clean the data by only selecting the epic-specific fields for update
+    const cleanEpicData: Partial<Epic> = {};
+    
+    if (epicData.title !== undefined) cleanEpicData.title = epicData.title;
+    if (epicData.description !== undefined) cleanEpicData.description = epicData.description;
+    if (epicData.assignee !== undefined) cleanEpicData.assignee = epicData.assignee;
+    
+    console.log('Updating epic with clean data:', cleanEpicData);
+
+    const result = await this._epicRepo.update(id, cleanEpicData);
 
     if (!result.affected || result.affected === 0) {
       return null;

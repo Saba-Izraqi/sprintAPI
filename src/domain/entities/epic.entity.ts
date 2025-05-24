@@ -25,11 +25,11 @@ export class Epic extends BaseEntity {
   description!: string;
 
   @Column({ nullable: true })
-  assignee!: string;
+  assignee?: string;
 
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "assignee", referencedColumnName: "id" })
-  assigneeUser!: User;
+  assigneeUser?: User;
 
   @Column()
   projectId!: string;
