@@ -1,6 +1,5 @@
 import { injectable } from "tsyringe";
-import { IProjectRepo } from "../../../domain/IRepos/IProjectRepo";
-import { Project } from "../../../domain/entities";
+import { FindProjectOptions, IProjectRepo } from "../../../domain/IRepos/IProjectRepo";
 import { AppDataSource } from "../data-source";
 import { getDBError } from "../utils/handleDBErrors";
 import {
@@ -8,6 +7,7 @@ import {
   UpdateProjectDTO,
 } from "../../../domain/DTOs/projectDTO";
 import { FindOptionsWhere } from "typeorm";
+import { Project } from "../../../domain/entities";
 @injectable()
 export class ProjectRepo implements IProjectRepo {
   private _projectRepo;
@@ -41,9 +41,9 @@ export class ProjectRepo implements IProjectRepo {
     }
   }
 
-  async find(where: FindOptionsWhere<Project>): Promise<Project[]> {
+  async find(options: FindProjectOptions): Promise<Project[]> {
     try {
-      return await this._projectRepo.find({ where });
+      return await this._projectRepo.find({ where: options });
     } catch (error) {
       throw getDBError(error);
     }
