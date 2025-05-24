@@ -6,7 +6,6 @@ import {
   CreateProjectDto,
   UpdateProjectDTO,
 } from "../../../domain/DTOs/projectDTO";
-import { FindOptionsWhere } from "typeorm";
 import { Project } from "../../../domain/entities";
 @injectable()
 export class ProjectRepo implements IProjectRepo {

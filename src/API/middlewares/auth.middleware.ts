@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { Token } from "../enums/token";
-
 /**
  * Middleware to authenticate incoming requests by verifying the provided JWT token.
  *

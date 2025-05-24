@@ -10,7 +10,7 @@ export interface FindProjectOptions {
 
 export interface IProjectRepo {
   create(dto: CreateProjectDto): Promise<Project>;
-  update(project: UpdateProjectDTO): Promise<Project>;
+  update(dto: UpdateProjectDTO): Promise<Project>;
   delete(id: string): Promise<void>;
   find(options: FindProjectOptions): Promise<Project[]>;
 }
