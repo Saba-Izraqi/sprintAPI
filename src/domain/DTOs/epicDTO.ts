@@ -8,11 +8,6 @@ import {
 import { Epic } from "../entities";
 
 export class CreateEpicDto {
-  @IsOptional()
-  @IsString()
-  @Length(1, 100)
-  key?: string;
-
   @IsString()
   @Length(1, 100)
   @IsNotEmpty()

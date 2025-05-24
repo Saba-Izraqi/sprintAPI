@@ -30,15 +30,13 @@ export class EpicRepo implements IEpicRepo {
       where: options,
       relations: ["assigneeUser", "issues"],
     });
-  }
-  async create(epicData: Partial<Epic>): Promise<Epic> {
+  }  async create(epicData: Partial<Epic>): Promise<Epic> {
     try {
-      if (!epicData.key && epicData.projectId) {
-        epicData.key = await this.generateEpicKey(epicData.projectId);
-      }
+      // Always generate a new key automatically
+      const key = await this.generateEpicKey(epicData.projectId!);
 
       const cleanEpicData = {
-        key: epicData.key,
+        key: key,
         title: epicData.title,
         description: epicData.description,
         assignee: epicData.assignee,
