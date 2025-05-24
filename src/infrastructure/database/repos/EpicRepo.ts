@@ -1,9 +1,7 @@
 import { injectable } from "tsyringe";
-import { IEpicRepo } from "../../../domain/IRepos/IEpicRepo";
 import { AppDataSource } from "../data-source";
-import { Epic } from "../../../domain/entities";
-import { getDBError } from "../utils/handleDBErrors";
-import { UserError } from "../../../app/exceptions";
+import { Epic, Issue, Project } from "../../../domain/entities";
+import { IEpicRepo } from "../../../domain/IRepos/IEpicRepo";
 
 @injectable()
 export class EpicRepo implements IEpicRepo {
@@ -13,77 +11,86 @@ export class EpicRepo implements IEpicRepo {
     this._epicRepo = AppDataSource.getRepository(Epic);
   }
 
-  async findAll(projectId: string): Promise<Epic[]> {
-    try {
-      return await this._epicRepo.find({
-        where: { projectId },
-        relations: ["assigneeUser", "project"],
-      });
-    } catch (error) {
-      throw getDBError(error);
-    }
+  async get(projectId: string): Promise<Epic[]> {
+    return await this._epicRepo.find({
+      where: { projectId },
+      relations: ["assigneeUser"],
+    });
   }
 
-  async findById(id: string): Promise<Epic | null> {
-    try {
-      const epic = await this._epicRepo.findOne({
-        where: { id },
-        relations: ["assigneeUser", "project"],
-      });
-      return epic;
-    } catch (error) {
-      throw getDBError(error);
-    }
+  async getById(id: string): Promise<Epic | null> {
+    return await this._epicRepo.findOne({
+      where: { id },
+      relations: ["assigneeUser", "issues"],
+    });
   }
 
+  async find(options: Partial<Epic>): Promise<Epic[]> {
+    return await this._epicRepo.find({
+      where: options,
+      relations: ["assigneeUser", "issues"],
+    });
+  }
   async create(epicData: Partial<Epic>): Promise<Epic> {
-    try {
-      const epic = this._epicRepo.create(epicData);
-      return await this._epicRepo.save(epic);
-    } catch (error) {
-      throw getDBError(error);
+    if (!epicData.key && epicData.projectId) {
+      epicData.key = await this.generateEpicKey(epicData.projectId);
     }
+
+    const epic = this._epicRepo.create(epicData);
+    return await this._epicRepo.save(epic);
   }
 
-  async update(id: string, epicData: Partial<Epic>): Promise<Epic> {
-    try {
-      const result = await this._epicRepo.update(id, epicData);
-      if (!result.affected) {
-        throw new UserError([`Epic with ID ${id} not found.`], 404);
-      }
-      
-      const updatedEpic = await this._epicRepo.findOne({
-        where: { id },
-        relations: ["assigneeUser", "project"],
-      });
-      
-      if (!updatedEpic) {
-        throw new UserError([`Epic with ID ${id} not found after update.`], 404);
-      }
-      
-      return updatedEpic;
-    } catch (error) {
-      throw getDBError(error);
+  async update(id: string, epicData: Partial<Epic>): Promise<Epic | null> {
+    const result = await this._epicRepo.update(id, epicData);
+
+    if (!result.affected || result.affected === 0) {
+      return null;
     }
+
+    return await this.getById(id);
   }
 
   async delete(id: string): Promise<boolean> {
-    try {
-      const result = await this._epicRepo.softDelete(id);
-      return !!result.affected;
-    } catch (error) {
-      throw getDBError(error);
-    }
+    const result = await this._epicRepo.delete(id);
+    return result.affected ? result.affected > 0 : false;
   }
+  private async generateEpicKey(projectId: string): Promise<string> {
+    const projectRepo = AppDataSource.getRepository(Project);
+    const project = await projectRepo.findOne({ where: { id: projectId } });
 
-  async findByKey(key: string, projectId: string): Promise<Epic | null> {
-    try {
-      return await this._epicRepo.findOne({
-        where: { key, projectId },
-        relations: ["assigneeUser", "project"],
-      });
-    } catch (error) {
-      throw getDBError(error);
+    if (!project) {
+      throw new Error(`Project with ID ${projectId} not found`);
     }
+
+    const epicRepo = AppDataSource.getRepository(Epic);
+    const issueRepo = AppDataSource.getRepository(Issue);
+
+    const [epics, issues] = await Promise.all([
+      epicRepo.find({
+        where: { projectId },
+        select: ["key"],
+      }),
+      issueRepo.find({
+        where: { projectId },
+        select: ["key"],
+      }),
+    ]);
+
+    const keyPrefix = project.keyPrefix;
+    const keyPattern = new RegExp(`^${keyPrefix}-(\\d+)$`);
+
+    let highestNumber = 0;
+
+    [...epics, ...issues].forEach((item) => {
+      const match = item.key.match(keyPattern);
+      if (match) {
+        const number = parseInt(match[1], 10);
+        if (number > highestNumber) {
+          highestNumber = number;
+        }
+      }
+    });
+
+    return `${keyPrefix}-${highestNumber + 1}`;
   }
 }

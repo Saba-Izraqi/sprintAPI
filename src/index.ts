@@ -10,9 +10,9 @@ dotenv.config();
   await ensureDatabaseExists({
     dbName: "sprintify",
     user: "postgres",
-    password: process.env.DB_PASSWORD as string, 
+    password: process.env.DB_PASSWORD as string,
   });
-  
+
   await AppDataSource.initialize();
   console.success("📦 DB connected & schema synced");
 

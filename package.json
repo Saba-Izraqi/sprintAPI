@@ -2,10 +2,11 @@
   "name": "sprint-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
-  "scripts": {
+  "main": "index.ts",  "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
     "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts"
   },

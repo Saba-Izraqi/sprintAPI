@@ -3,10 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from "typeorm";
-import { BaseEntity, Project, User } from ".";
+import { BaseEntity, Project, User, Issue } from ".";
 
 @Entity("epics")
 @Unique("Key_uniqueness_scoped_per_board", ["key", "projectId"])
@@ -36,4 +37,7 @@ export class Epic extends BaseEntity {
   @ManyToOne(() => Project, { onDelete: "CASCADE", nullable: false })
   @JoinColumn({ name: "projectId", referencedColumnName: "id" })
   project!: Project;
+
+  @OneToMany(() => Issue, (issue) => issue.epic)
+  issues!: Issue[];
 }

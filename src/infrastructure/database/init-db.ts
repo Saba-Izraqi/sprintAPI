@@ -15,10 +15,10 @@ export const ensureDatabaseExists = async ({
   user,
   password,
   host = "localhost",
-  port = Number(process.env.DB_PORT) ,
+  port = Number(process.env.DB_PORT),
 }: IDatabaseConfig) => {
   const client = new Client({
-    user,  
+    user,
     password,
     host,
     port,
@@ -30,7 +30,7 @@ export const ensureDatabaseExists = async ({
 
     const res = await client.query(
       `SELECT 1 FROM pg_database WHERE datname = $1`,
-      [dbName]
+      [dbName],
     );
 
     if (res.rowCount === 0) {
@@ -47,4 +47,3 @@ export const ensureDatabaseExists = async ({
     await client.end();
   }
 };
-

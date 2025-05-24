@@ -9,7 +9,7 @@ const errorMiddleware: ErrorRequestHandler = (
   err: Error | UserError | ServerError | DBConstraintError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   if (err instanceof UserError || err instanceof DBConstraintError) {
     res.status(err.statusCode).json({
