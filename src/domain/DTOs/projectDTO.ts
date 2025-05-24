@@ -6,9 +6,11 @@ import {
   Length,
   Matches,
 } from "class-validator";
-import { UserResponseDto } from "./userDTO";
+import { Transform } from "class-transformer";
 import { Project } from "../entities";
-import { ProjectPermission } from '../enums/types';
+import { UserResponseDto } from "./userDTO";
+import { ProjectPermission } from "../enums/types";
+import { generateKeyPrefix } from "../../infrastructure/database/utils/generateKeyPrefix";
 
 export class CreateProjectDto {
   @IsNotEmpty()
@@ -19,6 +21,8 @@ export class CreateProjectDto {
 
   @IsNotEmpty()
   @IsString()
+  @Transform(({ value }) => value.toLowerCase())
+  @Transform(({ obj }) => generateKeyPrefix(obj.name))
   @Matches(/^[A-Za-z]{1,5}$/, {
     message: "Project key must be 1-5 letters, not case sensitive",
   })
@@ -38,6 +42,7 @@ export class UpdateProjectDTO {
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => value.toLowerCase())
   @Matches(/^[A-Za-z]{1,5}$/, {
     message: "Project key must be 1-5 letters, not case sensitive",
   })
