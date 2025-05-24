@@ -37,7 +37,6 @@ export class EpicRepo implements IEpicRepo {
         epicData.key = await this.generateEpicKey(epicData.projectId);
       }
 
-      // Remove unwanted fields that might come from JWT token or other sources
       const cleanEpicData = {
         key: epicData.key,
         title: epicData.title,
@@ -49,25 +48,18 @@ export class EpicRepo implements IEpicRepo {
       const epic = this._epicRepo.create(cleanEpicData);
       const savedEpic = await this._epicRepo.save(epic);
       
-      // Fetch the saved epic with relations to include assigneeUser
       const fullEpic = await this.getById(savedEpic.id);
-      
-      return fullEpic || savedEpic;
+        return fullEpic || savedEpic;
     } catch (error) {
-      console.error('Error creating epic:', error);
       throw error;
     }
   }
 
   async update(id: string, epicData: Partial<Epic>): Promise<Epic | null> {
-    // Clean the data by only selecting the epic-specific fields for update
     const cleanEpicData: Partial<Epic> = {};
-    
-    if (epicData.title !== undefined) cleanEpicData.title = epicData.title;
+      if (epicData.title !== undefined) cleanEpicData.title = epicData.title;
     if (epicData.description !== undefined) cleanEpicData.description = epicData.description;
     if (epicData.assignee !== undefined) cleanEpicData.assignee = epicData.assignee;
-    
-    console.log('Updating epic with clean data:', cleanEpicData);
 
     const result = await this._epicRepo.update(id, cleanEpicData);
 
