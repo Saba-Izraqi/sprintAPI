@@ -8,12 +8,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { BaseEntity, Project, User } from ".";
-
-export enum ProjectPermission {
-  MEMBER = 0,
-  MODERATOR = 1,
-  ADMINISTRATOR = 2,
-}
+import { ProjectPermission } from '../enums/types';
 
 @Entity("project_members")
 @Unique(["user", "project"]) // Prevent duplicate memberships

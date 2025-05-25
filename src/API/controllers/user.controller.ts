@@ -20,17 +20,17 @@ export class UserController {
       if (errors.length) {
         throw new UserError(errors);
       }
-      const user = await this.userService.registerUser(dto);
+      const user = await this.userService.register(dto);
       const token = genToken({
-        id: user.id,
-        email: user.email,
+        userId: user.id,
+        userEmail: user.email,
         isEmailVerified: user.isEmailVerified,
         tokenType: Token.ACCESS,
       });
 
       const emailVerificationToken = genToken({
-        id: user.id,
-        email: user.email,
+        userId: user.id,
+        userEmail: user.email,
         isEmailVerified: user.isEmailVerified,
         tokenType: Token.EMAIL_VERIFICATION,
       });
@@ -58,10 +58,10 @@ export class UserController {
         throw new UserError(errors);
       }
 
-      const user = await this.userService.loginUser(dto);
+      const user = await this.userService.login(dto);
       const token = genToken({
-        id: user.id,
-        email: user.email,
+        userId: user.id,
+        userEmail: user.email,
         isEmailVerified: user.isEmailVerified,
         tokenType: Token.ACCESS,
       });
@@ -85,8 +85,8 @@ export class UserController {
     const { email } = req.body;
 
     const token = genToken({
-      email,
-      id: "unknown",
+      userEmail: email,
+      userId: "unknown",
       isEmailVerified: false,
       tokenType: Token.RESET_PASSWORD,
     });

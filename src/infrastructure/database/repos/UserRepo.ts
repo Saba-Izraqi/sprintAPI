@@ -15,7 +15,7 @@ export class UserRepo implements IUserRepo {
     this._userRepo = AppDataSource.getRepository(User);
   }
 
-  async createUser(user: RegisterUserDto) {
+  async create(user: RegisterUserDto) {
     try {
       const newUser = this._userRepo.create(user);
       return await this._userRepo.save(newUser);
