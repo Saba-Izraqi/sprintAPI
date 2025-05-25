@@ -39,7 +39,7 @@ export const authenticate = (
       "secretKeyPlaceHolderWillReplaceLater"
     ) as JwtPayload;
 
-    if (!decoded || !decoded.email) {
+    if (!decoded || !decoded.userEmail) {
       res.status(401).json({ message: "Not authorized, email not found" });
       return;
     }
