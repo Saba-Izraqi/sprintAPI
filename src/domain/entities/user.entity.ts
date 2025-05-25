@@ -4,6 +4,7 @@ import {
   Column,
   Index,
   OneToMany,
+  ManyToMany,
 } from "typeorm";
 import { BaseEntity, Issue, ProjectMember } from ".";
 
@@ -38,4 +39,5 @@ export class User extends BaseEntity {
   issues!: Issue[];
 
   projectMemberships!: ProjectMember[];
+ 
 }
