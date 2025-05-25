@@ -22,7 +22,6 @@ export class CreateProjectDto {
   @IsNotEmpty()
   @IsString()
   @Transform(({ value }) => value.toLowerCase())
-  @Transform(({ obj }) => generateKeyPrefix(obj.name))
   @Matches(/^[A-Za-z]{1,5}$/, {
     message: "Project key must be 1-5 letters, not case sensitive",
   })

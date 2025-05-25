@@ -9,18 +9,23 @@ import {
   ProjectResponseDto,
 } from "../../domain/DTOs/projectDTO";
 import { UserError } from "../../app/exceptions";
+import { FindProjectOptions } from "../../domain/IRepos/IProjectRepo";
 
 @injectable()
 export class ProjectController {
   constructor(@inject(ProjectService) private projectService: ProjectService) {}
 
   async create(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(CreateProjectDto, req.body);
+    const dto = plainToInstance(CreateProjectDto, {
+      ...req.body,
+      createdById: req.body.userId,
+    });
     try {
       const errors = await validate(dto);
       if (errors.length) {
         throw new UserError(errors);
       }
+
       const project = await this.projectService.create(dto);
       res
         .status(201)
@@ -57,7 +62,14 @@ export class ProjectController {
   }
 
   async find(req: Request, res: Response, next: NextFunction) {
-    const where = req.query as Partial<CreateProjectDto>;
+    const { userId } = req.body;
+    const query = req.query;
+    // TODO: Handle the userId to search for projects that the user is a member of
+    const where: FindProjectOptions = {
+      ...query,
+      userId,
+    };
+
     try {
       const projects = await this.projectService.find(where);
       res.status(200).json({

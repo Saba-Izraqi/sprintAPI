@@ -41,6 +41,7 @@ export class ProjectRepo implements IProjectRepo {
   }
 
   async find(options: FindProjectOptions): Promise<Project[]> {
+    // TODO: update options to handle userId
     try {
       return await this._projectRepo.find({ where: options });
     } catch (error) {

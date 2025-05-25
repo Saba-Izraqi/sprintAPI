@@ -4,11 +4,18 @@ import { ProjectController } from "../controllers/project.controller";
 import { authenticate } from "../middlewares/auth.middleware";
 import { restrictTokens } from "../middlewares/tokenTypes.middleware";
 import { Token } from "../enums/token";
-import { restrictToAdmin } from "../middlewares/permissions.middleware";
+import { restrictTo } from "../middlewares/permissions.middleware";
+import { ProjectPermission } from "../../domain/enums/types";
 
 export class ProjectRoutes extends BaseRoute {
   public path = "/project";
 
+  /**
+   ** POST api/v1/project/ { body: { ...dto } }
+   ** patch api/v1/project/ { body: { ...dto } }
+   ** DELETE api/v1/project/:id
+    ** GET api/v1/project/ { query: { ...FindProjectOptions } }
+   */
   protected initRoutes(): void {
     const controller = container.resolve(ProjectController);
 
@@ -16,7 +23,6 @@ export class ProjectRoutes extends BaseRoute {
       "/",
       authenticate,
       restrictTokens(Token.ACCESS),
-      restrictToAdmin,
       controller.create.bind(controller)
     );
 
@@ -24,7 +30,7 @@ export class ProjectRoutes extends BaseRoute {
       "/",
       authenticate,
       restrictTokens(Token.ACCESS),
-      restrictToAdmin,
+      restrictTo(ProjectPermission.ADMINISTRATOR),
       controller.update.bind(controller)
     );
 
@@ -32,7 +38,7 @@ export class ProjectRoutes extends BaseRoute {
       "/:id",
       authenticate,
       restrictTokens(Token.ACCESS),
-      restrictToAdmin,
+      restrictTo(ProjectPermission.ADMINISTRATOR),
       controller.delete.bind(controller)
     );
 
