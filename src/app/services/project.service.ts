@@ -17,6 +17,9 @@ export class ProjectService {
     const project = this.projectRepo.create(dto);
     // TODO: add the creator as a member of the project with role ADMINISTRATOR
     // * Cannot address this [todo] until the projectMembers service is implemented
+
+    // TODO: Should create the default status, columns and sprint for the project
+    // * Cannot address this [todo] until the status, columns and sprint services are implemented
     return project;
   }
 
