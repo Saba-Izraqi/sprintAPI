@@ -55,7 +55,9 @@ export class EpicResponseDto {
     id: string;
     fullName: string;
     email: string;
+    image?: string; // Added image property
   };
+  issues?: any[]; // Added issues property
   projectId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -74,7 +76,11 @@ export class EpicResponseDto {
         id: epic.assigneeUser.id,
         fullName: epic.assigneeUser.fullName,
         email: epic.assigneeUser.email,
+        image: epic.assigneeUser.image, // Added image property
       };
     }
+    if (epic.issues) { // Added issues property
+      this.issues = epic.issues; // Added issues property
+    } // Added issues property
   }
 }

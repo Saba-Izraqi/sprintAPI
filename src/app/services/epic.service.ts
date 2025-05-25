@@ -12,7 +12,7 @@ import { UserError } from "../exceptions";
 export class EpicService {
   constructor(@inject("IEpicRepo") private epicRepo: IEpicRepo) {}
 
-  async getAll(projectId: string): Promise<EpicResponseDto[]> {
+  async get(projectId: string): Promise<EpicResponseDto[]> {
     const epics = await this.epicRepo.get(projectId);
     return epics.map((epic) => new EpicResponseDto(epic));
   }

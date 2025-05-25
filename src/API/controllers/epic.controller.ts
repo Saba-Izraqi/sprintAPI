@@ -13,7 +13,7 @@ export class EpicController {
   async get(req: Request, res: Response, next: NextFunction) {
     try {
       const { projectId } = req.params;
-      const epics = await this.epicService.getAll(projectId);
+      const epics = await this.epicService.get(projectId);
       res.status(200).json({ epics, success: true });
     } catch (error) {
       next(error);

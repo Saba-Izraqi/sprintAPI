@@ -27,10 +27,11 @@ export class EpicRepo implements IEpicRepo {
 
   async find(options: Partial<Epic>): Promise<Epic[]> {
     return await this._epicRepo.find({
-      where: options,
+      where: { projectId: options.projectId, ...options },
       relations: ["assigneeUser", "issues"],
     });
   }
+
   async create(epicData: Partial<Epic>): Promise<Epic> {
     try {
       if (!epicData.key && epicData.projectId) {
@@ -39,11 +40,8 @@ export class EpicRepo implements IEpicRepo {
 
       // Remove unwanted fields that might come from JWT token or other sources
       const cleanEpicData = {
-        key: epicData.key,
-        title: epicData.title,
-        description: epicData.description,
-        assignee: epicData.assignee,
-        projectId: epicData.projectId
+        ...epicData,
+        key: epicData.key, // Ensure key is present
       };
       
       const epic = this._epicRepo.create(cleanEpicData);
@@ -61,13 +59,9 @@ export class EpicRepo implements IEpicRepo {
 
   async update(id: string, epicData: Partial<Epic>): Promise<Epic | null> {
     // Clean the data by only selecting the epic-specific fields for update
-    const cleanEpicData: Partial<Epic> = {};
+    const cleanEpicData: Partial<Epic> = { ...epicData };
     
-    if (epicData.title !== undefined) cleanEpicData.title = epicData.title;
-    if (epicData.description !== undefined) cleanEpicData.description = epicData.description;
-    if (epicData.assignee !== undefined) cleanEpicData.assignee = epicData.assignee;
     
-    console.log('Updating epic with clean data:', cleanEpicData);
 
     const result = await this._epicRepo.update(id, cleanEpicData);
 
@@ -80,7 +74,7 @@ export class EpicRepo implements IEpicRepo {
 
   async delete(id: string): Promise<boolean> {
     const result = await this._epicRepo.delete(id);
-    return result.affected ? result.affected > 0 : false;
+    return !!(result.affected && result.affected > 0);
   }
   private async generateEpicKey(projectId: string): Promise<string> {
     const projectRepo = AppDataSource.getRepository(Project);
