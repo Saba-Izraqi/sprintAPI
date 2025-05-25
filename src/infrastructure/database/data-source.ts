@@ -14,9 +14,9 @@ import {
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
-  port: 5432,
+  port: 5001,
   username: "postgres",
-  password: "root",
+  password: "20032003",
   database: "sprintify",
   synchronize: true, // dev only! disable in prod
   logging: ["error", "warn"], // comment out in prod
