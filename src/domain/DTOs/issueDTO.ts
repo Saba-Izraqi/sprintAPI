@@ -1,5 +1,5 @@
-import { IsString, IsNumber, IsOptional, Length, IsUUID } from "class-validator";
-import { RelatedIssueType } from "../enums/types";
+import { IsString, IsNumber, IsOptional, Length, IsUUID, IsEnum } from "class-validator";
+import { RelatedIssueType, IssueType } from "../enums/types";
 import { Expose, Type, Transform } from 'class-transformer'; // Added Expose, Type, Transform
 
 export class CreateIssueDto {
@@ -31,6 +31,10 @@ export class CreateIssueDto {
   @IsOptional()
   @IsUUID()
   statusId?: string;
+
+  @IsEnum(IssueType)
+  @IsOptional()
+  type: IssueType = IssueType.TASK;
 }
 
 export class UpdateIssueDto {
@@ -62,6 +66,10 @@ export class UpdateIssueDto {
   @IsOptional()
   @IsUUID()
   statusId?: string;
+
+  @IsOptional()
+  @IsEnum(IssueType)
+  type?: IssueType;
 }
 
 class BasicUserDto {
@@ -143,7 +151,8 @@ export class IssuePartialResponseDto {
   @Type(() => BasicStatusDto)
   status?: BasicStatusDto;
 
-  // Removed constructor, class-transformer handles mapping
+  @Expose()
+  type!: IssueType; // Added type field
 }
 
 // Full issue response for detailed view
@@ -189,5 +198,6 @@ export class IssueFullResponseDto {
   @Type(() => RelatedIssueLinkDto)
   incomingRelations?: RelatedIssueLinkDto[];
 
-  // Removed constructor, class-transformer handles mapping
+  @Expose()
+  type!: IssueType; // Added type field
 }

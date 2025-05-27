@@ -12,6 +12,10 @@ export class IssueRepo implements IIssueRepo {
   }
 
   async create(issueData: Partial<Issue>): Promise<Issue> {
+    // Always remove id to force new insert
+    if ('id' in issueData) {
+      delete issueData.id;
+    }
     const issue = this.repo.create(issueData);
     return await this.repo.save(issue);
   }

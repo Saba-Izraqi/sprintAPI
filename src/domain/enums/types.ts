@@ -10,3 +10,9 @@ export enum RelatedIssueType {
   DUPLICATES = 2,
   DUPLICATED_BY = -2,
 }
+
+export enum IssueType {
+  BUG = "bug",
+  STORY = "story",
+  TASK = "task",
+}

@@ -15,7 +15,7 @@ export const ensureDatabaseExists = async ({
   user,
   password,
   host = "localhost",
-  port = 5001,
+  port = 5432,
 }: IDatabaseConfig) => {
   const client = new Client({
     user,

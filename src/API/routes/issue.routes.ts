@@ -9,6 +9,7 @@ export class IssueRoutes extends BaseRoute {
   constructor() {
     super();
     this.router = Router({ mergeParams: true });
+    this.initRoutes(); 
   }
 
   protected initRoutes(): void {

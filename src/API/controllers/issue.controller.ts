@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { IssueService } from "../../app/services/issue.service";
 import { CreateIssueDto, UpdateIssueDto } from "../../domain/DTOs/issueDTO";
 import { validate } from "class-validator";
@@ -10,14 +10,10 @@ export class IssueController {
   constructor(@inject(IssueService) private issueService: IssueService) {}
 
   
-  async create(req: Request, res: Response): Promise<void> { // Renamed from createIssue
+  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { projectId } = req.params;
-      const userId = req.user?.id;
-      if (!userId) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-      }
+      const { userId } = req.body; // Changed: get userId from body
 
       const createIssueDto = plainToClass(CreateIssueDto, {
         ...req.body,
@@ -26,27 +22,30 @@ export class IssueController {
 
       const errors = await validate(createIssueDto);
       if (errors.length > 0) {
-        console.log("Validation errors:", JSON.stringify(errors, null, 2)); // <<< ADD THIS LINE TO SEE FULL ERROR DETAILS
-        res.status(400).json({
-          message: "Validation failed",
-          errors: errors.map(error => ({
-            property: error.property,
-            constraints: error.constraints,
-          })),
-        });
-        return;
+        // console.log("Validation errors:", JSON.stringify(errors, null, 2)); // Removed log
+        // Optionally, use console.debug for debugging
+        // console.debug("Validation errors:", JSON.stringify(errors, null, 2));
+        // Instead of sending response, throw error to be handled by error middleware
+        const validationError = new Error("Validation failed");
+        (validationError as any).status = 400;
+        (validationError as any).details = errors.map(error => ({
+          property: error.property,
+          constraints: error.constraints,
+        }));
+        throw validationError;
       }
 
-      const issue = await this.issueService.create(userId, createIssueDto); // Renamed from createIssue
+      const issue = await this.issueService.create(userId, createIssueDto);
 
       res.status(201).json({
         message: "Issue created successfully",
         data: issue,
       });
     } catch (error: any) {
-      res.status(error.status || 500).json({
-        message: error.message || "Internal server error",
-      });
+      // res.status(error.status || 500).json({
+      //   message: error.message || "Internal server error",
+      // });
+      next(error); // Pass error to error middleware
     }
   }
 
@@ -54,12 +53,8 @@ export class IssueController {
   async getAll(req: Request, res: Response): Promise<void> { // Renamed from getProjectIssues
     try {
       const { projectId } = req.params;
-      const userId = req.user?.id;
-
-      if (!userId) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-      }
+      // Use userId from req.body, as set by your auth middleware
+      const userId = req.body.userId;
 
       const {
         sprintId,

@@ -14,7 +14,7 @@ import {
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
-  port: 5001,
+  port: 5432,
   username: "postgres",
   password: "20032003",
   database: "sprintify",
