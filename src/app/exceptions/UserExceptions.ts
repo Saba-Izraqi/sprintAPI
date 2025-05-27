@@ -6,7 +6,7 @@ export class UserError extends Error {
 
   constructor(
     message: string | string[] | ValidationError[],
-    statusCode: number = 400
+    statusCode: number = 400,
   ) {
     let finalMessage: string;
     let errorList: string[] | undefined;
@@ -17,7 +17,7 @@ export class UserError extends Error {
       message[0] instanceof ValidationError
     ) {
       errorList = (message as ValidationError[]).flatMap((err) =>
-        Object.values(err.constraints || {})
+        Object.values(err.constraints || {}),
       );
       finalMessage = errorList.join(", ");
     } else if (Array.isArray(message)) {

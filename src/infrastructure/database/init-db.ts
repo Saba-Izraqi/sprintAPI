@@ -1,7 +1,7 @@
 import { Client } from "pg";
-
+import dotenv from "dotenv";
 const DEFAULT_DB = "postgres";
-
+dotenv.config();
 interface IDatabaseConfig {
   dbName: string;
   user: string;
@@ -15,7 +15,7 @@ export const ensureDatabaseExists = async ({
   user,
   password,
   host = "localhost",
-  port = 5432,
+  port = Number(process.env.DB_PORT),
 }: IDatabaseConfig) => {
   const client = new Client({
     user,
@@ -30,7 +30,7 @@ export const ensureDatabaseExists = async ({
 
     const res = await client.query(
       `SELECT 1 FROM pg_database WHERE datname = $1`,
-      [dbName]
+      [dbName],
     );
 
     if (res.rowCount === 0) {
@@ -47,4 +47,3 @@ export const ensureDatabaseExists = async ({
     await client.end();
   }
 };
-
