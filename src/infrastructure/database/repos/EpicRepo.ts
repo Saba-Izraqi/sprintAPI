@@ -37,11 +37,8 @@ export class EpicRepo implements IEpicRepo {
       const key = await this.generateEpicKey(epicData.projectId!);
 
       const cleanEpicData = {
-        key: epicData.key,
-        title: epicData.title,
-        description: epicData.description,
-        assignee: epicData.assignee,
-        projectId: epicData.projectId
+        ...epicData,
+        key, // ensure key is included
       };
       
       const epic = this._epicRepo.create(cleanEpicData);
@@ -56,11 +53,7 @@ export class EpicRepo implements IEpicRepo {
 
   async update(id: string, epicData: Partial<Epic>): Promise<Epic | null> {
     // Clean the data by only selecting the epic-specific fields for update
-    const cleanEpicData: Partial<Epic> = {};
-    
-    if (epicData.title !== undefined) cleanEpicData.title = epicData.title;
-    if (epicData.description !== undefined) cleanEpicData.description = epicData.description;
-    if (epicData.assignee !== undefined) cleanEpicData.assignee = epicData.assignee;
+    const cleanEpicData: Partial<Epic> = { ...epicData }; // Use spread operator
     
     console.log('Updating epic with clean data:', cleanEpicData);
 
@@ -75,7 +68,7 @@ export class EpicRepo implements IEpicRepo {
 
   async delete(id: string): Promise<boolean> {
     const result = await this._epicRepo.delete(id);
-    return !!(result.affected && result.affected > 0);
+    return !!(result.affected && result.affected > 0); // Ensure boolean return and use &&
   }
   private async generateEpicKey(projectId: string): Promise<string> {
     const projectRepo = AppDataSource.getRepository(Project);
