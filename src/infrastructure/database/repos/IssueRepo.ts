@@ -103,10 +103,7 @@ export class IssueRepo implements IIssueRepo {
         "status",
         "sprint",
         "epic",
-        "outgoingRelations", // Loads RelatedIssue entities
-        "outgoingRelations.targetIssue", // <<< ADD THIS to load the targetIssue for each outgoingRelation
-        "incomingRelations",  // Loads RelatedIssue entities
-        "incomingRelations.sourceIssue"  // <<< ADD THIS to load the sourceIssue for each incomingRelation
+        // Removed outgoingRelations and incomingRelations as per the change request
       ],
     });
   }

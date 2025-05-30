@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, Length, IsUUID, IsEnum } from "class-validator";
-import { RelatedIssueType, IssueType } from "../enums/types";
-import { Expose, Type, Transform } from 'class-transformer'; // Added Expose, Type, Transform
+import { IssueType } from "../enums/types";
+import { Expose, Type } from 'class-transformer'; // Added Expose, Type
 
 export class CreateIssueDto {
   @IsString()
@@ -104,35 +104,6 @@ class BasicStatusDto {
   @Expose() order?: number; // order is optional in Partial, required in Full
 }
 
-class RelatedIssueTargetDto {
-  @Expose() id!: string;
-  @Expose() key!: string;
-  @Expose() title!: string;
-}
-
-class RelatedIssueLinkDto {
-  @Expose() id!: string;
-
-  @Transform(({ obj }) => { // obj is the RelatedIssue entity
-    if (obj.type === undefined) return 'UNKNOWN';
-    const typeKey = Object.keys(RelatedIssueType).find(
-      (key) => RelatedIssueType[key as keyof typeof RelatedIssueType] === obj.type
-    );
-    return typeKey || 'UNKNOWN';
-  })
-  @Expose()
-  relationType!: string;
-
-  @Expose()
-  @Type(() => RelatedIssueTargetDto)
-  targetIssue?: RelatedIssueTargetDto; // For outgoing
-
-  @Expose()
-  @Type(() => RelatedIssueTargetDto)
-  sourceIssue?: RelatedIssueTargetDto; // For incoming
-}
-
-
 // Partial issue response for listing (lightweight)
 export class IssuePartialResponseDto {
   @Expose() id!: string;
@@ -189,14 +160,6 @@ export class IssueFullResponseDto {
   @Expose()
   @Type(() => BasicStatusDto)
   status?: BasicStatusDto;
-
-  @Expose()
-  @Type(() => RelatedIssueLinkDto)
-  outgoingRelations?: RelatedIssueLinkDto[];
-
-  @Expose()
-  @Type(() => RelatedIssueLinkDto)
-  incomingRelations?: RelatedIssueLinkDto[];
 
   @Expose()
   type!: IssueType; // Added type field
