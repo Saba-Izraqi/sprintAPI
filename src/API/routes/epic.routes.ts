@@ -28,5 +28,6 @@ export class EpicRoutes extends BaseRoute {
     this.router.get("/", controller.get.bind(controller));
     this.router.get("/key/:key", controller.getByKey.bind(controller));
     this.router.get("/:id", controller.getById.bind(controller));
+    this.router.get("/:epicId/issues", controller.getEpicIssues.bind(controller));
   }
 }

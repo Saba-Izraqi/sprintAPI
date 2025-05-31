@@ -85,4 +85,15 @@ export class EpicController {
       next(error);
     }
   }
+
+  async getEpicIssues(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { epicId } = req.params;
+      // You may want to add projectId as well if needed: const { projectId } = req.params;
+      const issues = await this.epicService.getEpicIssues(epicId);
+      res.status(200).json({ issues, success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

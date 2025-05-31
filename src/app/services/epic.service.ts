@@ -55,4 +55,14 @@ export class EpicService {
     }
     return result;
   }
+
+  async getEpicIssues(epicId: string) {
+    // You may want to use an IssueRepo for better separation, but here we use the Epic entity's relation
+    const epic = await this.epicRepo.getById(epicId);
+    if (!epic) {
+      throw new UserError([`Epic with ID ${epicId} not found`], 404);
+    }
+    // Assumes epic.issues is loaded (see getById in EpicRepo)
+    return epic.issues || [];
+  }
 }
