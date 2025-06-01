@@ -19,10 +19,10 @@ export class SprintRoutes extends BaseRoute {
     const controller = container.resolve(SprintController);
     this.router.use(authenticate);
     this.router.use(restrictTokens(Token.ACCESS));
-    this.router.get("/", controller.getAll.bind(controller));
-    this.router.get("/:id", controller.getById.bind(controller));
-    this.router.post("/", controller.create.bind(controller));
-    this.router.patch("/:id", controller.update.bind(controller));
-    this.router.delete("/:id", controller.delete.bind(controller));
+    this.router.post("/", authenticate, controller.create.bind(controller));
+    this.router.get("/", authenticate, controller.getAll.bind(controller));
+    this.router.get("/:id", authenticate, controller.getById.bind(controller));
+    this.router.put("/:id", authenticate, controller.update.bind(controller));
+    this.router.delete("/:id", authenticate, controller.delete.bind(controller));
   }
 }

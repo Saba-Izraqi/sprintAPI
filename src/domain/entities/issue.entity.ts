@@ -3,18 +3,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import {
-  BaseEntity,
-  Epic,
-  Project,
-  RelatedIssue,
-  Sprint,
-  Status,
-  User,
-} from ".";
+import { BaseEntity, Epic, Project, Sprint, Status, User } from ".";
+import { IssueType } from "../enums/types";
 
 @Entity("issues")
 export class Issue extends BaseEntity {
@@ -48,6 +40,9 @@ export class Issue extends BaseEntity {
   @Column()
   projectId!: string;
 
+  @Column({ type: "enum", enum: IssueType, default: IssueType.TASK })
+  type!: IssueType;
+
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "assignee", referencedColumnName: "id" })
   assigneeUser!: User;
@@ -67,10 +62,4 @@ export class Issue extends BaseEntity {
   @ManyToOne(() => Status, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "statusId" })
   status!: Status;
-
-  @OneToMany(() => RelatedIssue, (rel) => rel.sourceIssue)
-  outgoingRelations!: RelatedIssue[];
-
-  @OneToMany(() => RelatedIssue, (rel) => rel.targetIssue)
-  incomingRelations!: RelatedIssue[];
 }

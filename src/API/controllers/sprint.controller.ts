@@ -29,13 +29,16 @@ export class SprintController {
     }
   }
 
-  async create(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { projectId } = req.params;
       req.body.projectId = projectId;
       const dto = plainToInstance(CreateSprintDto, req.body);
       const errors = await validate(dto);
-      if (errors.length) return res.status(400).json({ errors });
+      if (errors.length) {
+        res.status(400).json({ errors });
+        return;
+      }
       const sprint = await this.sprintService.create(dto);
       res.status(201).json({ sprint, success: true });
     } catch (err) {
@@ -43,12 +46,15 @@ export class SprintController {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
       const dto = plainToInstance(UpdateSprintDto, req.body);
       const errors = await validate(dto);
-      if (errors.length) return res.status(400).json({ errors });
+      if (errors.length) {
+        res.status(400).json({ errors });
+        return;
+      }
       const sprint = await this.sprintService.update(id, dto);
       res.json({ sprint, success: true });
     } catch (err) {
