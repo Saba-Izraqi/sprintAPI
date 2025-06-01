@@ -33,20 +33,24 @@ export class EpicRepo implements IEpicRepo {
   }
   async create(epicData: Partial<Epic>): Promise<Epic> {
     try {
-      // Always generate a new key automatically
-      const key = await this.generateEpicKey(epicData.projectId!);
-
+      // Only keep allowed fields for epic creation
+      const { title, description, projectId, assignee } = epicData;
+      const key = await this.generateEpicKey(projectId!);
       const cleanEpicData = {
-        ...epicData,
-        key, // ensure key is included
+        title,
+        description,
+        projectId,
+        assignee,
+        key,
       };
-      
+      console.log('Creating new epic with data:', cleanEpicData); // Debug log
       const epic = this._epicRepo.create(cleanEpicData);
       const savedEpic = await this._epicRepo.save(epic);
       
       const fullEpic = await this.getById(savedEpic.id);
         return fullEpic || savedEpic;
     } catch (error) {
+      console.error('Epic creation error:', error); // Debug log
       throw error;
     }
   }

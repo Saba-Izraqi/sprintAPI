@@ -2,6 +2,7 @@ import { IsString, IsNumber, IsOptional, Length, IsUUID, IsEnum } from "class-va
 import { IssueType } from "../enums/types";
 import { Expose, Type } from 'class-transformer'; // Added Expose, Type
 
+// Data Transfer Objects for Issue
 export class CreateIssueDto {
   @IsString()
   @Length(1, 250)

@@ -4,8 +4,9 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
-import { BaseEntity, Project } from ".";
+import { BaseEntity, Project, Issue } from ".";
 @Entity("sprints")
 export class Sprint extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -32,4 +33,7 @@ export class Sprint extends BaseEntity {
   @ManyToOne(() => Project, { onDelete: "CASCADE" })
   @JoinColumn({ name: "projectId", referencedColumnName: "id" })
   project!: Project;
+
+  @OneToMany(() => Issue, (issue) => issue.sprint)
+  issues!: Issue[];
 }
