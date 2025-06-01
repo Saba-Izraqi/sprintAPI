@@ -23,6 +23,12 @@ export class Sprint extends BaseEntity {
   @Column()
   projectId!: string;
 
+  @Column({ default: false })
+  isActive!: boolean;
+
+  @Column({ default: false })
+  isComplete!: boolean;
+
   @ManyToOne(() => Project, { onDelete: "CASCADE" })
   @JoinColumn({ name: "projectId", referencedColumnName: "id" })
   project!: Project;
