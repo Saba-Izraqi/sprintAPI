@@ -4,7 +4,6 @@ export * from "./epic.entity";
 export * from "./issue.entity";
 export * from "./project-members.entity";
 export * from "./project.entity";
-export * from "./related-issue.entity";
 export * from "./sprint.entity";
 export * from "./status.entity";
 export * from "./user.entity";

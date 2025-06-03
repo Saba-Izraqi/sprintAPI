@@ -10,7 +10,6 @@ import {
   BaseEntity,
   Epic,
   Project,
-  RelatedIssue,
   Sprint,
   Status,
   User,
@@ -67,10 +66,4 @@ export class Issue extends BaseEntity {
   @ManyToOne(() => Status, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "statusId" })
   status!: Status;
-
-  @OneToMany(() => RelatedIssue, (rel) => rel.sourceIssue)
-  outgoingRelations!: RelatedIssue[];
-
-  @OneToMany(() => RelatedIssue, (rel) => rel.targetIssue)
-  incomingRelations!: RelatedIssue[];
 }
