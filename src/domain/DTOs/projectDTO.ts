@@ -6,10 +6,10 @@ import {
   Length,
   Matches,
 } from "class-validator";
-import { Transform } from "class-transformer";
-import { Project } from "../entities";
+import { Transform, Expose } from "class-transformer";
+import { Project, Sprint } from "../entities";
 import { UserResponseDto } from "./userDTO";
-import { ProjectPermission } from "../enums/types";
+import { ProjectPermission } from "../types";
 
 export class CreateProjectDto {
   @IsNotEmpty()
@@ -28,19 +28,25 @@ export class CreateProjectDto {
 
   @IsNotEmpty()
   @IsUUID()
-  createdById!: string;
+  createdBy!: string;
 }
 
 export class UpdateProjectDTO {
+  @Expose()
+  @IsUUID()
+  id!: string;
+
+  @Expose()
   @IsOptional()
   @IsString()
   @Matches(/^[a-zA-Z0-9_ ]+$/)
   @Length(3, 50)
   name?: string;
 
+  @Expose()
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => value.toLowerCase())
+  @Transform(({ value }) => value?.toLowerCase())
   @Matches(/^[A-Za-z]{1,5}$/, {
     message: "Project key must be 1-5 letters, not case sensitive",
   })
@@ -51,7 +57,7 @@ export class ProjectResponseDto {
   id: string;
   name: string;
   keyPrefix: string;
-  createdBy: UserResponseDto;
+  createdBy: string;
   members: {
     id: string;
     permission: ProjectPermission;
@@ -61,7 +67,7 @@ export class ProjectResponseDto {
     this.id = project.id;
     this.name = project.name;
     this.keyPrefix = project.keyPrefix;
-    this.createdBy = new UserResponseDto(project.createdBy);
+    this.createdBy = project.createdBy;
     this.members =
       project.members?.map((member) => ({
         id: member.id,

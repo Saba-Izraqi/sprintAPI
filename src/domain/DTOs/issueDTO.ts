@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, Length, IsUUID, IsEnum } from "class-validator";
-import { IssueType } from "../enums/types";
 import { Expose, Type } from 'class-transformer'; // Added Expose, Type
+import { IssueType } from "../types";
 
 export class CreateIssueDto {
   @IsString()

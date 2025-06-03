@@ -20,9 +20,12 @@ export class Project extends BaseEntity {
   @Column({ length: 5, unique: true })
   keyPrefix!: string;
 
+  @Column({ type: "uuid" })
+  createdBy!: string;
+
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: false })
   @JoinColumn({ name: "createdBy" })
-  createdBy?: User;
+  creator?: User;
 
   @OneToMany(() => ProjectMember, (member) => member.project)
   members!: ProjectMember[];

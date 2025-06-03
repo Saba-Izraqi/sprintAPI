@@ -25,7 +25,6 @@ export class UserController {
         userId: user.id,
         userEmail: user.email,
         isEmailVerified: user.isEmailVerified,
-        tokenType: Token.ACCESS,
       });
 
       const emailVerificationToken = genToken({
@@ -40,7 +39,7 @@ export class UserController {
         user.fullName,
         user.email,
         emailConfirmationURL,
-        "email-confirmation",
+        "email-confirmation"
       );
       res
         .status(201)
@@ -63,18 +62,22 @@ export class UserController {
         userId: user.id,
         userEmail: user.email,
         isEmailVerified: user.isEmailVerified,
-        tokenType: Token.ACCESS,
       });
       res.status(200).json({ user, token, success: true });
     } catch (error) {
       next(error);
     }
   }
+
   async verifyEmail(req: Request, res: Response, next: NextFunction) {
-    const { email } = req.body;
+    const { userEmail } = req.body;
+    console.debug("email: ", userEmail);
 
     try {
-      const user = await this.userService.updateEmailVerification(email, true);
+      const user = await this.userService.updateEmailVerification(
+        userEmail,
+        true
+      );
       res.status(200).json({ success: true, user });
     } catch (error) {
       next(error);
@@ -99,12 +102,14 @@ export class UserController {
           user.fullName,
           user.email,
           resetURL,
-          "forget-password",
+          "forget-password"
         );
       }
       res.status(200).json({
         success: true,
-        message: "AN email was sent with password recovery instruction.",
+        message:
+          "AN email should be sent with password recovery instruction, token is provided in response for testing.",
+        token,
       });
     } catch (error) {
       next(error);
@@ -112,22 +117,29 @@ export class UserController {
   }
 
   async resetPassword(req: Request, res: Response, next: NextFunction) {
-    const { oldPassword, password, email, tokenType } = req.body;
+    const { oldPassword, password, userEmail, tokenType } = req.body;
 
     const dto = plainToInstance(LoginUserDto, {
-      email: req.body.email,
-      password: req.body.password,
+      email: userEmail,
+      password,
     });
     try {
+      if (tokenType === Token.ACCESS && !oldPassword) {
+        throw new UserError(
+          "Old password is required. If you forget the password, press on forget password in login page.",
+          400
+        );
+      }
+
       const errors = await validate(dto);
       if (errors.length) {
         console.error(errors);
         throw new UserError(errors);
       }
       await this.userService.resetPassword(
-        email,
+        userEmail,
         password,
-        tokenType === Token.ACCESS ? oldPassword : null,
+        tokenType === Token.ACCESS ? oldPassword : null
       );
       res.status(200).json({
         success: true,

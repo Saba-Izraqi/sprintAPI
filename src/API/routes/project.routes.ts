@@ -5,17 +5,11 @@ import { authenticate } from "../middlewares/auth.middleware";
 import { restrictTokens } from "../middlewares/tokenTypes.middleware";
 import { Token } from "../enums/token";
 import { restrictTo } from "../middlewares/permissions.middleware";
-import { ProjectPermission } from "../../domain/enums/types";
+import { ProjectPermission } from "../../domain/types";
 
 export class ProjectRoutes extends BaseRoute {
   public path = "/project";
 
-  /**
-   ** POST api/v1/project/ { body: { ...dto } }
-   ** patch api/v1/project/ { body: { ...dto } }
-   ** DELETE api/v1/project/:id
-    ** GET api/v1/project/ { query: { ...FindProjectOptions } }
-   */
   protected initRoutes(): void {
     const controller = container.resolve(ProjectController);
 

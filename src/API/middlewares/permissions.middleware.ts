@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ProjectPermission } from "../../domain/enums/types";
+import { ProjectPermission } from "../../domain/types";
+
 export function restrictTo(allowedPermission: ProjectPermission) {
   return function (req: Request, res: Response, next: NextFunction): void {
     //TODO : permission/role is not exist in the token. I should fetch the role for the user in the project from the DB.

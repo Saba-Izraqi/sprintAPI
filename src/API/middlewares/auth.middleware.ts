@@ -25,6 +25,7 @@ export const authenticate = (
   next: NextFunction,
 ): void => {
   const token = req.header("Authorization")?.split(" ")[1];
+  console.debug('token => ', req.header('Authorization'))
   if (!token) {
     res
       .status(401)

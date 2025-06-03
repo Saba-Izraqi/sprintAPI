@@ -97,7 +97,7 @@ export class IssueController {
   async getById(req: Request, res: Response): Promise<void> { // Renamed from getIssueById
     try {
       const { id } = req.params;
-      const userId = req.user?.id;
+      const userId = req.body.userId;
 
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });
@@ -117,11 +117,10 @@ export class IssueController {
     }
   }
 
-  // GET /api/issues/key/:key (full details by key)
-  async getByKey(req: Request, res: Response) { // Renamed from getIssueByKey
+  async getByKey(req: Request, res: Response) {
     try {
       const { key } = req.params;
-      const userId = req.user?.id;
+      const userId = req.body.userId;
 
       if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
@@ -141,10 +140,10 @@ export class IssueController {
   }
 
   // PUT /api/issues/:id
-  async update(req: Request, res: Response): Promise<void> { // Renamed from updateIssue
+  async update(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.user?.id;
+      const userId = req.body.userId;
 
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });
@@ -182,7 +181,7 @@ export class IssueController {
   async delete(req: Request, res: Response): Promise<void> { // Renamed from deleteIssue
     try {
       const { id } = req.params;
-      const userId = req.user?.id;
+      const userId = req.body.userId;
 
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });
@@ -204,7 +203,7 @@ export class IssueController {
   // GET /api/issues/my-assigned (issues assigned to current user)
   async getMyAssigned(req: Request, res: Response): Promise<void> { // Renamed from getMyAssignedIssues
     try {
-      const userId = req.user?.id;
+      const userId = req.body.userId;
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });
         return;
@@ -256,7 +255,7 @@ export class IssueController {
   async getBySprint(req: Request, res: Response): Promise<void> { // Renamed from getSprintIssues
     try {
       const { sprintId } = req.params;
-      const userId = req.user?.id;
+      const userId = req.body.userId;
 
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });
@@ -306,7 +305,7 @@ export class IssueController {
   async getByEpic(req: Request, res: Response): Promise<void> { // Renamed from getEpicIssues
     try {
       const { epicId } = req.params;
-      const userId = req.user?.id;
+      const userId = req.body.userId;
 
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });

@@ -1,13 +1,11 @@
 import { injectable, inject } from "tsyringe";
-import {
-  FindProjectOptions,
-  IProjectRepo,
-} from "../../domain/IRepos/IProjectRepo";
+import { IProjectRepo } from "../../domain/IRepos/IProjectRepo";
 import {
   CreateProjectDto,
   UpdateProjectDTO,
 } from "../../domain/DTOs/projectDTO";
 import { Project } from "../../domain/entities";
+import { FindProjectOptions } from "../../domain/types";
 
 @injectable()
 export class ProjectService {
@@ -33,7 +31,7 @@ export class ProjectService {
     return this.projectRepo.delete(id);
   }
 
-  async find(options: FindProjectOptions): Promise<Project[]> {
-    return this.projectRepo.find(options);
+  async find(options: FindProjectOptions, userId: string): Promise<Project[]> {
+    return this.projectRepo.find(options, "");
   }
 }

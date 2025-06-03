@@ -5,15 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { IssueType } from "../enums/types";
-import {
-  BaseEntity,
-  Epic,
-  Project,
-  Sprint,
-  Status,
-  User,
-} from ".";
+import { BaseEntity, Epic, Project, Sprint, Status, User } from ".";
+import { IssueType } from "../types";
 
 @Entity("issues")
 export class Issue extends BaseEntity {

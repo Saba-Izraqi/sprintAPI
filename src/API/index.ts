@@ -24,7 +24,7 @@ export class AppServer {
     this.app.use(
       "/api-docs",
       swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument),
+      swaggerUi.setup(swaggerDocument)
     );
   }
 
@@ -34,7 +34,7 @@ export class AppServer {
     });
 
     const routeFiles = await glob(
-      path.resolve(__dirname, "routes/*.ts").replace(/\\/g, "/"),
+      path.resolve(__dirname, "routes/*.ts").replace(/\\/g, "/")
     );
 
     for (const filePath of routeFiles) {
@@ -48,7 +48,7 @@ export class AppServer {
           const routeInstance: BaseRoute = new RouteClass();
           this.app.use(
             `${this.apiPrefix}${routeInstance.path}`,
-            routeInstance.router,
+            routeInstance.router
           );
           console.success(`Loaded route: ${routeInstance.path}`);
         }
@@ -62,7 +62,7 @@ export class AppServer {
     //*this middleware cant be registered in setupMiddlewares because it needs to be the last middleware
     this.app.use(errorMiddleware);
     this.app.listen(port, () =>
-      console.info(`🚀 Server running at http://localhost:${port}`),
+      console.info(`🚀 Server running at http://localhost:${port}`)
     );
   }
 }

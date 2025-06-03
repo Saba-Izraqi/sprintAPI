@@ -9,7 +9,7 @@ import {
   ProjectResponseDto,
 } from "../../domain/DTOs/projectDTO";
 import { UserError } from "../../app/exceptions";
-import { FindProjectOptions } from "../../domain/IRepos/IProjectRepo";
+import { FindProjectOptions } from "../../domain/types";
 
 @injectable()
 export class ProjectController {
@@ -18,7 +18,7 @@ export class ProjectController {
   async create(req: Request, res: Response, next: NextFunction) {
     const dto = plainToInstance(CreateProjectDto, {
       ...req.body,
-      createdById: req.body.userId,
+      createdBy: req.body.userId,
     });
     try {
       const errors = await validate(dto);
@@ -36,7 +36,8 @@ export class ProjectController {
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(UpdateProjectDTO, req.body);
+    const dto = plainToInstance(UpdateProjectDTO, req.body, { excludeExtraneousValues: true }); // ! Dynamically map only exposed attributes.
+
     try {
       const errors = await validate(dto);
       if (errors.length) {
@@ -64,14 +65,12 @@ export class ProjectController {
   async find(req: Request, res: Response, next: NextFunction) {
     const { userId } = req.body;
     const query = req.query;
-    // TODO: Handle the userId to search for projects that the user is a member of
     const where: FindProjectOptions = {
       ...query,
-      userId,
     };
 
     try {
-      const projects = await this.projectService.find(where);
+      const projects = await this.projectService.find(where, userId);
       res.status(200).json({
         projects: projects.map((p) => new ProjectResponseDto(p)),
         success: true,
