@@ -10,7 +10,6 @@ import { Transform } from "class-transformer";
 import { Project } from "../entities";
 import { UserResponseDto } from "./userDTO";
 import { ProjectPermission } from "../enums/types";
-import { generateKeyPrefix } from "../../infrastructure/database/utils/generateKeyPrefix";
 
 export class CreateProjectDto {
   @IsNotEmpty()
@@ -52,24 +51,22 @@ export class ProjectResponseDto {
   id: string;
   name: string;
   keyPrefix: string;
-  createdBy?: UserResponseDto;
+  createdBy: UserResponseDto;
   members: {
     id: string;
     permission: ProjectPermission;
-    user?: UserResponseDto;
+    user: UserResponseDto;
   }[];
   constructor(project: Project) {
     this.id = project.id;
     this.name = project.name;
     this.keyPrefix = project.keyPrefix;
-    this.createdBy = project.createdBy
-      ? new UserResponseDto(project.createdBy)
-      : undefined;
+    this.createdBy = new UserResponseDto(project.createdBy);
     this.members =
       project.members?.map((member) => ({
         id: member.id,
         permission: member.permission,
-        user: member.user ? new UserResponseDto(member.user) : undefined,
+        user: new UserResponseDto(member.user),
       })) ?? [];
   }
 }
