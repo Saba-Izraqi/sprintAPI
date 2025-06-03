@@ -4,15 +4,8 @@ import {
   Column,
   Index,
   OneToMany,
-  ManyToMany,
 } from "typeorm";
 import { BaseEntity, Issue, ProjectMember } from ".";
-
-export enum Permission {
-  MEMBER = 0,
-  MODERATOR = 1,
-  ADMINISTRATOR = 2,
-}
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -39,5 +32,4 @@ export class User extends BaseEntity {
   issues!: Issue[];
 
   projectMemberships!: ProjectMember[];
- 
 }

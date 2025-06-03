@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
-  Unique,
+  OneToOne,
 } from "typeorm";
 import { BaseEntity, ProjectMember, Sprint, User } from ".";
 
@@ -32,4 +32,8 @@ export class Project extends BaseEntity {
 
   @OneToMany(() => Sprint, (sprint) => sprint.project)
   sprints!: Sprint[];
+
+  @OneToOne(() => Sprint, { onDelete: "SET NULL", nullable: true })
+  @JoinColumn({ name: "activeSprintId", referencedColumnName: "id" })
+  activeSprint?: Sprint;
 }

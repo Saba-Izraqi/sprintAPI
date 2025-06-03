@@ -16,6 +16,9 @@ export class ProjectMember extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
+  @Column({ type: "int", default: ProjectPermission.MEMBER })
+  permission!: ProjectPermission;
+  
   @ManyToOne(() => User, (user) => user.projectMemberships, {
     onDelete: "CASCADE",
   })
@@ -27,9 +30,6 @@ export class ProjectMember extends BaseEntity {
   })
   @JoinColumn({ name: "projectId" })
   project!: Project;
-
-  @Column({ type: "int", default: ProjectPermission.MEMBER })
-  permission!: ProjectPermission;
 
   @OneToMany(() => ProjectMember, (member) => member.user)
   projectMemberships!: ProjectMember[];
