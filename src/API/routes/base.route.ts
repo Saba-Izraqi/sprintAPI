@@ -1,4 +1,3 @@
-// src/API/routes/BaseRoute.ts
 import { Router } from "express";
 
 export abstract class BaseRoute {

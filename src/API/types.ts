@@ -1,4 +1,4 @@
-import { Token } from './enums/token';
+import { Token } from "./enums/token";
 
 export interface ITokenPayload {
   id: string;

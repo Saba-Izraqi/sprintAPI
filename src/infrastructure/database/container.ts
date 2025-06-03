@@ -8,7 +8,9 @@ const getInterfaceToken = (className: string) => {
 };
 
 export async function registerDependencies() {
-  const repoFiles = await glob(path.join(__dirname, "repos/*.@(ts|js)").replace(/\\/g, "/"));
+  const repoFiles = await glob(
+    path.join(__dirname, "repos/*.@(ts|js)").replace(/\\/g, "/"),
+  );
   for (const filePath of repoFiles) {
     const module = await import(filePath);
     for (const exportedName in module) {
@@ -20,9 +22,12 @@ export async function registerDependencies() {
       }
     }
   }
-  const servicePath = path.resolve(__dirname, "../../app/services").replace(/\\/g, "/");
-  const appFiles = await glob(path.join(servicePath, "*.{ts,js}").replace(/\\/g, "/"));
-  
+  const servicePath = path
+    .resolve(__dirname, "../../app/services")
+    .replace(/\\/g, "/");
+  const appFiles = await glob(
+    path.join(servicePath, "*.{ts,js}").replace(/\\/g, "/"),
+  );
 
   for (const filePath of appFiles) {
     const module = await import(filePath);
