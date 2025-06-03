@@ -3,9 +3,9 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { IssueType } from "../enums/types";
 import {
   BaseEntity,
   Epic,
@@ -46,6 +46,9 @@ export class Issue extends BaseEntity {
 
   @Column()
   projectId!: string;
+
+  @Column({ type: "enum", enum: IssueType, default: IssueType.TASK })
+  type!: IssueType;
 
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "assignee", referencedColumnName: "id" })
