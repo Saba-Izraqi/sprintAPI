@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { Token } from "../enums/token";
-
 /**
  * Middleware to authenticate incoming requests by verifying the provided JWT token.
  *
@@ -24,7 +22,7 @@ import { Token } from "../enums/token";
 export const authenticate = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const token = req.header("Authorization")?.split(" ")[1];
   if (!token) {
@@ -38,10 +36,10 @@ export const authenticate = (
   try {
     const decoded = jwt.verify(
       token,
-      "secretKeyPlaceHolderWillReplaceLater"
+      "secretKeyPlaceHolderWillReplaceLater",
     ) as JwtPayload;
 
-    if (!decoded || !decoded.email) {
+    if (!decoded || !decoded.userEmail) {
       res.status(401).json({ message: "Not authorized, email not found" });
       return;
     }

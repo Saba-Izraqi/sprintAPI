@@ -1,4 +1,3 @@
-// src/app/services/user.service.ts
 import { injectable, inject } from "tsyringe";
 import { IUserRepo } from "../../domain/IRepos/IUserRepo";
 import bcrypt from "bcrypt";
@@ -8,20 +7,21 @@ import {
   UserResponseDto,
 } from "../../domain/DTOs/userDTO";
 import { UserError } from "../exceptions";
+
 @injectable()
 export class UserService {
   constructor(@inject("IUserRepo") private userRepo: IUserRepo) {}
 
-  async registerUser(dto: RegisterUserDto) {
+  async register(dto: RegisterUserDto) {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
-    const user = await this.userRepo.createUser({
+    const user = await this.userRepo.create({
       ...dto,
       password: hashedPassword,
     });
     return new UserResponseDto(user);
   }
 
-  async loginUser(dto: LoginUserDto) {
+  async login(dto: LoginUserDto) {
     const user = await this.userRepo.findByEmail(dto.email);
     const isValid = user && (await bcrypt.compare(dto.password, user.password));
 
@@ -30,7 +30,6 @@ export class UserService {
     }
     return new UserResponseDto(user);
   }
-
   async updateEmailVerification(email: string, isVerified: boolean = true) {
     const user = await this.userRepo.updateEmailVerification(email, isVerified);
     if (!user || !user.isEmailVerified) {
@@ -39,17 +38,10 @@ export class UserService {
     return new UserResponseDto(user);
   }
 
-  /**
-   * Update and recovery password by user email
-   * @param email
-   * @param newPassword
-   * @param oldPassword - pass it only when the user is logged in and wants to change their password
-   */
-
   async resetPassword(
     email: string,
     newPassword: string,
-    oldPassword?: string
+    oldPassword?: string,
   ) {
     if (oldPassword) {
       const user = await this.userRepo.findByEmail(email);
@@ -64,6 +56,7 @@ export class UserService {
     await this.userRepo.updatePassword(email, hashedPassword);
     return;
   }
+
   async getByEmail(email: string) {
     return await this.userRepo.findByEmail(email);
   }

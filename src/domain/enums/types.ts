@@ -3,3 +3,9 @@ export enum IssueType {
   STORY = "story",
   TASK = "task",
 }
+
+export enum ProjectPermission {
+  MEMBER = 0,
+  MODERATOR = 1,
+  ADMINISTRATOR = 2,
+}
