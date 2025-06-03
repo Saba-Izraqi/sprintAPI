@@ -3,11 +3,14 @@ import { Request, Response, NextFunction } from "express";
 import { UserService } from "../../app/services/user.service";
 import { validate } from "class-validator";
 import { plainToInstance } from "class-transformer";
-import { RegisterUserDto, LoginUserDto } from "../../domain/DTOs/userDTO";
+import { RegisterUserDto, LoginUserDto, UpdateProfileDto } from "../../domain/DTOs/userDTO";
 import { Token } from "../enums/token";
 import { genToken } from "../utils/token";
 import PostmarkSender from "../../infrastructure/email/postmarkSender";
 import { UserError } from "../../app/exceptions";
+import multer from "multer";
+import "../types"; // Import types to extend Express Request
+import { validateProfilePhoto } from "../../utils/file-validation";
 
 @injectable()
 export class UserController {
@@ -131,6 +134,80 @@ export class UserController {
       );
       res.status(200).json({
         success: true,
+      });
+    } catch (error) {
+      next(error);
+    }  }
+
+  async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // Get user ID from the authenticated user (JWT token)
+      const userId = req.user?.id;
+      
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized: User ID not found" });
+        return;
+      }
+
+      // Extract profile data from request body
+      const profileData = {
+        fullName: req.body.fullName
+      };
+      
+      let fileBuffer: Buffer | undefined;
+      let fileName: string | undefined;
+      
+      // Handle file upload if present
+      if (req.file) {
+        // Validate the uploaded file
+        const validation = validateProfilePhoto(req.file);
+        
+        if (!validation.valid) {
+          res.status(400).json({ 
+            success: false, 
+            message: validation.error || "Invalid file" 
+          });
+          return;
+        }
+        
+        fileBuffer = req.file.buffer;
+        fileName = req.file.originalname;
+      }
+      
+      // Update profile in service
+      const updatedUser = await this.userService.updateProfile(
+        userId,
+        profileData,
+        fileBuffer,
+        fileName
+      );
+      
+      res.status(200).json({ 
+        success: true, 
+        message: "Profile updated successfully", 
+        user: updatedUser 
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      // Get user ID from the authenticated user (JWT token)
+      const userId = req.user?.id;
+      
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized: User ID not found" });
+        return;
+      }
+      
+      // Get user profile from service
+      const user = await this.userService.getById(userId);
+      
+      res.status(200).json({ 
+        success: true, 
+        user 
       });
     } catch (error) {
       next(error);

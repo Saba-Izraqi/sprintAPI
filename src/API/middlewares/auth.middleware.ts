@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Token } from "../enums/token";
+import "../types"; // Import types to extend Express Request
 
 /**
  * Middleware to authenticate incoming requests by verifying the provided JWT token.
@@ -44,12 +45,13 @@ export const authenticate = (
     if (!decoded || !decoded.email) {
       res.status(401).json({ message: "Not authorized, email not found" });
       return;
-    }
-
-    req.body = {
+    }    req.body = {
       ...req.body,
       ...decoded,
     };
+    
+    // Also set req.user for cleaner access
+    req.user = decoded as any;
 
     next();
   } catch (err) {

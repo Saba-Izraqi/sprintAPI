@@ -6,6 +6,7 @@ import {
   LoginUserDto,
   RegisterUserDto,
   UserResponseDto,
+  UpdateProfileDto,
 } from "../../domain/DTOs/userDTO";
 import { UserError } from "../exceptions";
 @injectable()
@@ -66,5 +67,28 @@ export class UserService {
   }
   async getByEmail(email: string) {
     return await this.userRepo.findByEmail(email);
+  }
+
+  async updateProfile(
+    userId: string, 
+    profileData: UpdateProfileDto, 
+    fileBuffer?: Buffer, 
+    fileName?: string
+  ) {
+    try {
+      const updatedUser = await this.userRepo.updateProfile(userId, profileData, fileBuffer, fileName);
+      return new UserResponseDto(updatedUser);
+    } catch (error) {
+      console.error('Error in updateProfile service:', error);
+      throw error;
+    }
+  }
+
+  async getById(userId: string) {
+    const user = await this.userRepo.findById(userId);
+    if (!user) {
+      throw new UserError([`User with id ${userId} not found`], 404);
+    }
+    return new UserResponseDto(user);
   }
 }

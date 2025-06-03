@@ -1,4 +1,4 @@
-import { RegisterUserDto } from "../DTOs/userDTO";
+import { RegisterUserDto, UpdateProfileDto } from "../DTOs/userDTO";
 import { User } from "../entities";
 
 export interface IUserRepo {
@@ -9,4 +9,11 @@ export interface IUserRepo {
     isEmailVerified: boolean
   ): Promise<User>;
   updatePassword(userId: string, newPassword: string): Promise<void>;
+  findById(id: string): Promise<User | null>;
+  updateProfile(
+    userId: string,
+    profileData: UpdateProfileDto,
+    fileBuffer?: Buffer,
+    fileName?: string
+  ): Promise<User>;
 }
