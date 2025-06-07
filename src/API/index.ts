@@ -3,8 +3,7 @@ import express, { Application } from "express";
 import { BaseRoute } from "./routes/base.route";
 import { glob } from "glob";
 import path from "path";
-import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./swagger.json";
+import { setupSwagger } from "./swagger/swagger.config";
 import errorMiddleware from "./middlewares/error.middleware";
 
 export class AppServer {
@@ -19,13 +18,8 @@ export class AppServer {
   private setupMiddleware() {
     this.app.use(express.json());
   }
-
   private setupSwagger() {
-    this.app.use(
-      "/api-docs",
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument)
-    );
+    setupSwagger(this.app);
   }
 
   private async setupRoutes() {
