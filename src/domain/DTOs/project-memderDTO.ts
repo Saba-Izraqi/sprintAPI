@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
-import { ProjectPermission } from "../enums/types";
+import { ProjectPermission } from "../types/enums";
 import { UserResponseDto } from "./userDTO";
 import { ProjectMember } from "../entities";
 
