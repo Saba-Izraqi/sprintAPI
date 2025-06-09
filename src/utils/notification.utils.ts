@@ -4,11 +4,7 @@
  * @version 1.0.0
  */
 
-import { 
-  sendNotification as sendNotificationHelper,
-  sendNotificationToUsers as sendNotificationToUsersHelper,
-  sendProjectNotification as sendProjectNotificationHelper
-} from "../app/services/notification.service";
+import { NotificationService } from "../app/services/notification.service";
 import { NotificationType, NotificationPriority } from "../domain/types/enums";
 
 /**

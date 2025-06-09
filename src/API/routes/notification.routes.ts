@@ -58,10 +58,10 @@ export class NotificationRoutes extends BaseRoute {
     );
 
     // Create notification (admin/system use)
-    this.router.post(
-      "/",
-      authenticate,
-      controller.createNotification.bind(controller)
-    );
+    // this.router.post(
+    //   "/",
+    //   authenticate,
+    //   controller.createNotification.bind(controller)
+    // );
   }
 }

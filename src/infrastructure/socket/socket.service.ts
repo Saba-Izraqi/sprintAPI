@@ -16,7 +16,6 @@ interface JwtPayload {
  * Service for managing Socket.IO connections and real-time communication
  */
 @injectable()
-@singleton()
 export class SocketService {
   private io?: SocketIOServer;
   private userSockets: Map<string, string[]> = new Map(); // userId -> socketIds[]
@@ -45,15 +44,23 @@ export class SocketService {
    * @param socket - The socket connection to authenticate
    * @param next - Callback function to continue or reject the connection
    */
-  private authenticateSocket(socket: AuthenticatedSocket, next: (err?: Error) => void): void {
+  private authenticateSocket(
+    socket: AuthenticatedSocket,
+    next: (err?: Error) => void
+  ): void {
     try {
-      const token = socket.handshake.auth.token || socket.handshake.headers.authorization?.replace("Bearer ", "");
-      
+      const token =
+        socket.handshake.auth.token ||
+        socket.handshake.headers.authorization?.replace("Bearer ", "");
+
       if (!token) {
         return next(new Error("Authentication token required"));
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET as string
+      ) as JwtPayload;
       socket.userId = decoded.userId;
       next();
     } catch {
@@ -67,7 +74,7 @@ export class SocketService {
    */
   private handleConnection(socket: AuthenticatedSocket): void {
     const userId = socket.userId!;
-    
+
     // Add socket to user's socket list
     if (!this.userSockets.has(userId)) {
       this.userSockets.set(userId, []);
@@ -104,13 +111,13 @@ export class SocketService {
   private handleDisconnect(socket: AuthenticatedSocket): void {
     const userId = socket.userId!;
     const userSocketIds = this.userSockets.get(userId);
-    
+
     if (userSocketIds) {
       const index = userSocketIds.indexOf(socket.id);
       if (index > -1) {
         userSocketIds.splice(index, 1);
       }
-      
+
       if (userSocketIds.length === 0) {
         this.userSockets.delete(userId);
       }
@@ -127,7 +134,7 @@ export class SocketService {
    */
   emitToUser(userId: string, event: string, data: unknown): void {
     if (!this.io) return;
-    
+
     this.io.to(`user:${userId}`).emit(event, data);
     console.info(`🔔 Notification sent to user ${userId}: ${event}`);
   }
@@ -140,7 +147,7 @@ export class SocketService {
    */
   emitToProject(projectId: string, event: string, data: unknown): void {
     if (!this.io) return;
-    
+
     this.io.to(`project:${projectId}`).emit(event, data);
     console.info(`🔔 Notification sent to project ${projectId}: ${event}`);
   }
@@ -153,8 +160,8 @@ export class SocketService {
    */
   emitToUsers(userIds: string[], event: string, data: unknown): void {
     if (!this.io) return;
-    
-    userIds.forEach(userId => {
+
+    userIds.forEach((userId) => {
       this.emitToUser(userId, event, data);
     });
   }
@@ -166,7 +173,7 @@ export class SocketService {
    */
   broadcast(event: string, data: unknown): void {
     if (!this.io) return;
-    
+
     this.io.emit(event, data);
     console.info(`🔔 Broadcast notification sent: ${event}`);
   }
@@ -196,3 +203,4 @@ export class SocketService {
     return Array.from(this.userSockets.keys());
   }
 }
+

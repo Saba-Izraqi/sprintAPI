@@ -25,7 +25,7 @@ export class AppServer {
     this.app.use(express.json());
     this.app.use(cors(
       {
-        origin: "*", // Adjust this to your needs, e.g., specify allowed origins
+        origin: "*",
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
       }

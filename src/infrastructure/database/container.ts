@@ -2,14 +2,14 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 import { glob } from "glob";
 import path from "path";
-
+import { SocketService } from "../socket/socket.service";
 const getInterfaceToken = (className: string) => {
   return "I" + className.replace("Repo", "") + "Repo";
 };
 
 export async function registerDependencies() {
   const repoFiles = await glob(
-    path.join(__dirname, "repos/*.@(ts|js)").replace(/\\/g, "/"),
+    path.join(__dirname, "repos/*.@(ts|js)").replace(/\\/g, "/")
   );
   for (const filePath of repoFiles) {
     const module = await import(filePath);
@@ -26,7 +26,7 @@ export async function registerDependencies() {
     .resolve(__dirname, "../../app/services")
     .replace(/\\/g, "/");
   const appFiles = await glob(
-    path.join(servicePath, "*.{ts,js}").replace(/\\/g, "/"),
+    path.join(servicePath, "*.{ts,js}").replace(/\\/g, "/")
   );
 
   for (const filePath of appFiles) {
@@ -39,4 +39,7 @@ export async function registerDependencies() {
       }
     }
   }
+
+  container.registerSingleton("SocketService", SocketService);
+  console.success(`Registered service: SocketService`);
 }

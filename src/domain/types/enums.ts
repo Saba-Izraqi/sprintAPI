@@ -3,11 +3,13 @@ export enum IssueType {
   STORY = "story",
   TASK = "task",
 }
+
 export enum StatusType {
   BACKLOG = 0,
   IN_PROGRESS = 1,
   DONE = 2,
 }
+
 export enum ProjectPermission {
   MEMBER = 0,
   MODERATOR = 1,
@@ -15,14 +17,11 @@ export enum ProjectPermission {
 }
 
 export enum NotificationType {
-  PROJECT_INVITATION = "PROJECT_INVITATION",
-  ISSUE_ASSIGNED = "ISSUE_ASSIGNED",
-  ISSUE_UPDATED = "ISSUE_UPDATED",
-  SPRINT_STARTED = "SPRINT_STARTED",
-  SPRINT_COMPLETED = "SPRINT_COMPLETED",
-  EPIC_UPDATED = "EPIC_UPDATED",
-  PROJECT_UPDATED = "PROJECT_UPDATED",
-  GENERAL = "GENERAL",
+  PROJECT_INVITATION = 1,
+  ISSUE_UPDATED = 2,
+  SPRINT_UPDATED = 3,
+  EPIC_UPDATED = -4,
+  PROJECT_UPDATED = -5
 }
 
 export enum NotificationPriority {

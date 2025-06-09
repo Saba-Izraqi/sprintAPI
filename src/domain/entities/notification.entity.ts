@@ -25,7 +25,7 @@ export class Notification extends BaseEntity {
   @Column({
     type: "enum",
     enum: NotificationType,
-    default: NotificationType.GENERAL,
+    default: NotificationType.PROJECT_INVITATION,
   })
   type!: NotificationType;
 
