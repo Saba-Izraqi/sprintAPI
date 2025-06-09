@@ -13,6 +13,8 @@ swagger/
     ├── projects.ts        # Project management endpoints
     ├── issues.ts          # Issue/Task management endpoints
     ├── epics.ts           # Epic management endpoints
+    ├── sprints.ts         # Sprint management endpoints
+    ├── status.ts          # Status management endpoints
     └── board-columns.ts   # Board column endpoints
 ```
 
@@ -39,7 +41,7 @@ swagger/
 
 To generate the static JSON documentation file:
 
-```bash
+```bash 
 npm run generate-swagger
 # or
 npm run docs
@@ -79,6 +81,24 @@ This will create/update the `generated-api-docs.json` file.
 - **PATCH** `/api/v1/{projectId}/epic/{id}` - Update epic
 - **DELETE** `/api/v1/{projectId}/epic/{id}` - Delete epic
 - **GET** `/api/v1/{projectId}/epic/{epicId}/issues` - Get epic issues
+
+### Sprints
+- **POST** `/api/v1/{projectId}/sprints` - Create sprint
+- **GET** `/api/v1/{projectId}/sprints` - Get project sprints
+- **GET** `/api/v1/{projectId}/sprints/active` - Get active sprint
+- **GET** `/api/v1/sprint/{id}` - Get sprint details
+- **PUT** `/api/v1/sprint/{id}` - Update sprint
+- **DELETE** `/api/v1/sprint/{id}` - Delete sprint
+- **POST** `/api/v1/sprint/{id}/activate` - Activate sprint
+- **POST** `/api/v1/sprint/{id}/complete` - Complete sprint
+- **GET** `/api/v1/sprint/{id}/issues` - Get sprint issues
+
+### Status
+- **POST** `/api/v1/status` - Create status
+- **GET** `/api/v1/status` - Get all statuses
+- **GET** `/api/v1/status/{id}` - Get status details
+- **PUT** `/api/v1/status/{id}` - Update status
+- **DELETE** `/api/v1/status/{id}` - Delete status
 
 ### Board Columns
 - **POST** `/api/v1/board-column` - Create board column

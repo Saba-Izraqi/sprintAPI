@@ -1,10 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import { Request, Response, NextFunction } from "express";
 import { EpicService } from "../../app/services/epic.service";
-import { validate } from "class-validator";
-import { plainToInstance } from "class-transformer";
 import { CreateEpicDto, UpdateEpicDto } from "../../domain/DTOs/epicDTO";
-import { UserError } from "../../app/exceptions";
 
 @injectable()
 export class EpicController {
@@ -38,36 +35,22 @@ export class EpicController {
     } catch (error) {
       next(error);
     }
-  }
-
-  async create(req: Request, res: Response, next: NextFunction) {
+  }  async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { projectId } = req.params;
-      req.body.projectId = projectId;
+      const createEpicDto = (req as any).validatedData as CreateEpicDto;
+      // No need to manually assign projectId - it's already merged by validateDTOWithParams
 
-      const dto = plainToInstance(CreateEpicDto, req.body);
-      const errors = await validate(dto);
-      if (errors.length) {
-        throw new UserError(errors);
-      }
-
-      const epic = await this.epicService.create(dto);
+      const epic = await this.epicService.create(createEpicDto);
       res.status(201).json({ epic, success: true });
     } catch (error) {
       next(error);
     }
-  }
-
-  async update(req: Request, res: Response, next: NextFunction) {
+  }async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const dto = plainToInstance(UpdateEpicDto, req.body);
-      const errors = await validate(dto);
-      if (errors.length) {
-        throw new UserError(errors);
-      }
+      const updateEpicDto = (req as any).validatedData as UpdateEpicDto;
 
-      const updatedEpic = await this.epicService.update(id, dto);
+      const updatedEpic = await this.epicService.update(id, updateEpicDto);
       res.status(200).json({ epic: updatedEpic, success: true });
     } catch (error) {
       next(error);

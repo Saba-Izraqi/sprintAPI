@@ -1,32 +1,23 @@
 import { Request, Response, NextFunction } from "express";
 import { inject, injectable } from "tsyringe";
 import { ProjectService } from "../../app/services/project.service";
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
 import {
   CreateProjectDto,
   UpdateProjectDTO,
   ProjectResponseDto,
 } from "../../domain/DTOs/projectDTO";
-import { UserError } from "../../app/exceptions";
 import { FindProjectOptions } from "../../domain/types";
 
 @injectable()
 export class ProjectController {
   constructor(@inject(ProjectService) private projectService: ProjectService) {}
-
   async create(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(CreateProjectDto, {
-      ...req.body,
-      createdBy: req.body.userId,
-    });
     try {
-      const errors = await validate(dto);
-      if (errors.length) {
-        throw new UserError(errors);
-      }
+      const userId = req.user?.userId;
+      const createProjectDto = (req as any).validatedData as CreateProjectDto;
+      createProjectDto.createdBy = userId!;
 
-      const project = await this.projectService.create(dto);
+      const project = await this.projectService.create(createProjectDto);
       res
         .status(201)
         .json({ project: new ProjectResponseDto(project), success: true });
@@ -34,16 +25,11 @@ export class ProjectController {
       next(error);
     }
   }
-
   async update(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(UpdateProjectDTO, req.body, { excludeExtraneousValues: true }); // ! Dynamically map only exposed attributes.
-
     try {
-      const errors = await validate(dto);
-      if (errors.length) {
-        throw new UserError(errors);
-      }
-      const project = await this.projectService.update(dto);
+      const updateProjectDto = (req as any).validatedData as UpdateProjectDTO;
+
+      const project = await this.projectService.update(updateProjectDto);
       res
         .status(200)
         .json({ project: new ProjectResponseDto(project), success: true });
@@ -61,16 +47,15 @@ export class ProjectController {
       next(error);
     }
   }
-
   async find(req: Request, res: Response, next: NextFunction) {
-    const { userId } = req.body;
-    const query = req.query;
-    const where: FindProjectOptions = {
-      ...query,
-    };
-
     try {
-      const projects = await this.projectService.find(where, userId);
+      const userId = req.user?.userId;
+      const query = req.query;
+      const where: FindProjectOptions = {
+        ...query,
+      };
+
+      const projects = await this.projectService.find(where, userId!);
       res.status(200).json({
         projects: projects.map((p) => new ProjectResponseDto(p)),
         success: true,

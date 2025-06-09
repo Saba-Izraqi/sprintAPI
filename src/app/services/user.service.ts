@@ -37,14 +37,12 @@ export class UserService {
     }
     return new UserResponseDto(user);
   }
-
   async resetPassword(
     email: string,
     newPassword: string,
     oldPassword?: string,
   ) {
     if (oldPassword) {
-      console.debug(1)
       const user = await this.userRepo.findByEmail(email);
       const isValid =
         user && (await bcrypt.compare(oldPassword, user.password));
@@ -52,7 +50,6 @@ export class UserService {
         throw new UserError(["Invalid current password"], 401);
       }
     }
-    console.debug(2)
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await this.userRepo.updatePassword(email, hashedPassword);

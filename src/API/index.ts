@@ -21,14 +21,13 @@ export class AppServer {
   private setupSwagger() {
     setupSwagger(this.app);
   }
-
   private async setupRoutes() {
     this.app.get("/health-check", (_, res) => {
       res.send({ status: "ok" });
     });
 
     const routeFiles = await glob(
-      path.resolve(__dirname, "routes/*.ts").replace(/\\/g, "/")
+      path.resolve(__dirname, "routes/*.{ts,js}").replace(/\\/g, "/")
     );
 
     for (const filePath of routeFiles) {

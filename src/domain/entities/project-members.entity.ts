@@ -24,13 +24,9 @@ export class ProjectMember extends BaseEntity {
   })
   @JoinColumn({ name: "userId" })
   user!: User;
-
   @ManyToOne(() => Project, (project) => project.members, {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "projectId" })
   project!: Project;
-
-  @OneToMany(() => ProjectMember, (member) => member.user)
-  projectMemberships!: ProjectMember[];
 }

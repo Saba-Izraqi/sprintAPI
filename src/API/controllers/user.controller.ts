@@ -1,26 +1,20 @@
 import { injectable, inject } from "tsyringe";
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../../app/services/user.service";
-import { validate } from "class-validator";
-import { plainToInstance } from "class-transformer";
 import { RegisterUserDto, LoginUserDto } from "../../domain/DTOs/userDTO";
 import { Token } from "../enums/token";
 import { genToken } from "../utils/token";
 import PostmarkSender from "../../infrastructure/email/postmarkSender";
-import { UserError } from "../../app/exceptions";
 
 @injectable()
 export class UserController {
   constructor(@inject(UserService) private userService: UserService) {}
 
   async register(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(RegisterUserDto, req.body);
     try {
-      const errors = await validate(dto);
-      if (errors.length) {
-        throw new UserError(errors);
-      }
-      const user = await this.userService.register(dto);
+      const registerUserDto = (req as any).validatedData as RegisterUserDto;
+      
+      const user = await this.userService.register(registerUserDto);
       const token = genToken({
         userId: user.id,
         userEmail: user.email,
@@ -50,14 +44,10 @@ export class UserController {
   }
 
   async login(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(LoginUserDto, req.body);
     try {
-      const errors = await validate(dto);
-      if (errors.length) {
-        throw new UserError(errors);
-      }
-
-      const user = await this.userService.login(dto);
+      const loginUserDto = (req as any).validatedData as LoginUserDto;
+      
+      const user = await this.userService.login(loginUserDto);
       const token = genToken({
         userId: user.id,
         userEmail: user.email,
@@ -68,14 +58,12 @@ export class UserController {
       next(error);
     }
   }
-
   async verifyEmail(req: Request, res: Response, next: NextFunction) {
-    const { userEmail } = req.body;
-    console.debug("email: ", userEmail);
-
     try {
+      const userEmail = req.user?.userEmail;
+
       const user = await this.userService.updateEmailVerification(
-        userEmail,
+        userEmail!,
         true
       );
       res.status(200).json({ success: true, user });
@@ -85,16 +73,16 @@ export class UserController {
   }
 
   async forgetPassword(req: Request, res: Response, next: NextFunction) {
-    const { email } = req.body;
-
-    const token = genToken({
-      userEmail: email,
-      userId: "unknown",
-      isEmailVerified: false,
-      tokenType: Token.RESET_PASSWORD,
-    });
-
     try {
+      const { email } = req.body;
+
+      const token = genToken({
+        userEmail: email,
+        userId: "unknown",
+        isEmailVerified: false,
+        tokenType: Token.RESET_PASSWORD,
+      });
+
       const user = await this.userService.getByEmail(email);
       if (user) {
         const resetURL = `http://localhost:5173/reset-password?token=${token}`;
@@ -115,29 +103,22 @@ export class UserController {
       next(error);
     }
   }
-
-  async resetPassword(req: Request, res: Response, next: NextFunction) {
-    const { oldPassword, password, userEmail, tokenType } = req.body;
-
-    const dto = plainToInstance(LoginUserDto, {
-      email: userEmail,
-      password,
-    });
+  async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const { oldPassword, password } = req.body;
+      const userEmail = req.user?.userEmail;
+      const tokenType = req.user?.tokenType;
+
       if (tokenType === Token.ACCESS && !oldPassword) {
-        throw new UserError(
-          "Old password is required. If you forget the password, press on forget password in login page.",
-          400
-        );
+        res.status(400).json({
+          success: false,
+          message: "Old password is required. If you forget the password, press on forget password in login page."
+        });
+        return;
       }
 
-      const errors = await validate(dto);
-      if (errors.length) {
-        console.error(errors);
-        throw new UserError(errors);
-      }
       await this.userService.resetPassword(
-        userEmail,
+        userEmail!,
         password,
         tokenType === Token.ACCESS ? oldPassword : null
       );

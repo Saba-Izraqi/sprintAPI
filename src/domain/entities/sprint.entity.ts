@@ -19,7 +19,10 @@ export class Sprint extends BaseEntity {
 
   @Column({ type: "date" })
   endDate!: Date;
-
+  @Column({ default: false })
+  isActive!: boolean;
+  @Column({default: false})
+  isArchived!: boolean;
   @Column()
   projectId!: string;
 

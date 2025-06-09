@@ -25,7 +25,6 @@ export const authenticate = (
   next: NextFunction,
 ): void => {
   const token = req.header("Authorization")?.split(" ")[1];
-  console.debug('token => ', req.header('Authorization'))
   if (!token) {
     res
       .status(401)
@@ -34,8 +33,7 @@ export const authenticate = (
     return;
   }
 
-  try {
-    const decoded = jwt.verify(
+  try {    const decoded = jwt.verify(
       token,
       "secretKeyPlaceHolderWillReplaceLater",
     ) as JwtPayload;
@@ -45,10 +43,7 @@ export const authenticate = (
       return;
     }
 
-    req.body = {
-      ...req.body,
-      ...decoded,
-    };
+    req.user = decoded as any;
 
     next();
   } catch (err) {

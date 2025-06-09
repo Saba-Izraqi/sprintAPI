@@ -5,7 +5,7 @@ import { ProjectMember } from "../../../domain/entities";
 import {
   CreateProjectMemberDto,
   UpdateProjectMemberDto,
-} from "../../../domain/DTOs/project-memderDTO";
+} from "../../../domain/DTOs/project-memberDTO";
 import { getDBError } from "../utils/handleDBErrors";
 import { UserError } from "../../../app/exceptions";
 

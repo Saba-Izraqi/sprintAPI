@@ -462,6 +462,197 @@ const options: swaggerJSDoc.Options = {
               type: 'string',
               example: '123e4567-e89b-12d3-a456-426614174000',
               description: 'ID of the project',
+            },          },
+        },
+
+        // Status Schemas
+        CreateStatusDto: {
+          type: 'object',
+          required: ['name', 'type'],
+          properties: {
+            name: {
+              type: 'string',
+              example: 'In Progress',
+              description: 'Name of the status',
+            },
+            type: {
+              type: 'integer',
+              enum: [0, 1, 2],
+              example: 1,
+              description: 'Type of status (0: BACKLOG, 1: IN_PROGRESS, 2: DONE)',
+            },
+            columnId: {
+              type: 'string',
+              example: '123e4567-e89b-12d3-a456-426614174000',
+              description: 'ID of the board column (optional)',
+            },
+          },
+        },
+        UpdateStatusDto: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              example: 'Updated Status Name',
+            },
+            type: {
+              type: 'integer',
+              enum: [0, 1, 2],
+              example: 2,
+              description: 'Type of status (0: BACKLOG, 1: IN_PROGRESS, 2: DONE)',
+            },
+            columnId: {
+              type: 'string',
+              example: '123e4567-e89b-12d3-a456-426614174000',
+              description: 'ID of the board column (optional)',
+            },
+          },
+        },
+        StatusResponseDto: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: '123e4567-e89b-12d3-a456-426614174000',
+            },
+            name: {
+              type: 'string',
+              example: 'In Progress',
+            },
+            type: {
+              type: 'integer',
+              example: 1,
+              description: 'Type of status (0: BACKLOG, 1: IN_PROGRESS, 2: DONE)',
+            },
+            columnId: {
+              type: 'string',
+              example: '123e4567-e89b-12d3-a456-426614174000',
+              description: 'ID of the board column (optional)',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+          },        },        // Sprint Schemas        CreateSprintDto: {
+          type: 'object',
+          required: ['name', 'startDate', 'endDate'],
+          properties: {
+            name: {
+              type: 'string',
+              maxLength: 25,
+              example: 'Sprint 1',
+              description: 'Name of the sprint',
+            },
+            startDate: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-01T00:00:00.000Z',
+              description: 'Start date of the sprint',
+            },
+            endDate: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-14T23:59:59.999Z',
+              description: 'End date of the sprint',
+            },
+            isActive: {
+              type: 'boolean',
+              example: false,
+              description: 'Whether the sprint is active',
+            },
+            isArchived: {
+              type: 'boolean',
+              example: false,
+              description: 'Whether the sprint is archived',
+            },
+          },
+        },        UpdateSprintDto: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              maxLength: 25,
+              example: 'Updated Sprint Name',
+              description: 'Updated name of the sprint',
+            },
+            startDate: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-01T00:00:00.000Z',
+              description: 'Updated start date',
+            },
+            endDate: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-14T23:59:59.999Z',
+              description: 'Updated end date',
+            },
+            isActive: {
+              type: 'boolean',
+              example: true,
+              description: 'Whether the sprint is active',
+            },
+            isArchived: {
+              type: 'boolean',
+              example: false,
+              description: 'Whether the sprint is archived',
+            },
+          },
+        },        SprintResponseDto: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              example: '123e4567-e89b-12d3-a456-426614174000',
+              description: 'Unique identifier of the sprint',
+            },
+            name: {
+              type: 'string',
+              example: 'Sprint 1',
+              description: 'Name of the sprint',
+            },
+            startDate: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-01T00:00:00.000Z',
+              description: 'Start date of the sprint',
+            },
+            endDate: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-14T23:59:59.999Z',
+              description: 'End date of the sprint',
+            },
+            isActive: {
+              type: 'boolean',
+              example: true,
+              description: 'Whether the sprint is currently active',
+            },
+            isArchived: {
+              type: 'boolean',
+              example: false,
+              description: 'Whether the sprint is archived',
+            },
+            projectId: {
+              type: 'string',
+              example: '123e4567-e89b-12d3-a456-426614174000',
+              description: 'ID of the project this sprint belongs to',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-01T00:00:00.000Z',
+              description: 'When the sprint was created',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-01-01T00:00:00.000Z',
+              description: 'When the sprint was last updated',
             },
           },
         },
@@ -554,7 +745,9 @@ const options: swaggerJSDoc.Options = {
               description: 'Total number of pages',
             },
           },
-        },        // Paginated Response Schema
+        },
+
+        // Paginated Response Schema
         PaginatedResponse: {
           type: 'object',
           properties: {
@@ -570,129 +763,6 @@ const options: swaggerJSDoc.Options = {
             },
             meta: {
               $ref: '#/components/schemas/PaginationMeta',
-            },
-          },
-        },
-
-        // Sprint Schemas
-        CreateSprintDto: {
-          type: 'object',
-          required: ['name', 'startDate', 'endDate'],
-          properties: {
-            name: {
-              type: 'string',
-              maxLength: 25,
-              example: 'Sprint 1',
-              description: 'Name of the sprint',
-            },
-            startDate: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-01T00:00:00.000Z',
-              description: 'Start date of the sprint',
-            },
-            endDate: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-14T23:59:59.999Z',
-              description: 'End date of the sprint',
-            },
-            isActive: {
-              type: 'boolean',
-              example: false,
-              description: 'Whether the sprint is active',
-            },
-            isArchived: {
-              type: 'boolean',
-              example: false,
-              description: 'Whether the sprint is archived',
-            },
-          },
-        },
-        UpdateSprintDto: {
-          type: 'object',
-          properties: {
-            name: {
-              type: 'string',
-              maxLength: 25,
-              example: 'Updated Sprint Name',
-              description: 'Updated name of the sprint',
-            },
-            startDate: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-01T00:00:00.000Z',
-              description: 'Updated start date',
-            },
-            endDate: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-14T23:59:59.999Z',
-              description: 'Updated end date',
-            },
-            isActive: {
-              type: 'boolean',
-              example: true,
-              description: 'Whether the sprint is active',
-            },
-            isArchived: {
-              type: 'boolean',
-              example: false,
-              description: 'Whether the sprint is archived',
-            },
-          },
-        },
-        SprintResponseDto: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'string',
-              example: '123e4567-e89b-12d3-a456-426614174000',
-              description: 'Unique identifier of the sprint',
-            },
-            name: {
-              type: 'string',
-              example: 'Sprint 1',
-              description: 'Name of the sprint',
-            },
-            startDate: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-01T00:00:00.000Z',
-              description: 'Start date of the sprint',
-            },
-            endDate: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-14T23:59:59.999Z',
-              description: 'End date of the sprint',
-            },
-            isActive: {
-              type: 'boolean',
-              example: true,
-              description: 'Whether the sprint is currently active',
-            },
-            isArchived: {
-              type: 'boolean',
-              example: false,
-              description: 'Whether the sprint is archived',
-            },
-            projectId: {
-              type: 'string',
-              example: '123e4567-e89b-12d3-a456-426614174000',
-              description: 'ID of the project this sprint belongs to',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-01T00:00:00.000Z',
-              description: 'When the sprint was created',
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time',
-              example: '2024-01-01T00:00:00.000Z',
-              description: 'When the sprint was last updated',
             },
           },
         },
@@ -719,18 +789,24 @@ const options: swaggerJSDoc.Options = {
       {
         name: 'Issues',
         description: 'Issue/Task management endpoints',
-      },
-      {
+      },      {
         name: 'Epics',
         description: 'Epic management endpoints',
+      },
+      {
+        name: 'Sprints',
+        description: 'Sprint management endpoints',
       },
       {
         name: 'Board Columns',
         description: 'Board column management endpoints',
       },
+      {
+        name: 'Status',
+        description: 'Status management endpoints',
+      },
     ],
-  },
-  apis: [
+  },  apis: [
     './src/API/controllers/*.ts',
     './src/API/routes/*.ts',
     './src/API/swagger/paths/*.ts',

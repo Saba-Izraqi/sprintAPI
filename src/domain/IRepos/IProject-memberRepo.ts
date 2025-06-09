@@ -1,4 +1,4 @@
-import { CreateProjectMemberDto, UpdateProjectMemberDto } from "../DTOs/project-memderDTO";
+import { CreateProjectMemberDto, UpdateProjectMemberDto } from "../DTOs/project-memberDTO";
 import { ProjectMember } from "../entities";
 
 export interface IProjectMemberRepo {

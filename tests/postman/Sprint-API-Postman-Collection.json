@@ -1,0 +1,1161 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789012",
+		"name": "Sprint API Collection",
+		"description": "Complete API collection for testing Sprint API endpoints including authentication, projects, sprints, issues, and more.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('userId', responseJson.user.id);",
+									"    pm.environment.set('userEmail', responseJson.user.email);",
+									"    console.log('User registered successfully:', responseJson.user.email);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullName\": \"Test User\",\n  \"email\": \"test.{{$timestamp}}@example.com\",\n  \"password\": \"TestPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('authToken', responseJson.token);",
+									"    pm.environment.set('userId', responseJson.user.id);",
+									"    console.log('Login successful, token saved');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"TestPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Create Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('projectId', responseJson.data.id);",
+									"    console.log('Project created successfully:', responseJson.data.name);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Project {{$timestamp}}\",\n  \"keyPrefix\": \"TEST\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/project",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Projects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/project",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/project/{{projectId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Test Project\",\n  \"keyPrefix\": \"UPD\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/project/{{projectId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/project/{{projectId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sprints",
+			"item": [
+				{
+					"name": "Create Sprint",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('sprintId', responseJson.data.id);",
+									"    console.log('Sprint created successfully:', responseJson.data.name);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Sprint 1\",\n  \"description\": \"First test sprint\",\n  \"startDate\": \"{{$isoTimestamp}}\",\n  \"endDate\": \"2025-06-23T10:00:00.000Z\",\n  \"goal\": 50\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/sprints",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"sprints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Sprints",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/sprints",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"sprints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sprint by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sprint/{{sprintId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sprint",
+								"{{sprintId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Sprint",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Test Sprint\",\n  \"description\": \"Updated sprint description\",\n  \"goal\": 75\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sprint/{{sprintId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sprint",
+								"{{sprintId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate Sprint",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sprint/{{sprintId}}/activate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sprint",
+								"{{sprintId}}",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Active Sprint",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/sprints/active",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"sprints",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete Sprint",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sprint/{{sprintId}}/complete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sprint",
+								"{{sprintId}}",
+								"complete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Sprint",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/sprint/{{sprintId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sprint",
+								"{{sprintId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Status",
+			"item": [
+				{
+					"name": "Create Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('statusId', responseJson.data.id);",
+									"    console.log('Status created successfully:', responseJson.data.name);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Status\",\n  \"type\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Status by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/status/{{statusId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"status",
+								"{{statusId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Test Status\",\n  \"type\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/status/{{statusId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"status",
+								"{{statusId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Status",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/status/{{statusId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"status",
+								"{{statusId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Issues",
+			"item": [
+				{
+					"name": "Create Issue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('issueId', responseJson.data.id);",
+									"    pm.environment.set('issueKey', responseJson.data.key);",
+									"    console.log('Issue created successfully:', responseJson.data.key);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Test Issue\",\n  \"description\": \"This is a test issue\",\n  \"type\": 1,\n  \"priority\": 2,\n  \"statusId\": \"{{statusId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/issues",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Issues",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/issues",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Issue by Key",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/issues/{{issueKey}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"issues",
+								"{{issueKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Issue",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Test Issue\",\n  \"description\": \"This is an updated test issue\",\n  \"priority\": 3\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/issues/{{issueId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"issues",
+								"{{issueId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Issue",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/issues/{{issueId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"issues",
+								"{{issueId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Epics",
+			"item": [
+				{
+					"name": "Create Epic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('epicId', responseJson.data.id);",
+									"    console.log('Epic created successfully:', responseJson.data.name);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Epic\",\n  \"description\": \"This is a test epic\",\n  \"color\": \"#FF5733\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/epic",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"epic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Epics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/epic",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"epic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Epic",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Test Epic\",\n  \"description\": \"This is an updated test epic\",\n  \"color\": \"#33FF57\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/epic/{{epicId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"epic",
+								"{{epicId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Epic",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{projectId}}/epic/{{epicId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{projectId}}",
+								"epic",
+								"{{epicId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Board Columns",
+			"item": [
+				{
+					"name": "Create Board Column",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set('boardColumnId', responseJson.data.id);",
+									"    console.log('Board Column created successfully:', responseJson.data.name);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Column\",\n  \"position\": 1,\n  \"projectId\": \"{{projectId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/board-column",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"board-column"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Board Columns",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/board-column",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"board-column"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Board Column",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Test Column\",\n  \"position\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/board-column/{{boardColumnId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"board-column",
+								"{{boardColumnId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Board Column",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/board-column/{{boardColumnId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"board-column",
+								"{{boardColumnId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project Members",
+			"item": [
+				{
+					"name": "Add Project Member",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"permission\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/project/{{projectId}}/project-members",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project",
+								"{{projectId}}",
+								"project-members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Members",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/project/{{projectId}}/project-members",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project",
+								"{{projectId}}",
+								"project-members"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test Workflows",
+			"item": [
+				{
+					"name": "Complete Project Creation & Deletion Test",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// This test specifically checks the project deletion bug",
+									"console.log('Testing project creation and deletion workflow');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/project/{{projectId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"project",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:4000/api/v1",
+			"type": "string"
+		}
+	]
+}

@@ -23,12 +23,9 @@ export class CreateProjectDto {
   @Transform(({ value }) => value.toLowerCase())
   @Matches(/^[A-Za-z]{1,5}$/, {
     message: "Project key must be 1-5 letters, not case sensitive",
-  })
-  keyPrefix!: string;
-
-  @IsNotEmpty()
-  @IsUUID()
-  createdBy!: string;
+  })  keyPrefix!: string;
+  
+  createdBy?: string;
 }
 
 export class UpdateProjectDTO {

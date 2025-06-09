@@ -50,12 +50,9 @@ export class EpicRepo implements IEpicRepo {
       throw error;
     }
   }
-
   async update(id: string, epicData: Partial<Epic>): Promise<Epic | null> {
     // Clean the data by only selecting the epic-specific fields for update
     const cleanEpicData: Partial<Epic> = { ...epicData }; // Use spread operator
-    
-    console.log('Updating epic with clean data:', cleanEpicData);
 
     const result = await this._epicRepo.update(id, cleanEpicData);
 

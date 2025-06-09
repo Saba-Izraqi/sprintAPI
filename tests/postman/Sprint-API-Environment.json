@@ -1,0 +1,86 @@
+{
+	"id": "12345678-1234-1234-1234-123456789012",
+	"name": "Sprint API Environment",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:4000/api/v1",
+			"description": "Base URL for the Sprint API",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"description": "JWT authentication token",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"description": "Current user ID",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "userEmail",
+			"value": "",
+			"description": "Current user email",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "projectId",
+			"value": "",
+			"description": "Current project ID",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "sprintId",
+			"value": "",
+			"description": "Current sprint ID",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "statusId",
+			"value": "",
+			"description": "Current status ID",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "issueId",
+			"value": "",
+			"description": "Current issue ID",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "issueKey",
+			"value": "",
+			"description": "Current issue key",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "epicId",
+			"value": "",
+			"description": "Current epic ID",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "boardColumnId",
+			"value": "",
+			"description": "Current board column ID",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-06-09T10:00:00.000Z",
+	"_postman_exported_using": "Postman/10.0.0"
+}

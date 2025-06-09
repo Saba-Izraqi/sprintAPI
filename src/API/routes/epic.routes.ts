@@ -3,8 +3,10 @@ import { BaseRoute } from "./base.route";
 import { EpicController } from "../controllers/epic.controller";
 import { authenticate } from "../middlewares/auth.middleware";
 import { restrictTokens } from "../middlewares/tokenTypes.middleware";
+import { validateDTO, validateDTOWithParams } from "../middlewares/validation.middleware";
 import { Token } from "../enums/token";
 import { Router } from "express";
+import { CreateEpicDto, UpdateEpicDto } from "../../domain/DTOs/epicDTO";
 
 export class EpicRoutes extends BaseRoute {
   public path = "/:projectId/epic";
@@ -21,8 +23,8 @@ export class EpicRoutes extends BaseRoute {
     this.router.use(authenticate);
     this.router.use(restrictTokens(Token.ACCESS));
 
-    this.router.post("/", controller.create.bind(controller));
-    this.router.patch("/:id", controller.update.bind(controller));
+    this.router.post("/", validateDTOWithParams(CreateEpicDto, ["projectId"]), controller.create.bind(controller));
+    this.router.patch("/:id", validateDTO(UpdateEpicDto), controller.update.bind(controller));
     this.router.delete("/:id", controller.delete.bind(controller));
 
     this.router.get("/", controller.get.bind(controller));
