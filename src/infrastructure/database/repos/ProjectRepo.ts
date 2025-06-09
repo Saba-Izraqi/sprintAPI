@@ -51,15 +51,21 @@ export class ProjectRepo implements IProjectRepo {
       throw getDBError(error);
     }
   }
-
   async find(options: FindProjectOptions, userId?: string): Promise<Project[]> {
     try {
+      console.log('🔍 ProjectRepo.find - Debug info:');
+      console.log('- options:', options);
+      console.log('- userId:', userId);
+      
       const queryBuilder = this._projectRepo
         .createQueryBuilder("project")
         .leftJoinAndSelect("project.members", "member");
 
       if (userId) {
+        console.log('- Adding userId filter to query');
         queryBuilder.where("member.userId = :userId", { userId });
+      } else {
+        console.log('- No userId provided, will return ALL projects');
       }
 
       if (options.name) {
@@ -84,8 +90,17 @@ export class ProjectRepo implements IProjectRepo {
         }
       );
 
-      return await queryBuilder.getMany();
+      const query = queryBuilder.getQuery();
+      const parameters = queryBuilder.getParameters();
+      console.log('- Generated SQL query:', query);
+      console.log('- Query parameters:', parameters);
+
+      const result = await queryBuilder.getMany();
+      console.log('- Projects found in database:', result?.length || 0);
+      
+      return result;
     } catch (error) {
+      console.log('- Error in ProjectRepo.find:', error);
       throw getDBError(error);
     }
   }

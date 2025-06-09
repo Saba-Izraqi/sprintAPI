@@ -43,12 +43,15 @@ export const authenticate = (
     if (!decoded || !decoded.userEmail) {
       res.status(401).json({ message: "Not authorized, email not found" });
       return;
-    }
-
-    req.body = {
+    }    req.body = {
       ...req.body,
       ...decoded,
     };
+
+    console.log('🔍 Auth middleware - Debug info:');
+    console.log('- Token found and decoded successfully');
+    console.log('- Decoded payload:', decoded);
+    console.log('- req.body after spreading decoded:', req.body);
 
     next();
   } catch (err) {

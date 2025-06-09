@@ -6,18 +6,30 @@ import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import errorMiddleware from "./middlewares/error.middleware";
-
+import { createServer, Server as HttpServer } from "http";
+import { container } from "tsyringe";
+import { SocketService } from "../infrastructure/socket/socket.service";
+import cors from "cors";
 export class AppServer {
   public app: Application;
+  public httpServer: HttpServer;
   private readonly apiPrefix = "/api/v1";
 
   constructor() {
     this.app = express();
+    this.httpServer = createServer(this.app);
     this.setupMiddleware();
   }
 
   private setupMiddleware() {
     this.app.use(express.json());
+    this.app.use(cors(
+      {
+        origin: "*", // Adjust this to your needs, e.g., specify allowed origins
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        credentials: true,
+      }
+    ))
   }
 
   private setupSwagger() {
@@ -53,16 +65,19 @@ export class AppServer {
           console.success(`Loaded route: ${routeInstance.path}`);
         }
       }
-    }
+    }  }
+
+  private setupSocket(): void {
+    const socketService = container.resolve(SocketService);
+    socketService.initialize(this.httpServer);
   }
 
-  public async listen(port: number) {
+  public async listen(port: number): Promise<void> {
     await this.setupRoutes();
     this.setupSwagger();
+    this.setupSocket();
     //*this middleware cant be registered in setupMiddlewares because it needs to be the last middleware
     this.app.use(errorMiddleware);
-    this.app.listen(port, () =>
-      console.info(`🚀 Server running at http://localhost:${port}`)
-    );
-  }
+    this.httpServer.listen(port, () =>
+      console.info(`🚀 Server running at http://localhost:${port}`)    );  }
 }

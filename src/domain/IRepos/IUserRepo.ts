@@ -4,6 +4,7 @@ import { User } from "../entities";
 export interface IUserRepo {
   create(user: RegisterUserDto): any;
   findByEmail(email: string): Promise<any>;
+  getAll(): Promise<User[]>;
   updateEmailVerification(
     email: string,
     isEmailVerified: boolean,

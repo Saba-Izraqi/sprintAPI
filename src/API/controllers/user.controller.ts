@@ -140,10 +140,18 @@ export class UserController {
         userEmail,
         password,
         tokenType === Token.ACCESS ? oldPassword : null
-      );
-      res.status(200).json({
+      );      res.status(200).json({
         success: true,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllUsers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await this.userService.getAllUsers();
+      res.status(200).json({ users, success: true });
     } catch (error) {
       next(error);
     }

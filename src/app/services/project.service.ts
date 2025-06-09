@@ -29,9 +29,14 @@ export class ProjectService {
 
   async delete(id: string): Promise<void> {
     return this.projectRepo.delete(id);
-  }
-
-  async find(options: FindProjectOptions, userId: string): Promise<Project[]> {
-    return this.projectRepo.find(options, "");
+  }  async find(options: FindProjectOptions, userId: string): Promise<Project[]> {
+    console.log('🔍 ProjectService.find - Debug info:');
+    console.log('- options:', options);
+    console.log('- userId:', userId);
+    
+    const result = await this.projectRepo.find(options, userId);
+    console.log('- projects returned from repo:', result?.length || 0);
+    
+    return result;
   }
 }
