@@ -2,10 +2,10 @@ import { authenticate } from "../middlewares/auth.middleware";
 import { BaseRoute } from "./base.route";
 import { BoardColumnController } from "../controllers/board-column.controller";
 import { container } from "tsyringe";
-import { ProjectPermission } from "../../domain/enums/types";
 import { restrictTo } from "../middlewares/permissions.middleware";
 import { restrictTokens } from "../middlewares/tokenTypes.middleware";
 import { Token } from "../enums/token";
+import { ProjectPermission } from '../../domain/types';
 
 export class BoardColumnRoutes extends BaseRoute {
   public path = "/board-column";
