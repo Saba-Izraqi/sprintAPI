@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
-import { ProjectPermission } from "../enums/types";
 import { UserResponseDto } from "./userDTO";
 import { ProjectMember } from "../entities";
+import { ProjectPermission } from '../types';
 
 export class CreateProjectMemberDto {
   @IsNotEmpty()
