@@ -1,11 +1,11 @@
 import { injectable } from "tsyringe";
-import { IProjectMemberRepo } from "../../../domain/IRepos/IProject-memberRepo";
+import { IProjectMemberRepo } from "../../../domain/IRepos/IProjectMemberRepo";
 import { AppDataSource } from "../data-source";
 import { ProjectMember } from "../../../domain/entities";
 import {
   CreateProjectMemberDto,
   UpdateProjectMemberDto,
-} from "../../../domain/DTOs/project-memderDTO";
+} from "../../../domain/DTOs/projectMemberDTO";
 import { getDBError } from "../utils/handleDBErrors";
 import { UserError } from "../../../app/exceptions";
 

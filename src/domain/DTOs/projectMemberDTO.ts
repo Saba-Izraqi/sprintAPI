@@ -1,7 +1,11 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
+<<<<<<< HEAD:src/domain/DTOs/project-memderDTO.ts
 import { ProjectPermission } from "../types/enums";
+=======
+>>>>>>> 82f029448a06a170d6edf0c84c36c7c39d8a7954:src/domain/DTOs/projectMemberDTO.ts
 import { UserResponseDto } from "./userDTO";
 import { ProjectMember } from "../entities";
+import { ProjectPermission } from '../types';
 
 /**
  * DTO for creating a new project member
