@@ -10,5 +10,4 @@ export interface INotificationRepo {
   markAsRead(id: string): Promise<Notification>;
   markAllAsRead(recipientId: string): Promise<void>;
   getUnreadCount(recipientId: string): Promise<number>;
-  findScheduledNotifications(): Promise<Notification[]>;
 }

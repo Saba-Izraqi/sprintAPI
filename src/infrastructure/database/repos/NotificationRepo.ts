@@ -2,7 +2,11 @@ import { injectable } from "tsyringe";
 import { AppDataSource } from "../data-source";
 import { Notification } from "../../../domain/entities/notification.entity";
 import { INotificationRepo } from "../../../domain/IRepos/INotificationRepo";
-import { CreateNotificationDto, UpdateNotificationDto, NotificationQueryDto } from "../../../domain/DTOs/notificationDTO";
+import {
+  CreateNotificationDto,
+  UpdateNotificationDto,
+  NotificationQueryDto,
+} from "../../../domain/DTOs/notificationDTO";
 import { getDBError } from "../utils/handleDBErrors";
 import { UserError, ServerError } from "../../../app/exceptions";
 
@@ -54,7 +58,10 @@ export class NotificationRepo implements INotificationRepo {
    * @returns Promise<Notification[]> - Array of notifications
    * @throws ServerError - If database operation fails
    */
-  async findByRecipientId(recipientId: string, query?: NotificationQueryDto): Promise<Notification[]> {
+  async findByRecipientId(
+    recipientId: string,
+    query?: NotificationQueryDto
+  ): Promise<Notification[]> {
     try {
       const queryBuilder = this.repository
         .createQueryBuilder("notification")
@@ -64,15 +71,21 @@ export class NotificationRepo implements INotificationRepo {
         .orderBy("notification.createdAt", "DESC");
 
       if (query?.isRead !== undefined) {
-        queryBuilder.andWhere("notification.isRead = :isRead", { isRead: query.isRead });
+        queryBuilder.andWhere("notification.isRead = :isRead", {
+          isRead: query.isRead,
+        });
       }
 
       if (query?.type) {
-        queryBuilder.andWhere("notification.type = :type", { type: query.type });
+        queryBuilder.andWhere("notification.type = :type", {
+          type: query.type,
+        });
       }
 
       if (query?.priority) {
-        queryBuilder.andWhere("notification.priority = :priority", { priority: query.priority });
+        queryBuilder.andWhere("notification.priority = :priority", {
+          priority: query.priority,
+        });
       }
 
       if (query?.page && query?.limit) {
@@ -176,24 +189,5 @@ export class NotificationRepo implements INotificationRepo {
       throw new ServerError(dbError.message || "Failed to get unread count");
     }
   }
-
-  /**
-   * Find notifications scheduled for sending
-   * @returns Promise<Notification[]> - Array of scheduled notifications
-   * @throws ServerError - If database operation fails
-   */
-  async findScheduledNotifications(): Promise<Notification[]> {
-    try {
-      return await this.repository
-        .createQueryBuilder("notification")
-        .leftJoinAndSelect("notification.recipient", "recipient")
-        .leftJoinAndSelect("notification.sender", "sender")
-        .where("notification.scheduledFor <= :now", { now: new Date() })
-        .andWhere("notification.isRead = false")
-        .getMany();
-    } catch (error: unknown) {
-      const dbError = getDBError(error);
-      throw new ServerError(dbError.message || "Failed to find scheduled notifications");
-    }
-  }
 }
+

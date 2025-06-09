@@ -6,25 +6,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { BaseEntity, User } from ".";
-
-export enum NotificationType {
-  PROJECT_INVITATION = "PROJECT_INVITATION",
-  ISSUE_ASSIGNED = "ISSUE_ASSIGNED",
-  ISSUE_UPDATED = "ISSUE_UPDATED",
-  SPRINT_STARTED = "SPRINT_STARTED",
-  SPRINT_COMPLETED = "SPRINT_COMPLETED",
-  COMMENT_ADDED = "COMMENT_ADDED",
-  EPIC_UPDATED = "EPIC_UPDATED",
-  PROJECT_UPDATED = "PROJECT_UPDATED",
-  GENERAL = "GENERAL",
-}
-
-export enum NotificationPriority {
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
-  URGENT = "URGENT",
-}
+import { NotificationType, NotificationPriority } from "../types/enums";
 
 /**
  * Notification entity representing system notifications
@@ -79,7 +61,5 @@ export class Notification extends BaseEntity {
 
   @Column({ default: false })
   emailSent!: boolean;
-
-  @Column({ nullable: true })
-  scheduledFor?: Date;
 }
+

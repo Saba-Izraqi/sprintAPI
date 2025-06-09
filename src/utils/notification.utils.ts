@@ -9,7 +9,7 @@ import {
   sendNotificationToUsers as sendNotificationToUsersHelper,
   sendProjectNotification as sendProjectNotificationHelper
 } from "../app/services/notification.service";
-import { NotificationType, NotificationPriority } from "../domain/entities/notification.entity";
+import { NotificationType, NotificationPriority } from "../domain/types/enums";
 
 /**
  * Send a notification to a single user

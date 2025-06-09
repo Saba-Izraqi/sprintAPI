@@ -3,7 +3,7 @@ import {
   sendNotificationToUsers, 
   sendProjectNotification 
 } from "../app/services/notification.service";
-import { NotificationType, NotificationPriority } from "../domain/entities/notification.entity";
+import { NotificationType, NotificationPriority } from "../domain/types/enums";
 
 /**
  * Example usage of the notification system
@@ -99,22 +99,4 @@ export async function scheduleSprintEndReminder(memberIds: string[], sprintName:
       }
     });
   }
-}
-
-// Example 6: Send comment notification with metadata
-export async function notifyCommentAdded(issueAssigneeId: string, issueKey: string, commenterId: string, commentText: string) {
-  await sendNotification({
-    title: "New Comment",
-    message: `${commentText.substring(0, 100)}${commentText.length > 100 ? '...' : ''}`,
-    type: NotificationType.COMMENT_ADDED,
-    recipientId: issueAssigneeId,
-    senderId: commenterId,
-    priority: NotificationPriority.LOW,
-    actionUrl: `/issues/${issueKey}#comments`,
-    metadata: {
-      issueKey,
-      commentLength: commentText.length,
-      action: "comment_added"
-    }
-  });
 }

@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID, IsBoolean, IsObject, IsUrl, IsDateString } from "class-validator";
-import { NotificationType, NotificationPriority } from "../entities/notification.entity";
+import { NotificationType, NotificationPriority } from "../types/enums";
 
 export class CreateNotificationDto {
   @IsNotEmpty()
@@ -36,9 +36,7 @@ export class CreateNotificationDto {
   @IsOptional()
   emailSent?: boolean;
 
-  @IsDateString()
-  @IsOptional()
-  scheduledFor?: Date;
+
 }
 
 export class UpdateNotificationDto {
@@ -67,7 +65,6 @@ export class NotificationResponseDto {
   metadata?: Record<string, any>;
   actionUrl?: string;
   emailSent!: boolean;
-  scheduledFor?: Date;
   createdAt!: Date;
   updatedAt!: Date;
 }
@@ -90,4 +87,116 @@ export class NotificationQueryDto {
 
   @IsOptional()
   limit?: number;
+}
+
+/**
+ * DTO for sending a notification to a single user
+ */
+export class SendNotificationDto {
+  @IsNotEmpty()
+  @IsString()
+  title!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  message!: string;
+
+  @IsEnum(NotificationType)
+  type!: NotificationType;
+
+  @IsUUID()
+  recipientId!: string;
+
+  @IsUUID()
+  @IsOptional()
+  senderId?: string;
+
+  @IsEnum(NotificationPriority)
+  @IsOptional()
+  priority?: NotificationPriority;
+
+  @IsObject()
+  @IsOptional()
+  metadata?: Record<string, unknown>;
+
+  @IsUrl()
+  @IsOptional()
+  actionUrl?: string;
+
+  @IsDateString()
+  @IsOptional()
+  scheduleFor?: Date;
+}
+
+/**
+ * DTO for sending notifications to multiple users
+ */
+export class SendNotificationToUsersDto {
+  @IsNotEmpty()
+  @IsString()
+  title!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  message!: string;
+
+  @IsEnum(NotificationType)
+  type!: NotificationType;
+
+  @IsUUID(4, { each: true })
+  recipientIds!: string[];
+
+  @IsUUID()
+  @IsOptional()
+  senderId?: string;
+
+  @IsEnum(NotificationPriority)
+  @IsOptional()
+  priority?: NotificationPriority;
+
+  @IsObject()
+  @IsOptional()
+  metadata?: Record<string, unknown>;
+
+  @IsUrl()
+  @IsOptional()
+  actionUrl?: string;
+}
+
+/**
+ * DTO for sending notifications to all members of a project
+ */
+export class SendProjectNotificationDto {
+  @IsNotEmpty()
+  @IsString()
+  title!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  message!: string;
+
+  @IsEnum(NotificationType)
+  type!: NotificationType;
+
+  @IsUUID()
+  projectId!: string;
+
+  @IsUUID(4, { each: true })
+  memberIds!: string[];
+
+  @IsUUID()
+  @IsOptional()
+  senderId?: string;
+
+  @IsEnum(NotificationPriority)
+  @IsOptional()
+  priority?: NotificationPriority;
+
+  @IsObject()
+  @IsOptional()
+  metadata?: Record<string, unknown>;
+
+  @IsUrl()
+  @IsOptional()
+  actionUrl?: string;
 }
