@@ -61,7 +61,7 @@ export class ProjectResponseDto {
   members: {
     id: string;
     permission: ProjectPermission;
-    user: UserResponseDto;
+    user: UserResponseDto | null;
   }[];
   constructor(project: Project) {
     this.id = project.id;
@@ -69,10 +69,21 @@ export class ProjectResponseDto {
     this.keyPrefix = project.keyPrefix;
     this.createdBy = project.createdBy;
     this.members =
-      project.members?.map((member) => ({
-        id: member.id,
-        permission: member.permission,
-        user: new UserResponseDto(member.user),
-      })) ?? [];
+      project.members?.map((member) => {
+        console.debug("Mapping project member:", member);
+        if (member.user) {
+          return {
+            id: member.id,
+            permission: member.permission,
+            user: new UserResponseDto(member.user),
+          };
+        } else {
+          return {
+            id: member.id,
+            permission: member.permission,
+            user: null,
+          };
+        }
+      }) ?? [];
   }
 }

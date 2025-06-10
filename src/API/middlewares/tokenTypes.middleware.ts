@@ -25,7 +25,7 @@ import { Token } from "../enums/token";
 export const restrictTokens =
   (...types: Token[]) =>
   (req: Request, res: Response, next: NextFunction): void => {
-    const { tokenType } = req.body;
+    const { tokenType } = req.user!;
     if (!tokenType) {
       res.status(403).json({
         message: "Not authorized, unknown token type",
