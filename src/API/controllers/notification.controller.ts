@@ -23,10 +23,13 @@ export class NotificationController {
    * @param res - Express response object
    * @param next - Express next function
    * @returns Promise<void>
-   */
-  async getNotifications(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async getNotifications(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const userId = req.body.userId;
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
       const query = plainToInstance(NotificationQueryDto, req.query);
       
       const errors = await validate(query);
@@ -56,11 +59,14 @@ export class NotificationController {
    * @param res - Express response object
    * @param next - Express next function
    * @returns Promise<void>
-   */
-  async getNotificationById(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async getNotificationById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.body.userId;
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
       
       const notification = await this.notificationService.findById(id);
       
@@ -85,11 +91,14 @@ export class NotificationController {
    * @param res - Express response object
    * @param next - Express next function
    * @returns Promise<void>
-   */
-  async markAsRead(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async markAsRead(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.body.userId;
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
       
       const notification = await this.notificationService.findById(id);
       
@@ -119,10 +128,13 @@ export class NotificationController {
    * @param res - Express response object
    * @param next - Express next function
    * @returns Promise<void>
-   */
-  async markAllAsRead(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async markAllAsRead(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const userId = req.body.userId;
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
       
       await this.notificationService.markAllAsRead(userId);
       
@@ -140,11 +152,14 @@ export class NotificationController {
    * @param res - Express response object
    * @param next - Express next function
    * @returns Promise<void>
-   */
-  async deleteNotification(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async deleteNotification(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.body.userId;
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
       
       const notification = await this.notificationService.findById(id);
       
@@ -173,10 +188,13 @@ export class NotificationController {
    * @param res - Express response object
    * @param next - Express next function
    * @returns Promise<void>
-   */
-  async getUnreadCount(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async getUnreadCount(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const userId = req.body.userId;
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
       const unreadCount = await this.notificationService.getUnreadCount(userId);
       
       res.json({ unreadCount });
@@ -199,11 +217,9 @@ export class NotificationController {
       
       if (errors.length) {
         throw new UserError(errors);
-      }
-
-      // Set sender as current user if not provided
+      }      // Set sender as current user if not provided
       if (!dto.senderId) {
-        dto.senderId = req.body.userId;
+        dto.senderId = req.user?.id;
       }
 
       const notification = await this.notificationService.create(dto);

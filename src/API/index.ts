@@ -23,6 +23,11 @@ export class AppServer {
 
   private setupMiddleware() {
     this.app.use(express.json());
+    this.app.use(cors({
+      origin: "*", // Allow all origins, adjust as needed for security
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      preflightContinue: false,
+    }))
   }
 
   private async setupRoutes() {
