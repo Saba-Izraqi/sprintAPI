@@ -1,12 +1,23 @@
 import { Request, Response, NextFunction } from "express";
 import { ProjectPermission } from "../../domain/types";
+import { container, inject } from "tsyringe";
+import { IProjectMemberRepo } from "../../domain/IRepos/IProjectMemberRepo";
 
 export function restrictTo(allowedPermission: ProjectPermission) {
-  return function (req: Request, res: Response, next: NextFunction): void {
-    //TODO : permission/role is not exist in the token. I should fetch the role for the user in the project from the DB.
-    const permission = req.body.permission; 
+  return async function (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    next();
+    const membersRepo: IProjectMemberRepo =
+      container.resolve("IProjectMemberRepo");
+    const membership = await membersRepo.find({
+      userId: req.user?.id,
+      projectId: req.params.projectId,
+    });
 
-    if (permission < allowedPermission) {
+    if (membership[0].permission < allowedPermission) {
       res.status(403).json({
         success: false,
         message: "Forbidden: You do not have permission to perform this action",
