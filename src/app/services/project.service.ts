@@ -25,11 +25,11 @@ export class ProjectService {
       projectId: project.id,
       permission: ProjectPermission.ADMINISTRATOR,
     };
-    this.memberService.add(newMembership);
+    const members = await this.memberService.add(newMembership);
 
     // TODO: Should create the default status, columns and sprint for the project
     // * Cannot address this [todo] until the status, columns and sprint services are implemented
-    return project;
+    return { ...project, members: [members] };
   }
 
   async update(dto: UpdateProjectDTO): Promise<Project> {
