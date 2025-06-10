@@ -5,7 +5,7 @@ export abstract class BaseRoute {
   public abstract path: string;
 
   constructor() {
-    this.router = Router();
+    this.router = Router({ mergeParams: true });
     this.initRoutes();
   }
 

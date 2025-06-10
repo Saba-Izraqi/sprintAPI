@@ -8,6 +8,7 @@ import {
 } from "../../../domain/DTOs/projectMemberDTO";
 import { getDBError } from "../utils/handleDBErrors";
 import { ServerError, UserError } from "../../../app/exceptions";
+import { FindProjectMemberOptions } from "../../../domain/types";
 
 @injectable()
 export class ProjectMemberRepo implements IProjectMemberRepo {
@@ -48,7 +49,14 @@ export class ProjectMemberRepo implements IProjectMemberRepo {
     throw new Error("Method not implemented.");
   }
 
-  get(projectId: string): Promise<ProjectMember[]> {
-    throw new Error("Method not implemented.");
+  async find(where: FindProjectMemberOptions): Promise<ProjectMember[]> {
+    try {
+      return await this._projectMemberRepo.find({
+        where,
+        relations: ["user", "project"],
+      });
+    } catch (error) {
+      throw getDBError(error);
+    }
   }
 }
