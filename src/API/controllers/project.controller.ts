@@ -16,10 +16,13 @@ export class ProjectController {
   constructor(@inject(ProjectService) private projectService: ProjectService) {}
 
   async create(req: Request, res: Response, next: NextFunction) {
+    const creator = req.user?.id;
+
     const dto = plainToInstance(CreateProjectDto, {
       ...req.body,
-      createdBy: req.body.userId,
+      createdBy: creator,
     });
+
     try {
       const errors = await validate(dto);
       if (errors.length) {
@@ -36,7 +39,9 @@ export class ProjectController {
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(UpdateProjectDTO, req.body, { excludeExtraneousValues: true }); // ! Dynamically map only exposed attributes.
+    const dto = plainToInstance(UpdateProjectDTO, req.body, {
+      excludeExtraneousValues: true,
+    }); // ! Dynamically map only exposed attributes.
 
     try {
       const errors = await validate(dto);
@@ -62,14 +67,14 @@ export class ProjectController {
     }
   }
   async find(req: Request, res: Response, next: NextFunction) {
-    const { userId } = req.body;
+    const user = req.user?.id;
     const query = req.query;
     const where: FindProjectOptions = {
       ...query,
     };
 
     try {
-      const projects = await this.projectService.find(where, userId);
+      const projects = await this.projectService.find(where, user!);
       res.status(200).json({
         projects: projects.map((p) => new ProjectResponseDto(p)),
         success: true,
