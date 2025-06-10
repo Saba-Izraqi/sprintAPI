@@ -5,16 +5,27 @@ import {
   UpdateProjectDTO,
 } from "../../domain/DTOs/projectDTO";
 import { Project } from "../../domain/entities";
-import { FindProjectOptions } from "../../domain/types";
+import { FindProjectOptions, ProjectPermission } from "../../domain/types";
+import { ProjectMembersService } from "./project-members.service";
+import { CreateProjectMemberDto } from "../../domain/DTOs/projectMemberDTO";
 
 @injectable()
 export class ProjectService {
-  constructor(@inject("IProjectRepo") private projectRepo: IProjectRepo) {}
+  constructor(
+    @inject("IProjectRepo") private projectRepo: IProjectRepo,
+    @inject("ProjectMembersService")
+    private memberService: ProjectMembersService
+  ) {}
 
   async create(dto: CreateProjectDto): Promise<Project> {
-    const project = this.projectRepo.create(dto);
-    // TODO: add the creator as a member of the project with role ADMINISTRATOR
-    // * Cannot address this [todo] until the projectMembers service is implemented
+    const project = await this.projectRepo.create(dto);
+
+    const newMembership: CreateProjectMemberDto = {
+      userId: project.createdBy,
+      projectId: project.id,
+      permission: ProjectPermission.ADMINISTRATOR,
+    };
+    this.memberService.add(newMembership);
 
     // TODO: Should create the default status, columns and sprint for the project
     // * Cannot address this [todo] until the status, columns and sprint services are implemented
@@ -29,14 +40,9 @@ export class ProjectService {
 
   async delete(id: string): Promise<void> {
     return this.projectRepo.delete(id);
-  }  async find(options: FindProjectOptions, userId: string): Promise<Project[]> {
-    console.log('🔍 ProjectService.find - Debug info:');
-    console.log('- options:', options);
-    console.log('- userId:', userId);
-    
-    const result = await this.projectRepo.find(options, userId);
-    console.log('- projects returned from repo:', result?.length || 0);
-    
-    return result;
+  }
+
+  async find(options: FindProjectOptions, userId: string): Promise<Project[]> {
+    return this.projectRepo.find(options, userId);
   }
 }

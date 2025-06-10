@@ -1,45 +1,24 @@
-import { Request, Response, NextFunction } from "express";
-import { inject, injectable } from "tsyringe";
-import { ProjectMemberService } from "../../app/services/project-members.service";
 import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import { inject, injectable } from "tsyringe";
 import {
   CreateProjectMemberDto,
-  UpdateProjectMemberDto,
   ProjectMemberResponseDto,
-} from "../../domain/DTOs/project-memderDTO";
+} from "../../domain/DTOs/projectMemberDTO";
+import { NextFunction, Request, Response } from "express";
 import { UserError } from "../../app/exceptions";
+import { validate } from "class-validator";
+import { ProjectMembersService } from "../../app/services/project-members.service";
 
 @injectable()
-export class ProjectMemberController {
+export class ProjectMembersController {
   constructor(
-    @inject(ProjectMemberService)
-    private projectMemberService: ProjectMemberService
+    @inject(ProjectMembersService) private service: ProjectMembersService
   ) {}
 
-  async addMember(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(CreateProjectMemberDto, req.body);
-    try {
-      const errors = await validate(dto);
-      if (errors.length) {
-        throw new UserError(errors);
-      }
-
-      const member = await this.projectMemberService.addMember(dto);
-      res.status(201).json({
-        member: new ProjectMemberResponseDto(member),
-        success: true,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async updatePermission(req: Request, res: Response, next: NextFunction) {
-    const dto = plainToInstance(UpdateProjectMemberDto, req.body, {
-      excludeExtraneousValues: true,
+  async add(req: Request, res: Response, next: NextFunction) {
+    const dto = plainToInstance(CreateProjectMemberDto, {
+      ...req.body,
     });
-    const { memberId } = req.params;
 
     try {
       const errors = await validate(dto);
@@ -47,45 +26,10 @@ export class ProjectMemberController {
         throw new UserError(errors);
       }
 
-      const member = await this.projectMemberService.updatePermission(
-        memberId,
-        dto
-      );
-      res.status(200).json({
-        member: new ProjectMemberResponseDto(member),
-        success: true,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
+      const membership = await this.service.add(dto);
 
-  async removeMember(req: Request, res: Response, next: NextFunction) {
-    const { memberId } = req.params;
-
-    try {
-      await this.projectMemberService.removeMember(memberId);
-      res.status(200).json({
-        message: "Project member removed successfully",
-        success: true,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getProjectMembers(req: Request, res: Response, next: NextFunction) {
-    const { projectId } = req.params;
-
-    try {
-      const members = await this.projectMemberService.getProjectMembers(
-        projectId
-      );
-      const memberDtos = members.map(
-        (member) => new ProjectMemberResponseDto(member)
-      );
-      res.status(200).json({
-        members: memberDtos,
+      res.status(201).json({
+        membership: new ProjectMemberResponseDto(membership),
         success: true,
       });
     } catch (error) {

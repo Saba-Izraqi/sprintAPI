@@ -1,34 +1,19 @@
-import { injectable, inject } from "tsyringe";
-import { IProjectMemberRepo } from "../../domain/IRepos/IProject-memberRepo";
+import { injectable } from "tsyringe";
+import { IProjectMemberRepo } from "../../domain/IRepos/IProjectMemberRepo";
 import {
   CreateProjectMemberDto,
   UpdateProjectMemberDto,
-} from "../../domain/DTOs/project-memderDTO";
-import { ProjectMember } from "../../domain/entities";
+} from "../../domain/DTOs/projectMemberDTO";
 
 @injectable()
-export class ProjectMemberService {
-  constructor(
-    @inject("IProjectMemberRepo")
-    private projectMemberRepo: IProjectMemberRepo
-  ) {}
+export class ProjectMembersService {
+  constructor(private repo: IProjectMemberRepo) {}
 
-  async addMember(dto: CreateProjectMemberDto): Promise<ProjectMember> {
-    return this.projectMemberRepo.add(dto);
+  async add(newMembership: CreateProjectMemberDto) {
+    return this.repo.add(newMembership); // TODO: Fire notification
   }
 
-  async updatePermission(
-    memberId: string,
-    dto: UpdateProjectMemberDto
-  ): Promise<ProjectMember> {
-    return this.projectMemberRepo.updatePermission(memberId, dto);
-  }
-
-  async removeMember(memberId: string): Promise<void> {
-    return this.projectMemberRepo.remove(memberId);
-  }
-
-  async getProjectMembers(projectId: string): Promise<ProjectMember[]> {
-    return this.projectMemberRepo.findByProject(projectId);
+  async update(membership: UpdateProjectMemberDto) {
+    this.repo.update(membership); // TODO: Fire notification but check with saba before
   }
 }

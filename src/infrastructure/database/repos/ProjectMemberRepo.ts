@@ -7,60 +7,52 @@ import {
   UpdateProjectMemberDto,
 } from "../../../domain/DTOs/projectMemberDTO";
 import { getDBError } from "../utils/handleDBErrors";
-import { UserError } from "../../../app/exceptions";
+import { ServerError, UserError } from "../../../app/exceptions";
+import { FindProjectMemberOptions } from "../../../domain/types";
 
 @injectable()
 export class ProjectMemberRepo implements IProjectMemberRepo {
   private _projectMemberRepo;
 
   constructor() {
-    this._projectMemberRepo = AppDataSource.getRepository(ProjectMember);
+    try {
+      this._projectMemberRepo = AppDataSource.getRepository(ProjectMember);
+    } catch (error) {
+      throw new ServerError("Cannot get project member repository", 500);
+    }
   }
 
   async add(dto: CreateProjectMemberDto): Promise<ProjectMember> {
     try {
-      const member = this._projectMemberRepo.create(dto);
-      return await this._projectMemberRepo.save(member);
+      const projectMember = this._projectMemberRepo.create(dto);
+      return await this._projectMemberRepo.save(projectMember);
     } catch (error) {
       throw getDBError(error);
     }
   }
 
-  async updatePermission(
-    memberId: string,
-    dto: UpdateProjectMemberDto
-  ): Promise<ProjectMember> {
+  async update(dto: UpdateProjectMemberDto): Promise<ProjectMember> {
     try {
-      await this._projectMemberRepo.update(memberId, dto);
-      const updated = await this._projectMemberRepo.findOne({
-        where: { id: memberId },
-        relations: ["user", "project"],
-      });
-      if (!updated) {
-        throw new UserError(["Project member not found"], 404);
+      const where = { userId: dto.userId, projectId: dto.projectId };
+      const res = await this._projectMemberRepo.update(where, dto);
+      if (res.affected === 0) {
+        throw new UserError("Project not found or no changes made.", 404);
       }
-      return updated;
+
+      return await this._projectMemberRepo.findOneOrFail({ where });
     } catch (error) {
       throw getDBError(error);
     }
   }
 
-  async remove(memberId: string): Promise<void> {
-    try {
-      const result = await this._projectMemberRepo.delete(memberId);
-
-      if (!result.affected) {
-        throw new UserError(["Project member not found"], 404);
-      }
-    } catch (error) {
-      throw getDBError(error);
-    }
+  remove(membershipId: string): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 
-  async findByProject(projectId: string): Promise<ProjectMember[]> {
+  async find(where: FindProjectMemberOptions): Promise<ProjectMember[]> {
     try {
       return await this._projectMemberRepo.find({
-        where: { project: { id: projectId } },
+        where,
         relations: ["user", "project"],
       });
     } catch (error) {
