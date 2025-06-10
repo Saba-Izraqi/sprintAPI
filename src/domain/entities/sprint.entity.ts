@@ -18,11 +18,12 @@ export class Sprint extends BaseEntity {
   startDate!: Date;
 
   @Column({ type: "date" })
-  endDate!: Date;
-  @Column({ default: false })
+  endDate!: Date;  @Column({ default: false })
   isActive!: boolean;
   @Column({default: false})
   isArchived!: boolean;
+  @Column({ default: false })
+  isCompleted!: boolean;
   @Column()
   projectId!: string;
 

@@ -46,11 +46,20 @@ export class BoardColumnRepo implements IBoardColumnRepo {
       throw getDBError(error);
     }
   }
-
   async get(projectId: string): Promise<BoardColumn[]> {
     try {
       return await this._boardColumnRepo.find({
         where: { projectId },
+        order: { order: "ASC" as const },
+      });
+    } catch (error) {
+      throw getDBError(error);
+    }
+  }
+
+  async getAll(): Promise<BoardColumn[]> {
+    try {
+      return await this._boardColumnRepo.find({
         order: { order: "ASC" as const },
       });
     } catch (error) {

@@ -6,4 +6,5 @@ export interface IProjectMemberRepo {
   updatePermission(memberId: string, dto: UpdateProjectMemberDto): Promise<ProjectMember>;
   remove(memberId: string): Promise<void>;
   findByProject(projectId: string): Promise<ProjectMember[]>;
+  findAll(): Promise<ProjectMember[]>;
 }

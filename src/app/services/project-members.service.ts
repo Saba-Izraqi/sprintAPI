@@ -64,8 +64,7 @@ export class ProjectMemberService {
 
   async removeMember(memberId: string): Promise<void> {
     await this._projectMemberRepo.remove(memberId);
-  }
-  async getProjectMembers(projectId: string): Promise<ProjectMemberResponseDto[]> {
+  }  async getProjectMembers(projectId: string): Promise<ProjectMemberResponseDto[]> {
     // Validate that the project exists
     const projects = await this._projectRepo.find({ id: projectId });
     if (!projects || projects.length === 0) {
@@ -73,6 +72,11 @@ export class ProjectMemberService {
     }
 
     const members = await this._projectMemberRepo.findByProject(projectId);
+    return members.map(member => new ProjectMemberResponseDto(member));
+  }
+
+  async getAll(): Promise<ProjectMemberResponseDto[]> {
+    const members = await this._projectMemberRepo.findAll();
     return members.map(member => new ProjectMemberResponseDto(member));
   }
 

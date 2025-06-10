@@ -13,14 +13,25 @@ export class ProjectMemberController {
     @inject(ProjectMemberService) private _projectMemberService: ProjectMemberService
   ) {}
 
+  /**
+   * @swagger
+   * /api/v1/project/{projectId}/project-members:
+   *   post:
+   *     responses:
+   *       201:
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: "#/components/schemas/ProjectMembersResponse"
+   */
   async addMember(req: Request, res: Response): Promise<void> {
     try {
       const createDto = req.body as CreateProjectMemberDto;
+      createDto.projectId = req.params.projectId;
+      
       const member = await this._projectMemberService.addMember(createDto);
       res.status(201).json({
-        success: true,
-        message: "Member added successfully",
-        data: member,
+        project_members: [member]
       });
     } catch (error) {
       if (error instanceof UserError) {
@@ -50,9 +61,7 @@ export class ProjectMemberController {
       );
       
       res.status(200).json({
-        success: true,
-        message: "Member permission updated successfully",
-        data: member,
+        project_members: [member]
       });
     } catch (error) {
       if (error instanceof UserError) {
@@ -77,8 +86,7 @@ export class ProjectMemberController {
       await this._projectMemberService.removeMember(memberId);
       
       res.status(200).json({
-        success: true,
-        message: "Member removed successfully",
+        project_members: []
       });
     } catch (error) {
       if (error instanceof UserError) {
@@ -103,9 +111,7 @@ export class ProjectMemberController {
       const members = await this._projectMemberService.getProjectMembers(projectId);
       
       res.status(200).json({
-        success: true,
-        message: "Project members retrieved successfully",
-        data: members,
+        project_members: members
       });
     } catch (error) {
       if (error instanceof UserError) {
@@ -123,23 +129,23 @@ export class ProjectMemberController {
       }
     }
   }
+
   async checkUserPermission(req: Request, res: Response): Promise<void> {
     try {
-      const { userId, projectId } = req.params;
+      const { userId } = req.params;
+      const { projectId } = req.params;
       const permission = await this._projectMemberService.checkUserPermission(
         userId,
         projectId
       );
       
       res.status(200).json({
-        success: true,
-        message: "User permission checked successfully",
-        data: {
+        project_members: [{
           userId,
           projectId,
           permission,
           isMember: permission !== null,
-        },
+        }]
       });
     } catch (error) {
       if (error instanceof UserError) {

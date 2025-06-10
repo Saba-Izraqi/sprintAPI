@@ -28,12 +28,18 @@ export class UserResponseDto {
   email: string;
   isEmailVerified: boolean;
   image?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
 
   constructor(user: any) {
+    this.id = user.id;
     this.email = user.email;
     this.fullName = user.fullName;
-    this.id = user.id;
-    this.image = user.image;
     this.isEmailVerified = user.isEmailVerified;
+    this.image = user.image;
+    this.createdAt = user.createdAt;
+    this.updatedAt = user.updatedAt;
+    this.deletedAt = user.deletedAt;
   }
 }

@@ -59,4 +59,9 @@ export class UserService {
   async getByEmail(email: string) {
     return await this.userRepo.findByEmail(email);
   }
+
+  async getAll(): Promise<UserResponseDto[]> {
+    const users = await this.userRepo.findAll();
+    return users.map((user) => new UserResponseDto(user));
+  }
 }

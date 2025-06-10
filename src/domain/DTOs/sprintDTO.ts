@@ -61,7 +61,9 @@ export class SprintResponseDto {
   endDate!: Date;
   isActive!: boolean;
   isArchived!: boolean;
+  isCompleted!: boolean;
   projectId!: string;
   createdAt!: Date;
   updatedAt!: Date;
+  deletedAt?: Date;
 }

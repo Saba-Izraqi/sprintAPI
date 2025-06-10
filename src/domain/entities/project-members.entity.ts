@@ -15,9 +15,14 @@ import { ProjectPermission } from "../types";
 export class ProjectMember extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
-
   @Column({ type: "int", default: ProjectPermission.MEMBER })
   permission!: ProjectPermission;
+  
+  @Column({ type: "uuid" })
+  userId!: string;
+
+  @Column({ type: "uuid" })
+  projectId!: string;
   
   @ManyToOne(() => User, (user) => user.projectMemberships, {
     onDelete: "CASCADE",

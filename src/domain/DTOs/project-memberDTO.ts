@@ -25,11 +25,21 @@ export class UpdateProjectMemberDto {
 export class ProjectMemberResponseDto {
   id: string;
   permission: ProjectPermission;
+  userId: string;
+  projectId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
   user?: UserResponseDto;
 
   constructor(member: ProjectMember) {
     this.id = member.id;
     this.permission = member.permission;
+    this.userId = member.userId;
+    this.projectId = member.projectId;
+    this.createdAt = member.createdAt;
+    this.updatedAt = member.updatedAt;
+    this.deletedAt = member.deletedAt;
     this.user = member.user ? new UserResponseDto(member.user) : undefined;
   }
 }

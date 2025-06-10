@@ -20,8 +20,13 @@ export class Project extends BaseEntity {
   @Column({ length: 5, unique: true })
   keyPrefix!: string;
 
+  @Column({ type: "text", nullable: true })
+  description?: string;
   @Column({ type: "uuid" })
   createdBy!: string;
+
+  @Column({ type: "uuid", nullable: true })
+  activeSprintId?: string;
 
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: false })
   @JoinColumn({ name: "createdBy" })

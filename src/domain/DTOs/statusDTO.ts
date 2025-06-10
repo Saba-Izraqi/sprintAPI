@@ -45,6 +45,7 @@ export class StatusResponseDto {
   columnId?: string;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date;
 
   constructor(status: any) {
     this.id = status.id;
@@ -53,5 +54,6 @@ export class StatusResponseDto {
     this.columnId = status.column?.id;
     this.createdAt = status.createdAt;
     this.updatedAt = status.updatedAt;
+    this.deletedAt = status.deletedAt;
   }
 }

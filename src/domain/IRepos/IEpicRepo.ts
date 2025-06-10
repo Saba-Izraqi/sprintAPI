@@ -2,6 +2,7 @@ import { Epic } from "../entities";
 
 export interface IEpicRepo {
   get(projectId: string): Promise<Epic[]>;
+  getAll(): Promise<Epic[]>;
   getById(id: string): Promise<Epic | null>;
   find(options: Partial<Epic>): Promise<Epic[]>;
   create(epic: Partial<Epic>): Promise<Epic>;

@@ -11,9 +11,13 @@ import { UserError } from "../exceptions";
 @injectable()
 export class EpicService {
   constructor(@inject("IEpicRepo") private epicRepo: IEpicRepo) {}
-
   async get(projectId: string): Promise<EpicResponseDto[]> {
     const epics = await this.epicRepo.get(projectId);
+    return epics.map((epic) => new EpicResponseDto(epic));
+  }
+
+  async getAll(): Promise<EpicResponseDto[]> {
+    const epics = await this.epicRepo.getAll();
     return epics.map((epic) => new EpicResponseDto(epic));
   }
 

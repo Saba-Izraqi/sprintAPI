@@ -9,4 +9,5 @@ export interface IBoardColumnRepo {
   update(id: string, dto: UpdateBoardColumnDto): Promise<BoardColumn>;
   delete(id: string): Promise<void>;
   get(projectId: string): Promise<BoardColumn[]>;
+  getAll(): Promise<BoardColumn[]>;
 }

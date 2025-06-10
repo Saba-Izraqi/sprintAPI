@@ -452,7 +452,8 @@ const options: swaggerJSDoc.Options = {
               example: '2024-03-15',
             },
           },
-        },        EpicResponseDto: {
+        },
+        EpicResponseDto: {
           type: 'object',
           properties: {
             id: {
@@ -463,6 +464,10 @@ const options: swaggerJSDoc.Options = {
               type: 'string',
               example: 'MAP-EPIC-1',
               description: 'Unique key for the epic',
+            },
+            name: {
+              type: 'string',
+              example: 'User Authentication Epic',
             },
             title: {
               type: 'string',
@@ -845,10 +850,11 @@ const options: swaggerJSDoc.Options = {
             user: {
               $ref: '#/components/schemas/UserResponseDto',
             },
-          },        },        // Response wrapper schemas that match actual controller responses
-        
-        // User responses
-        UsersResponse: {
+          },
+        },
+
+        // Data Response Schema (for /data endpoint)
+        DataResponseDto: {
           type: 'object',
           properties: {
             users: {
@@ -857,96 +863,68 @@ const options: swaggerJSDoc.Options = {
                 $ref: '#/components/schemas/UserResponseDto',
               },
             },
-          },
-        },
-
-        // Project responses
-        ProjectsResponse: {
-          type: 'object',
-          properties: {
             projects: {
               type: 'array',
               items: {
                 $ref: '#/components/schemas/ProjectResponseDto',
               },
             },
-          },
-        },
-
-        // Issue responses
-        IssuesResponse: {
-          type: 'object',
-          properties: {
-            issues: {
+            project_members: {
               type: 'array',
               items: {
-                $ref: '#/components/schemas/IssueResponseDto',
+                $ref: '#/components/schemas/ProjectMemberResponseDto',
               },
             },
-          },
-        },
-
-        // Epic responses
-        EpicsResponse: {
-          type: 'object',
-          properties: {
-            epics: {
-              type: 'array',
-              items: {
-                $ref: '#/components/schemas/EpicResponseDto',
-              },
-            },
-          },
-        },
-
-        // Sprint responses
-        SprintsResponse: {
-          type: 'object',
-          properties: {
-            sprints: {
-              type: 'array',
-              items: {
-                $ref: '#/components/schemas/SprintResponseDto',
-              },
-            },
-          },
-        },
-
-        // Status responses
-        StatusesResponse: {
-          type: 'object',
-          properties: {
-            statuses: {
-              type: 'array',
-              items: {
-                $ref: '#/components/schemas/StatusResponseDto',
-              },
-            },
-          },
-        },
-
-        // Board Column responses
-        ColumnsResponse: {
-          type: 'object',
-          properties: {
             columns: {
               type: 'array',
               items: {
                 $ref: '#/components/schemas/BoardColumnResponseDto',
               },
             },
-          },
-        },
-
-        // Project Member responses
-        ProjectMembersResponse: {
-          type: 'object',
-          properties: {
-            project_members: {
+            statuses: {
               type: 'array',
               items: {
-                $ref: '#/components/schemas/ProjectMemberResponseDto',
+                $ref: '#/components/schemas/StatusResponseDto',
               },
+            },
+            epics: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/EpicResponseDto',
+              },
+            },
+            sprints: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/SprintResponseDto',
+              },
+            },
+            issues: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/IssueResponseDto',
+              },
+            },
+            notifications: {
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              description: 'Future work - notifications not implemented yet',
+            },
+            comments: {
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              description: 'Future work - comments not implemented yet',
+            },
+            issue_links: {
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              description: 'Future work - issue links not implemented yet',
             },
           },
         },
@@ -974,54 +952,38 @@ const options: swaggerJSDoc.Options = {
               },
             },
           },
-        },        // Auth Response Schema (matches actual login/register responses)
+        },
+
+        // Success Response Schema
+        SuccessResponse: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              example: 'Operation completed successfully',
+            },
+            data: {
+              type: 'object',
+              description: 'Response data',
+            },
+            success: {
+              type: 'boolean',
+              example: true,
+            },
+          },
+        },
+
+        // Auth Response Schema
         AuthResponse: {
           type: 'object',
           properties: {
-            users: {
-              type: 'array',
-              items: {
-                $ref: '#/components/schemas/UserResponseDto',
-              },
+            user: {
+              $ref: '#/components/schemas/UserResponseDto',
             },
             token: {
               type: 'string',
               example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
               description: 'JWT access token',
-            },
-            emailVerificationToken: {
-              type: 'string',
-              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-              description: 'Email verification token (only on registration)',
-            },
-          },
-          required: ['users', 'token'],
-        },
-
-        // Email Verification Response
-        EmailVerificationResponse: {
-          type: 'object',
-          properties: {
-            success: {
-              type: 'boolean',
-              example: true,
-            },
-            users: {
-              type: 'array',
-              items: {
-                $ref: '#/components/schemas/UserResponseDto',
-              },
-            },
-          },
-        },
-
-        // Password Reset Response
-        PasswordResetResponse: {
-          type: 'object',
-          properties: {
-            message: {
-              type: 'string',
-              example: 'Password reset email sent successfully',
             },
             success: {
               type: 'boolean',
@@ -1113,18 +1075,21 @@ const options: swaggerJSDoc.Options = {
       {
         name: 'Statuses',
         description: 'Status management endpoints',
-      },      {
+      },
+      {
         name: 'Project Members',
         description: 'Project member management endpoints',
       },
+      {
+        name: 'Data',
+        description: 'Comprehensive data endpoints',
+      },
     ],
-  },  apis: [
+  },
+  apis: [
     './src/API/controllers/*.ts',
     './src/API/routes/*.ts',
     './src/API/swagger/paths/*.ts',
-    './dist/API/controllers/*.js',
-    './dist/API/routes/*.js',
-    './dist/API/swagger/paths/*.js',
   ],
 };
 

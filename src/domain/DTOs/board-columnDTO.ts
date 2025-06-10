@@ -44,11 +44,17 @@ export class BoardColumnResponseDto {
   name: string;
   order: number;
   projectId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
 
   constructor(column: any) {
     this.id = column.id;
     this.name = column.name;
     this.order = column.order;
     this.projectId = column.projectId;
+    this.createdAt = column.createdAt;
+    this.updatedAt = column.updatedAt;
+    this.deletedAt = column.deletedAt;
   }
 }

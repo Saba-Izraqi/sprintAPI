@@ -10,10 +10,15 @@ export class EpicRepo implements IEpicRepo {
   constructor() {
     this._epicRepo = AppDataSource.getRepository(Epic);
   }
-
   async get(projectId: string): Promise<Epic[]> {
     return await this._epicRepo.find({
       where: { projectId },
+      relations: ["assigneeUser"],
+    });
+  }
+
+  async getAll(): Promise<Epic[]> {
+    return await this._epicRepo.find({
       relations: ["assigneeUser"],
     });
   }

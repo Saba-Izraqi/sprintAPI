@@ -44,8 +44,13 @@ export class UpdateEpicDto {
 export class EpicResponseDto {
   id: string;
   key: string;
-  title: string;
+  title: string;  // Only title field, matching your JSON structure
   description: string;
+  assignee?: string;
+  projectId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
   assigneeUser?: {
     id: string;
     fullName: string;
@@ -53,18 +58,17 @@ export class EpicResponseDto {
     image?: string; 
   };
   issues?: any[]; 
-  projectId: string;
-  createdAt: Date;
-  updatedAt: Date;
 
   constructor(epic: Epic) {
     this.id = epic.id;
     this.key = epic.key;
-    this.title = epic.title;
+    this.title = epic.title;  // Use title directly
     this.description = epic.description;
+    this.assignee = epic.assignee;
     this.projectId = epic.projectId;
     this.createdAt = epic.createdAt;
     this.updatedAt = epic.updatedAt;
+    this.deletedAt = epic.deletedAt;
 
     if (epic.assigneeUser) {
       this.assigneeUser = {

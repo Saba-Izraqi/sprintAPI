@@ -54,6 +54,11 @@ export class SprintService {  constructor(
     return sprints.map(this.mapSprintToResponse);
   }
 
+  async getAll(): Promise<SprintResponseDto[]> {
+    const sprints = await this.sprintRepo.findAll();
+    return sprints.map(this.mapSprintToResponse);
+  }
+
   async getActiveSprintByProject(projectId: string): Promise<SprintResponseDto | null> {
     const sprint = await this.sprintRepo.findActiveByProjectId(projectId);
     return sprint ? this.mapSprintToResponse(sprint) : null;
@@ -156,9 +161,11 @@ export class SprintService {  constructor(
       endDate: sprint.endDate,
       isActive: sprint.isActive,
       isArchived: sprint.isArchived,
+      isCompleted: sprint.isCompleted,
       projectId: sprint.projectId,
       createdAt: sprint.createdAt,
       updatedAt: sprint.updatedAt,
+      deletedAt: sprint.deletedAt,
     };
   }
 }

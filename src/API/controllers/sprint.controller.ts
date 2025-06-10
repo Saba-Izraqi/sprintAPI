@@ -5,9 +5,20 @@ import { CreateSprintDto, UpdateSprintDto } from "../../domain/DTOs/sprintDTO";
 
 @injectable()
 export class SprintController {
-  constructor(
-    @inject(SprintService) private sprintService: SprintService
+  constructor(    @inject(SprintService) private sprintService: SprintService
   ) {}
+
+  /**
+   * @swagger
+   * /api/v1/project/{projectId}/sprints:
+   *   post:
+   *     responses:
+   *       201:
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/SprintsResponse'
+   */
   async createSprint(req: Request, res: Response): Promise<void> {
     try {
       const { projectId } = req.params;
@@ -15,9 +26,7 @@ export class SprintController {
       const sprint = await this.sprintService.createSprint(sprintData);
       
       res.status(201).json({
-        success: true,
-        message: "Sprint created successfully",
-        data: sprint,
+        sprints: [sprint]
       });
     } catch (error) {
       res.status(400).json({
@@ -27,14 +36,24 @@ export class SprintController {
     }
   }
 
+  /**
+   * @swagger
+   * /api/v1/sprint/{id}:
+   *   get:
+   *     responses:
+   *       200:
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/SprintsResponse'
+   */
   async getSprintById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const sprint = await this.sprintService.getSprintById(id);
       
       res.status(200).json({
-        success: true,
-        data: sprint,
+        sprints: [sprint]
       });
     } catch (error) {
       res.status(404).json({
@@ -48,10 +67,8 @@ export class SprintController {
     try {
       const { projectId } = req.params;
       const sprints = await this.sprintService.getSprintsByProject(projectId);
-      
-      res.status(200).json({
-        success: true,
-        data: sprints,
+        res.status(200).json({
+        sprints
       });
     } catch (error) {
       res.status(404).json({
@@ -60,15 +77,13 @@ export class SprintController {
       });
     }
   }
-
   async getActiveSprint(req: Request, res: Response): Promise<void> {
     try {
       const { projectId } = req.params;
       const sprint = await this.sprintService.getActiveSprintByProject(projectId);
       
       res.status(200).json({
-        success: true,
-        data: sprint,
+        sprints: sprint ? [sprint] : []
       });
     } catch (error) {
       res.status(404).json({
@@ -77,7 +92,6 @@ export class SprintController {
       });
     }
   }
-
   async updateSprint(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
@@ -85,9 +99,7 @@ export class SprintController {
       const sprint = await this.sprintService.updateSprint(id, updates);
       
       res.status(200).json({
-        success: true,
-        message: "Sprint updated successfully",
-        data: sprint,
+        sprints: [sprint]
       });
     } catch (error) {
       res.status(400).json({
@@ -96,15 +108,13 @@ export class SprintController {
       });
     }
   }
-
   async deleteSprint(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       await this.sprintService.deleteSprint(id);
       
       res.status(200).json({
-        success: true,
-        message: "Sprint deleted successfully",
+        sprints: []
       });
     } catch (error) {
       res.status(400).json({
@@ -113,16 +123,13 @@ export class SprintController {
       });
     }
   }
-
   async activateSprint(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const sprint = await this.sprintService.activateSprint(id);
       
       res.status(200).json({
-        success: true,
-        message: "Sprint activated successfully",
-        data: sprint,
+        sprints: [sprint]
       });
     } catch (error) {
       res.status(400).json({
@@ -131,16 +138,13 @@ export class SprintController {
       });
     }
   }
-
   async completeSprint(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const sprint = await this.sprintService.completeSprint(id);
       
       res.status(200).json({
-        success: true,
-        message: "Sprint completed successfully",
-        data: sprint,
+        sprints: [sprint]
       });
     } catch (error) {
       res.status(400).json({
@@ -149,15 +153,13 @@ export class SprintController {
       });
     }
   }
-
   async getSprintWithIssues(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const sprintWithIssues = await this.sprintService.getSprintWithIssues(id);
       
       res.status(200).json({
-        success: true,
-        data: sprintWithIssues,
+        sprints: [sprintWithIssues]
       });
     } catch (error) {
       res.status(404).json({

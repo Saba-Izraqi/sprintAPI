@@ -25,10 +25,16 @@ export class SprintRepo implements ISprintRepo {
       relations: ["project"],
     });
   }
-
   async findByProjectId(projectId: string): Promise<Sprint[]> {
     return await this.sprintRepository.find({
       where: { projectId },
+      relations: ["project"],
+      order: { createdAt: "DESC" },
+    });
+  }
+
+  async findAll(): Promise<Sprint[]> {
+    return await this.sprintRepository.find({
       relations: ["project"],
       order: { createdAt: "DESC" },
     });

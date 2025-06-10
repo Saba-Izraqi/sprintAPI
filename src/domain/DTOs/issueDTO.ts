@@ -109,10 +109,17 @@ export class IssuePartialResponseDto {
   @Expose() id!: string;
   @Expose() key!: string;
   @Expose() title!: string;
+  @Expose() description!: string;
   @Expose() storyPoint!: number;
   @Expose() statusId?: string;
   @Expose() assignee?: string;
+  @Expose() epicId?: string;
+  @Expose() sprintId?: string;
   @Expose() projectId!: string;
+  @Expose() type!: IssueType;
+  @Expose() createdAt!: Date;
+  @Expose() updatedAt!: Date;
+  @Expose() deletedAt?: Date;
   
   @Expose()
   @Type(() => BasicUserDto)
@@ -121,9 +128,6 @@ export class IssuePartialResponseDto {
   @Expose()
   @Type(() => BasicStatusDto)
   status?: BasicStatusDto;
-
-  @Expose()
-  type!: IssueType; // Added type field
 }
 
 // Full issue response for detailed view
@@ -138,8 +142,10 @@ export class IssueFullResponseDto {
   @Expose() epicId?: string;
   @Expose() sprintId?: string;
   @Expose() projectId!: string;
+  @Expose() type!: IssueType;
   @Expose() createdAt!: Date;
   @Expose() updatedAt!: Date;
+  @Expose() deletedAt?: Date;
   
   @Expose()
   @Type(() => BasicUserDto)
@@ -147,7 +153,7 @@ export class IssueFullResponseDto {
 
   @Expose()
   @Type(() => BasicProjectDto)
-  project!: BasicProjectDto;
+  project?: BasicProjectDto;
 
   @Expose()
   @Type(() => BasicEpicDto)
@@ -160,7 +166,4 @@ export class IssueFullResponseDto {
   @Expose()
   @Type(() => BasicStatusDto)
   status?: BasicStatusDto;
-
-  @Expose()
-  type!: IssueType; // Added type field
 }

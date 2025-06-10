@@ -22,9 +22,16 @@ export class UserRepo implements IUserRepo {
       throw getDBError(error);
     }
   }
-
   findByEmail(email: string) {
     return this._userRepo.findOneBy({ email });
+  }
+
+  async findAll(): Promise<User[]> {
+    try {
+      return await this._userRepo.find();
+    } catch (error) {
+      throw getDBError(error);
+    }
   }
 
   async updateEmailVerification(

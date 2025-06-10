@@ -56,11 +56,20 @@ export class ProjectMemberRepo implements IProjectMemberRepo {
       throw getDBError(error);
     }
   }
-
   async findByProject(projectId: string): Promise<ProjectMember[]> {
     try {
       return await this._projectMemberRepo.find({
         where: { project: { id: projectId } },
+        relations: ["user", "project"],
+      });
+    } catch (error) {
+      throw getDBError(error);
+    }
+  }
+
+  async findAll(): Promise<ProjectMember[]> {
+    try {
+      return await this._projectMemberRepo.find({
         relations: ["user", "project"],
       });
     } catch (error) {

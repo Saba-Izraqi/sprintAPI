@@ -9,7 +9,17 @@ import PostmarkSender from "../../infrastructure/email/postmarkSender";
 @injectable()
 export class UserController {
   constructor(@inject(UserService) private userService: UserService) {}
-
+  /**
+   * @swagger
+   * /api/v1/user/register:
+   *   post:
+   *     responses:
+   *       201:
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/AuthResponse'
+   */
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const registerUserDto = (req as any).validatedData as RegisterUserDto;
@@ -34,15 +44,29 @@ export class UserController {
         user.email,
         emailConfirmationURL,
         "email-confirmation"
-      );
-      res
+      );      res
         .status(201)
-        .json({ user, token, emailVerificationToken, success: true });
+        .json({ 
+          users: [user], 
+          token, 
+          emailVerificationToken 
+        });
     } catch (error) {
       next(error);
     }
   }
 
+  /**
+   * @swagger
+   * /api/v1/user/login:
+   *   post:
+   *     responses:
+   *       200:
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/AuthResponse'
+   */
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const loginUserDto = (req as any).validatedData as LoginUserDto;
@@ -53,11 +77,25 @@ export class UserController {
         userEmail: user.email,
         isEmailVerified: user.isEmailVerified,
       });
-      res.status(200).json({ user, token, success: true });
+      res.status(200).json({ 
+        users: [user], 
+        token 
+      });
     } catch (error) {
       next(error);
-    }
-  }
+    }  }
+
+  /**
+   * @swagger
+   * /api/v1/user/verify-email:
+   *   post:
+   *     responses:
+   *       200:
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/EmailVerificationResponse'
+   */
   async verifyEmail(req: Request, res: Response, next: NextFunction) {
     try {
       const userEmail = req.user?.userEmail;
@@ -66,7 +104,10 @@ export class UserController {
         userEmail!,
         true
       );
-      res.status(200).json({ success: true, user });
+      res.status(200).json({ 
+        success: true, 
+        users: [user] 
+      });
     } catch (error) {
       next(error);
     }
@@ -92,9 +133,8 @@ export class UserController {
           resetURL,
           "forget-password"
         );
-      }
-      res.status(200).json({
-        success: true,
+      }      res.status(200).json({
+        users: [],
         message:
           "AN email should be sent with password recovery instruction, token is provided in response for testing.",
         token,
@@ -121,9 +161,8 @@ export class UserController {
         userEmail!,
         password,
         tokenType === Token.ACCESS ? oldPassword : null
-      );
-      res.status(200).json({
-        success: true,
+      );      res.status(200).json({
+        users: []
       });
     } catch (error) {
       next(error);

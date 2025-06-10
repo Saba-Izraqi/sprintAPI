@@ -24,7 +24,6 @@ export class BoardColumnService {
   async delete(id: string): Promise<void> {
     return await this.boardColumnRepo.delete(id);
   }
-
   async get(projectId: string): Promise<BoardColumn[]> {
     try {
       let columns = await this.boardColumnRepo.get(projectId);
@@ -34,6 +33,14 @@ export class BoardColumnService {
       }
 
       return columns;
+    } catch (error) {
+      throw getDBError(error);
+    }
+  }
+
+  async getAll(): Promise<BoardColumn[]> {
+    try {
+      return await this.boardColumnRepo.getAll();
     } catch (error) {
       throw getDBError(error);
     }
