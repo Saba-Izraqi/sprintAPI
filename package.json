@@ -59,7 +59,6 @@
     "multer": "^2.0.1",
     "pg": "^8.14.1",
     "postmark": "^4.0.5",
-    "psql": "^0.0.1",
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
