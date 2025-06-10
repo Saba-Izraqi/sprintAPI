@@ -1,7 +1,8 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
 import { UserResponseDto } from "./userDTO";
 import { ProjectMember } from "../entities";
-import { ProjectPermission } from '../types';
+import { ProjectPermission } from "../types";
+import { IsNotAdministrator } from "./customValidators/isNotAdministrator";
 
 export class CreateProjectMemberDto {
   @IsNotEmpty()
@@ -13,13 +14,22 @@ export class CreateProjectMemberDto {
   projectId!: string;
 
   @IsEnum(ProjectPermission)
+  @IsNotAdministrator({ message: "Permission cannot be set to ADMINISTRATOR." })
   permission!: ProjectPermission;
 }
 
 export class UpdateProjectMemberDto {
-  @IsOptional()
+  @IsNotEmpty()
+  @IsUUID()
+  userId!: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  projectId!: string;
+
   @IsEnum(ProjectPermission)
-  permission?: ProjectPermission;
+  @IsNotAdministrator({ message: "Permission cannot be set to ADMINISTRATOR." })
+  permission!: ProjectPermission;
 }
 
 export class ProjectMemberResponseDto {

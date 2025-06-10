@@ -5,16 +5,27 @@ import {
   UpdateProjectDTO,
 } from "../../domain/DTOs/projectDTO";
 import { Project } from "../../domain/entities";
-import { FindProjectOptions } from "../../domain/types";
+import { FindProjectOptions, ProjectPermission } from "../../domain/types";
+import { ProjectMembersService } from "./project-members.service";
+import { CreateProjectMemberDto } from "../../domain/DTOs/projectMemberDTO";
 
 @injectable()
 export class ProjectService {
-  constructor(@inject("IProjectRepo") private projectRepo: IProjectRepo) {}
+  constructor(
+    @inject("IProjectRepo") private projectRepo: IProjectRepo,
+    @inject("ProjectMembersService")
+    private memberService: ProjectMembersService
+  ) {}
 
   async create(dto: CreateProjectDto): Promise<Project> {
-    const project = this.projectRepo.create(dto);
-    // TODO: add the creator as a member of the project with role ADMINISTRATOR
-    // * Cannot address this [todo] until the projectMembers service is implemented
+    const project = await this.projectRepo.create(dto);
+
+    const newMembership: CreateProjectMemberDto = {
+      userId: project.createdBy,
+      projectId: project.id,
+      permission: ProjectPermission.ADMINISTRATOR,
+    };
+    this.memberService.add(newMembership);
 
     // TODO: Should create the default status, columns and sprint for the project
     // * Cannot address this [todo] until the status, columns and sprint services are implemented

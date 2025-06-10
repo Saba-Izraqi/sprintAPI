@@ -18,12 +18,18 @@ export class ProjectMember extends BaseEntity {
 
   @Column({ type: "int", default: ProjectPermission.MEMBER })
   permission!: ProjectPermission;
-  
+
+  @Column({ type: "uuid" })
+  userId!: string;
+
   @ManyToOne(() => User, (user) => user.projectMemberships, {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "userId" })
   user!: User;
+
+  @Column({ type: "uuid" })
+  projectId!: string;
 
   @ManyToOne(() => Project, (project) => project.members, {
     onDelete: "CASCADE",
