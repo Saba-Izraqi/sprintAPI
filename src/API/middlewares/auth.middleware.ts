@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+
 /**
  * Middleware to authenticate incoming requests by verifying the provided JWT token.
  *
@@ -40,15 +41,12 @@ export const authenticate = (
       "secretKeyPlaceHolderWillReplaceLater",
     ) as JwtPayload;
 
-    if (!decoded || !decoded.userEmail) {
+    if (!decoded || !decoded.email) {
       res.status(401).json({ message: "Not authorized, email not found" });
       return;
     }
 
-    req.body = {
-      ...req.body,
-      ...decoded,
-    };
+    req.user = decoded as any; // <-- assign decoded payload to req.user
 
     next();
   } catch (err) {

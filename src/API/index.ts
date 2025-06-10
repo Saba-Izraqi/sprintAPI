@@ -1,10 +1,10 @@
 import "./loggerOverwrite";
+import "./types";
 import express, { Application } from "express";
 import { BaseRoute } from "./routes/base.route";
 import { glob } from "glob";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./swagger.json";
 import errorMiddleware from "./middlewares/error.middleware";
 
 export class AppServer {
@@ -18,14 +18,6 @@ export class AppServer {
 
   private setupMiddleware() {
     this.app.use(express.json());
-  }
-
-  private setupSwagger() {
-    this.app.use(
-      "/api-docs",
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument)
-    );
   }
 
   private async setupRoutes() {
@@ -58,7 +50,6 @@ export class AppServer {
 
   public async listen(port: number) {
     await this.setupRoutes();
-    this.setupSwagger();
     //*this middleware cant be registered in setupMiddlewares because it needs to be the last middleware
     this.app.use(errorMiddleware);
     this.app.listen(port, () =>
