@@ -1,5 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { Token } from "../enums/token";
+import { ITokenPayload } from "../types";
+
+// Extend Request type to include user property
+interface AuthenticatedRequest extends Request {
+  user?: ITokenPayload;
+}
+
 /**
  * Middleware to authenticate incoming requests by verifying the provided JWT token.
  *
@@ -36,14 +44,15 @@ export const authenticate = (
   try {    const decoded = jwt.verify(
       token,
       "secretKeyPlaceHolderWillReplaceLater",
-    ) as JwtPayload;
-
-    if (!decoded || !decoded.userEmail) {
+    ) as JwtPayload;    if (!decoded || !decoded.email) {
       res.status(401).json({ message: "Not authorized, email not found" });
       return;
-    }
-
-    req.user = decoded as any;
+    }req.body = {
+      ...req.body,
+      ...decoded,
+    };
+      // Also set req.user for cleaner access
+    (req as any).user = decoded;
 
     next();
   } catch (err) {

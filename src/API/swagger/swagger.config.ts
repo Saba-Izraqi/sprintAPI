@@ -209,17 +209,15 @@ const options: swaggerJSDoc.Options = {
               type: 'string',
               example: 'Users cannot login with valid credentials',
               description: 'Detailed description of the issue',
-            },
-            type: {
+            },            type: {
               type: 'string',
-              enum: ['TASK', 'BUG', 'STORY', 'EPIC'],
-              example: 'BUG',
+              enum: ['bug', 'story', 'task'],
+              example: 'bug',
               description: 'Type of the issue',
-            },
-            priority: {
+            },priority: {
               type: 'string',
-              enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
-              example: 'HIGH',
+              enum: ['low', 'medium', 'high'],
+              example: 'medium',
               description: 'Priority level of the issue',
             },
             assigneeId: {
@@ -254,16 +252,14 @@ const options: swaggerJSDoc.Options = {
             description: {
               type: 'string',
               example: 'Updated issue description',
-            },
-            type: {
+            },            type: {
               type: 'string',
-              enum: ['TASK', 'BUG', 'STORY', 'EPIC'],
-              example: 'TASK',
-            },
-            priority: {
+              enum: ['bug', 'story', 'task'],
+              example: 'task',
+            },priority: {
               type: 'string',
-              enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
-              example: 'MEDIUM',
+              enum: ['low', 'medium', 'high'],
+              example: 'medium',
             },
             assigneeId: {
               type: 'string',
@@ -334,11 +330,15 @@ const options: swaggerJSDoc.Options = {
             projectId: {
               type: 'string',
               example: '123e4567-e89b-12d3-a456-426614174000',
-            },
-            type: {
+            },            type: {
               type: 'string',
-              enum: ['STORY', 'BUG', 'TASK'],
-              example: 'STORY',
+              enum: ['story', 'bug', 'task'],
+              example: 'story',
+            },
+            priority: {
+              type: 'string',
+              enum: ['low', 'medium', 'high'],
+              example: 'medium',
             },
             createdAt: {
               type: 'string',

@@ -22,6 +22,7 @@ export class Project extends BaseEntity {
 
   @Column({ type: "text", nullable: true })
   description?: string;
+  
   @Column({ type: "uuid" })
   createdBy!: string;
 

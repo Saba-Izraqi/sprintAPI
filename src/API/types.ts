@@ -1,16 +1,9 @@
-import { Token } from "./enums/token";
 
 export interface ITokenPayload {
-  userId: string;
-  userEmail: string;
+  id: string;
+  email: string;
   isEmailVerified: boolean;
-  tokenType: Token;
-}
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: ITokenPayload;
-    }
-  }
+  tokenType: string;
+  iat?: number;
+  exp?: number;
 }

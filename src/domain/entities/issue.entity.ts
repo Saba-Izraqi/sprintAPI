@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { BaseEntity, Epic, Project, Sprint, Status, User } from ".";
-import { IssueType } from "../types";
+import { IssueType, Priority } from "../types";
 
 @Entity("issues")
 export class Issue extends BaseEntity {
@@ -39,9 +39,11 @@ export class Issue extends BaseEntity {
 
   @Column()
   projectId!: string;
-
   @Column({ type: "enum", enum: IssueType, default: IssueType.TASK })
   type!: IssueType;
+
+  @Column({ type: "enum", enum: Priority, default: Priority.MEDIUM })
+  priority!: Priority;
 
   @ManyToOne(() => User, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "assignee", referencedColumnName: "id" })

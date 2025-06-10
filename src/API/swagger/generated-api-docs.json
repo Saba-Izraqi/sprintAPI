@@ -97,6 +97,11 @@
             "type": "boolean",
             "example": false
           },
+          "image": {
+            "type": "string",
+            "example": "/avatars/john.png",
+            "description": "User profile image URL"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -104,6 +109,11 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -156,13 +166,21 @@
             "type": "string",
             "example": "My Awesome Project"
           },
-          "key": {
+          "keyPrefix": {
             "type": "string",
-            "example": "MAP"
+            "example": "MAP",
+            "description": "Project key prefix"
           },
-          "description": {
+          "createdBy": {
             "type": "string",
-            "example": "This is an awesome project"
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "ID of the user who created the project"
+          },
+          "activeSprintId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "ID of the currently active sprint",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -171,6 +189,11 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -195,23 +218,21 @@
           "type": {
             "type": "string",
             "enum": [
-              "TASK",
-              "BUG",
-              "STORY",
-              "EPIC"
+              "bug",
+              "story",
+              "task"
             ],
-            "example": "BUG",
+            "example": "bug",
             "description": "Type of the issue"
           },
           "priority": {
             "type": "string",
             "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "CRITICAL"
+              "low",
+              "medium",
+              "high"
             ],
-            "example": "HIGH",
+            "example": "medium",
             "description": "Priority level of the issue"
           },
           "assigneeId": {
@@ -250,22 +271,20 @@
           "type": {
             "type": "string",
             "enum": [
-              "TASK",
-              "BUG",
-              "STORY",
-              "EPIC"
+              "bug",
+              "story",
+              "task"
             ],
-            "example": "TASK"
+            "example": "task"
           },
           "priority": {
             "type": "string",
             "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "CRITICAL"
+              "low",
+              "medium",
+              "high"
             ],
-            "example": "MEDIUM"
+            "example": "medium"
           },
           "assigneeId": {
             "type": "string",
@@ -309,27 +328,66 @@
             "type": "string",
             "example": "Users cannot login with valid credentials"
           },
+          "storyPoint": {
+            "type": "number",
+            "example": 5
+          },
+          "statusId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "nullable": true
+          },
+          "assignee": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "nullable": true
+          },
+          "epicId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "nullable": true
+          },
+          "sprintId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "nullable": true
+          },
+          "projectId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
           "type": {
             "type": "string",
-            "example": "BUG"
+            "enum": [
+              "story",
+              "bug",
+              "task"
+            ],
+            "example": "story"
           },
           "priority": {
             "type": "string",
-            "example": "HIGH"
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "example": "medium"
           },
-          "status": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string",
-                "example": "In Progress"
-              }
-            }
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           },
-          "assignee": {
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "assigneeUser": {
             "type": "object",
             "properties": {
               "id": {
@@ -342,24 +400,30 @@
               "email": {
                 "type": "string",
                 "example": "john.doe@example.com"
+              },
+              "image": {
+                "type": "string",
+                "nullable": true
               }
-            }
+            },
+            "nullable": true
           },
-          "reporter": {
+          "status": {
             "type": "object",
             "properties": {
               "id": {
                 "type": "string"
               },
-              "fullName": {
+              "name": {
                 "type": "string",
-                "example": "Jane Smith"
+                "example": "In Progress"
               },
-              "email": {
-                "type": "string",
-                "example": "jane.smith@example.com"
+              "type": {
+                "type": "integer",
+                "example": 1
               }
-            }
+            },
+            "nullable": true
           },
           "project": {
             "type": "object",
@@ -371,27 +435,42 @@
                 "type": "string",
                 "example": "My Awesome Project"
               },
-              "key": {
+              "keyPrefix": {
                 "type": "string",
                 "example": "MAP"
               }
-            }
+            },
+            "nullable": true
           },
-          "estimatedHours": {
-            "type": "number",
-            "example": 8
+          "epic": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string",
+                "example": "User Management Epic"
+              },
+              "key": {
+                "type": "string",
+                "example": "MAP-EPIC-1"
+              }
+            },
+            "nullable": true
           },
-          "loggedHours": {
-            "type": "number",
-            "example": 5
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
+          "sprint": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "example": "Sprint 1"
+              }
+            },
+            "nullable": true
           }
         }
       },
@@ -461,7 +540,7 @@
             "example": "MAP-EPIC-1",
             "description": "Unique key for the epic"
           },
-          "name": {
+          "title": {
             "type": "string",
             "example": "User Authentication Epic"
           },
@@ -469,31 +548,16 @@
             "type": "string",
             "example": "Implement complete user authentication system"
           },
-          "startDate": {
+          "assignee": {
             "type": "string",
-            "format": "date",
-            "example": "2024-01-01"
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "ID of the assigned user",
+            "nullable": true
           },
-          "endDate": {
+          "projectId": {
             "type": "string",
-            "format": "date",
-            "example": "2024-03-01"
-          },
-          "project": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string",
-                "example": "My Awesome Project"
-              },
-              "key": {
-                "type": "string",
-                "example": "MAP"
-              }
-            }
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "ID of the project this epic belongs to"
           },
           "createdAt": {
             "type": "string",
@@ -502,6 +566,133 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CreateSprintDto": {
+        "type": "object",
+        "required": [
+          "name",
+          "startDate",
+          "endDate"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Sprint 1 - Foundation Setup"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-03-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-03-14"
+          }
+        }
+      },
+      "UpdateSprintDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 25,
+            "example": "Updated Sprint Name",
+            "description": "Updated name of the sprint"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-01T00:00:00.000Z",
+            "description": "Updated start date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-14T23:59:59.999Z",
+            "description": "Updated end date"
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether the sprint is active"
+          },
+          "isArchived": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether the sprint is archived"
+          }
+        }
+      },
+      "SprintResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "Unique identifier of the sprint"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sprint 1 - Foundation Setup",
+            "description": "Name of the sprint"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-03-01T00:00:00.000Z",
+            "description": "Start date of the sprint"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-03-14T23:59:59.999Z",
+            "description": "End date of the sprint"
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether the sprint is currently active"
+          },
+          "isArchived": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether the sprint is archived"
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether the sprint is completed"
+          },
+          "projectId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "ID of the project this sprint belongs to"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-01T00:00:00.000Z",
+            "description": "When the sprint was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-01T00:00:00.000Z",
+            "description": "When the sprint was last updated"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the sprint was deleted (if soft deleted)"
           }
         }
       },
@@ -509,7 +700,7 @@
         "type": "object",
         "required": [
           "name",
-          "position"
+          "order"
         ],
         "properties": {
           "name": {
@@ -517,7 +708,7 @@
             "example": "In Progress",
             "description": "Name of the board column"
           },
-          "position": {
+          "order": {
             "type": "number",
             "example": 2,
             "description": "Position of the column in the board"
@@ -526,6 +717,57 @@
             "type": "string",
             "example": "123e4567-e89b-12d3-a456-426614174000",
             "description": "ID of the project"
+          }
+        }
+      },
+      "UpdateBoardColumnDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Updated Column Name"
+          },
+          "order": {
+            "type": "number",
+            "example": 3
+          },
+          "projectId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        }
+      },
+      "BoardColumnResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "example": "In Progress"
+          },
+          "order": {
+            "type": "number",
+            "example": 2
+          },
+          "projectId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -595,13 +837,18 @@
           },
           "type": {
             "type": "integer",
+            "enum": [
+              0,
+              1,
+              2
+            ],
             "example": 1,
             "description": "Type of status (0: BACKLOG, 1: IN_PROGRESS, 2: DONE)"
           },
           "columnId": {
             "type": "string",
             "example": "123e4567-e89b-12d3-a456-426614174000",
-            "description": "ID of the board column (optional)"
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -610,41 +857,33 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
-      "CreateSprintDto": {
+      "CreateProjectMemberDto": {
         "type": "object",
         "required": [
-          "name",
-          "startDate",
-          "endDate"
+          "userId",
+          "projectId",
+          "permission"
         ],
         "properties": {
-          "name": {
+          "userId": {
             "type": "string",
-            "maxLength": 100,
-            "example": "Sprint 1",
-            "description": "Name of the sprint"
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "ID of the user to add as member"
           },
-          "description": {
+          "projectId": {
             "type": "string",
-            "example": "First sprint of the project",
-            "description": "Description of the sprint (optional, not stored in entity)"
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "description": "ID of the project"
           },
-          "startDate": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-01-01T00:00:00.000Z",
-            "description": "Start date of the sprint"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-01-14T23:59:59.999Z",
-            "description": "End date of the sprint"
-          },
-          "status": {
+          "permission": {
             "type": "integer",
             "enum": [
               0,
@@ -652,52 +891,14 @@
               2
             ],
             "example": 0,
-            "description": "Sprint status (optional, not stored in entity - defaults to PLANNING)"
-          },
-          "goal": {
-            "type": "number",
-            "example": 50,
-            "description": "Sprint goal/target (optional, not stored in entity)"
-          },
-          "isActive": {
-            "type": "boolean",
-            "example": false,
-            "description": "Whether the sprint is active"
-          },
-          "isArchived": {
-            "type": "boolean",
-            "example": false,
-            "description": "Whether the sprint is archived"
+            "description": "Permission level (0: MEMBER, 1: MODERATOR, 2: OWNER)"
           }
         }
       },
-      "UpdateSprintDto": {
+      "UpdateProjectMemberDto": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "maxLength": 100,
-            "example": "Updated Sprint Name",
-            "description": "Updated name of the sprint"
-          },
-          "description": {
-            "type": "string",
-            "example": "Updated sprint description",
-            "description": "Updated description (optional, not stored in entity)"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-01-01T00:00:00.000Z",
-            "description": "Updated start date"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-01-14T23:59:59.999Z",
-            "description": "Updated end date"
-          },
-          "status": {
+          "permission": {
             "type": "integer",
             "enum": [
               0,
@@ -705,93 +906,138 @@
               2
             ],
             "example": 1,
-            "description": "Sprint status (optional, not stored in entity)"
-          },
-          "goal": {
-            "type": "number",
-            "example": 75,
-            "description": "Updated goal (optional, not stored in entity)"
-          },
-          "isActive": {
-            "type": "boolean",
-            "example": true,
-            "description": "Whether the sprint is active"
-          },
-          "isArchived": {
-            "type": "boolean",
-            "example": false,
-            "description": "Whether the sprint is archived"
+            "description": "Permission level (0: MEMBER, 1: MODERATOR, 2: OWNER)"
           }
         }
       },
-      "SprintResponseDto": {
+      "ProjectMemberResponseDto": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "description": "Unique identifier of the sprint"
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
-          "name": {
-            "type": "string",
-            "example": "Sprint 1",
-            "description": "Name of the sprint"
-          },
-          "description": {
-            "type": "string",
-            "example": null,
-            "description": "Description of the sprint (always null - not stored in entity)",
-            "nullable": true
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-01-01T00:00:00.000Z",
-            "description": "Start date of the sprint"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2024-01-14T23:59:59.999Z",
-            "description": "End date of the sprint"
-          },
-          "status": {
+          "permission": {
             "type": "integer",
+            "enum": [
+              0,
+              1,
+              2
+            ],
             "example": 0,
-            "description": "Sprint status (always defaults to 0: PLANNING - not stored in entity)"
+            "description": "Permission level (0: MEMBER, 1: MODERATOR, 2: OWNER)"
           },
-          "goal": {
-            "type": "number",
-            "example": null,
-            "description": "Sprint goal (always null - not stored in entity)",
-            "nullable": true
-          },
-          "isActive": {
-            "type": "boolean",
-            "example": true,
-            "description": "Whether the sprint is currently active"
-          },
-          "isArchived": {
-            "type": "boolean",
-            "example": false,
-            "description": "Whether the sprint is archived"
+          "userId": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
           "projectId": {
             "type": "string",
-            "example": "123e4567-e89b-12d3-a456-426614174000",
-            "description": "ID of the project this sprint belongs to"
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time",
-            "example": "2024-01-01T00:00:00.000Z",
-            "description": "When the sprint was created"
+            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
             "format": "date-time",
-            "example": "2024-01-01T00:00:00.000Z",
-            "description": "When the sprint was last updated"
+            "nullable": true
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          }
+        }
+      },
+      "UsersResponse": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponseDto"
+            }
+          }
+        }
+      },
+      "ProjectsResponse": {
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectResponseDto"
+            }
+          }
+        }
+      },
+      "IssuesResponse": {
+        "type": "object",
+        "properties": {
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssueResponseDto"
+            }
+          }
+        }
+      },
+      "EpicsResponse": {
+        "type": "object",
+        "properties": {
+          "epics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EpicResponseDto"
+            }
+          }
+        }
+      },
+      "SprintsResponse": {
+        "type": "object",
+        "properties": {
+          "sprints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SprintResponseDto"
+            }
+          }
+        }
+      },
+      "StatusesResponse": {
+        "type": "object",
+        "properties": {
+          "statuses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusResponseDto"
+            }
+          }
+        }
+      },
+      "ColumnsResponse": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoardColumnResponseDto"
+            }
+          }
+        }
+      },
+      "ProjectMembersResponse": {
+        "type": "object",
+        "properties": {
+          "project_members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectMemberResponseDto"
+            }
           }
         }
       },
@@ -822,33 +1068,52 @@
           }
         }
       },
-      "SuccessResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Operation completed successfully"
-          },
-          "data": {
-            "type": "object",
-            "description": "Response data"
-          },
-          "success": {
-            "type": "boolean",
-            "example": true
-          }
-        }
-      },
       "AuthResponse": {
         "type": "object",
         "properties": {
-          "user": {
-            "$ref": "#/components/schemas/UserResponseDto"
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponseDto"
+            }
           },
           "token": {
             "type": "string",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
             "description": "JWT access token"
+          },
+          "emailVerificationToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "description": "Email verification token (only on registration)"
+          }
+        },
+        "required": [
+          "users",
+          "token"
+        ]
+      },
+      "EmailVerificationResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponseDto"
+            }
+          }
+        }
+      },
+      "PasswordResetResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Password reset email sent successfully"
           },
           "success": {
             "type": "boolean",
@@ -936,17 +1201,2055 @@
       "description": "Board column management endpoints"
     },
     {
-      "name": "Status",
+      "name": "Statuses",
       "description": "Status management endpoints"
+    },
+    {
+      "name": "Project Members",
+      "description": "Project member management endpoints"
     }
   ],
   "paths": {
+    "/api/v1/board-column": {
+      "post": {
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ColumnsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Board column created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "123e4567-e89b-12d3-a456-426614174000"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "In Progress"
+                        },
+                        "position": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "projectId": {
+                          "type": "string",
+                          "example": "123e4567-e89b-12d3-a456-426614174000"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Board column created successfully"
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions (Moderator required)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a new board column",
+        "tags": [
+          "Board Columns"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBoardColumnDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{projectId}/epic": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpicsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Epics retrieved successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EpicResponseDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Epics retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get project epics",
+        "tags": [
+          "Epics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search term for epic name or description"
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a new epic",
+        "tags": [
+          "Epics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEpicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Epic created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Epic created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EpicResponseDto"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{projectId}/epic/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpicsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Epic retrieved successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EpicResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Epic retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get epic by ID",
+        "tags": [
+          "Epics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Epic ID"
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update epic",
+        "tags": [
+          "Epics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Epic ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEpicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Epic updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Epic updated successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EpicResponseDto"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete epic",
+        "tags": [
+          "Epics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Epic ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Epic deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Epic deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{projectId}/epic/key/{key}": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpicsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Epic retrieved successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EpicResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Epic retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Epic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get epic by key",
+        "tags": [
+          "Epics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Epic key (e.g., MAP-EPIC-1)"
+          }
+        ]
+      }
+    },
+    "/api/v1/{projectId}/issues": {
+      "post": {
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssuesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Issue created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/IssueResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Issue created successfully"
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a new issue",
+        "tags": [
+          "Issues"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIssueDto"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssuesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Issues retrieved successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IssueResponseDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Issues retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get project issues (lightweight/partial)",
+        "tags": [
+          "Issues"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "query",
+            "name": "sprintId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by sprint ID"
+          },
+          {
+            "in": "query",
+            "name": "assignee",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by assignee ID"
+          },
+          {
+            "in": "query",
+            "name": "statusId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by status ID"
+          },
+          {
+            "in": "query",
+            "name": "epicId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by epic ID"
+          },
+          {
+            "in": "query",
+            "name": "parentId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by parent issue ID"
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TASK",
+                "BUG",
+                "STORY",
+                "EPIC"
+              ]
+            },
+            "description": "Filter by issue type"
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ]
+            },
+            "description": "Filter by priority"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "searchTerm",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search term for issue title or description"
+          }
+        ]
+      }
+    },
+    "/api/v1/project/{projectId}/project-members": {
+      "post": {
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectMembersResponse"
+                }
+              }
+            },
+            "description": "Member added successfully"
+          },
+          "400": {
+            "description": "Invalid input data or user already a member",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Add a member to a project",
+        "tags": [
+          "Project Members"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "permission"
+                ],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "description": "ID of the user to add as member"
+                  },
+                  "permission": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "example": 0,
+                    "description": "Permission level (0:MEMBER, 1:MODERATOR, 2:ADMINISTRATOR)"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all members of a project",
+        "tags": [
+          "Project Members"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project members retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectMembersResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/project": {
+      "post": {
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Project created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ProjectResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Project created successfully"
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Project key already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a new project",
+        "tags": [
+          "Projects"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectDto"
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Project updated successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ProjectResponseDto"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Project updated successfully"
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update project",
+        "tags": [
+          "Projects"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDto"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Projects retrieved successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProjectResponseDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Projects retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get user projects",
+        "tags": [
+          "Projects"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search term for project name or key"
+          }
+        ]
+      }
+    },
+    "/api/v1/project/{id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Project deleted successfully"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Project deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete project",
+        "tags": [
+          "Projects"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          }
+        ]
+      }
+    },
+    "/api/v1/project/{projectId}/sprints": {
+      "post": {
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SprintsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sprint/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SprintsResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Sprint retrieved successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SprintResponseDto"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Sprint retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sprint not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get sprint by ID",
+        "tags": [
+          "Sprints"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sprint ID"
+          }
+        ]
+      },
+      "put": {
+        "summary": "Update sprint",
+        "tags": [
+          "Sprints"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sprint ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSprintDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sprint updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Sprint updated successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SprintResponseDto"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sprint not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete sprint",
+        "tags": [
+          "Sprints"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sprint ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sprint deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Sprint deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sprint not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/status": {
+      "post": {
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Status created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/StatusResponseDto"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Status created successfully"
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Board column not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a new status",
+        "tags": [
+          "Status"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStatusDto"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All statuses retrieved successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StatusResponseDto"
+                      }
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Statuses retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all statuses",
+        "tags": [
+          "Status"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/status/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Status retrieved successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/StatusResponseDto"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Status retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Status not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get status by ID",
+        "tags": [
+          "Status"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Status ID"
+          }
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Status updated successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/StatusResponseDto"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Status updated successfully"
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Status not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update status",
+        "tags": [
+          "Status"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Status ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStatusDto"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Status deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Status deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Status not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete status",
+        "tags": [
+          "Status"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Status ID"
+          }
+        ]
+      }
+    },
+    "/api/v1/status/column/{columnId}": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusesResponse",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Statuses retrieved successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StatusResponseDto"
+                      }
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Statuses retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get statuses by column ID",
+        "tags": [
+          "Status"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Board column ID"
+          }
+        ]
+      }
+    },
     "/api/v1/user/register": {
       "post": {
-        "summary": "Register a new user",
         "tags": [
           "Authentication"
         ],
+        "summary": "Register a new user",
+        "description": "Creates a new user account and sends email verification",
         "requestBody": {
           "required": true,
           "content": {
@@ -963,6 +3266,21 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/UserResponseDto"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "emailVerificationToken": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
                   "allOf": [
                     {
                       "$ref": "#/components/schemas/AuthResponse"
@@ -1006,10 +3324,11 @@
     },
     "/api/v1/user/login": {
       "post": {
-        "summary": "Login user",
         "tags": [
           "Authentication"
         ],
+        "summary": "Login user",
+        "description": "Authenticate user with email and password",
         "requestBody": {
           "required": true,
           "content": {
@@ -1026,6 +3345,18 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/UserResponseDto"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
                   "$ref": "#/components/schemas/AuthResponse"
                 }
               }
@@ -1056,10 +3387,11 @@
     },
     "/api/v1/user/verify-email": {
       "post": {
-        "summary": "Verify user email",
         "tags": [
           "Authentication"
         ],
+        "summary": "Verify user email",
+        "description": "Verify user's email address using verification token",
         "security": [
           {
             "bearerAuth": []
@@ -1071,16 +3403,20 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "userEmail"
-                ],
                 "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
                   "userEmail": {
                     "type": "string",
                     "format": "email",
                     "example": "john.doe@example.com"
                   }
-                }
+                },
+                "required": [
+                  "userEmail"
+                ]
               }
             }
           }
@@ -1130,26 +3466,27 @@
     },
     "/api/v1/user/forget-password": {
       "post": {
-        "summary": "Request password reset",
         "tags": [
           "Authentication"
         ],
+        "summary": "Request password reset",
+        "description": "Send password reset email to user",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "email"
-                ],
                 "properties": {
                   "email": {
                     "type": "string",
                     "format": "email",
                     "example": "john.doe@example.com"
                   }
-                }
+                },
+                "required": [
+                  "email"
+                ]
               }
             }
           }
@@ -1162,13 +3499,13 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Password reset email sent successfully"
-                    },
                     "success": {
                       "type": "boolean",
                       "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password reset email sent successfully"
                     }
                   }
                 }
@@ -1200,10 +3537,11 @@
     },
     "/api/v1/user/password-reset": {
       "post": {
-        "summary": "Reset user password",
         "tags": [
           "Authentication"
         ],
+        "summary": "Reset user password",
+        "description": "Reset user password using reset token",
         "security": [
           {
             "bearerAuth": []
@@ -1215,21 +3553,31 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "newPassword"
-                ],
                 "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
                   "oldPassword": {
                     "type": "string",
                     "example": "oldpassword123",
                     "description": "Required if not using reset token"
+                  },
+                  "tokenType": {
+                    "type": "string"
                   },
                   "newPassword": {
                     "type": "string",
                     "example": "newpassword123",
                     "description": "New password"
                   }
-                }
+                },
+                "required": [
+                  "newPassword"
+                ]
               }
             }
           }
@@ -1242,13 +3590,13 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Password reset successfully"
-                    },
                     "success": {
                       "type": "boolean",
                       "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password reset successfully"
                     }
                   }
                 }
@@ -1278,12 +3626,13 @@
         }
       }
     },
-    "/api/v1/board-column": {
-      "post": {
-        "summary": "Create a new board column",
+    "/api/v1/user/update-profile": {
+      "put": {
         "tags": [
-          "Board Columns"
+          "User"
         ],
+        "summary": "Update user profile",
+        "description": "Update user profile information including profile photo",
         "security": [
           {
             "bearerAuth": []
@@ -1292,88 +3641,80 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateBoardColumnDto"
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string"
+                  },
+                  "profilePhoto": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Board column created successfully",
+          "200": {
+            "description": "Profile updated successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Board column created successfully"
+                    "success": {
+                      "type": "boolean"
                     },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "123e4567-e89b-12d3-a456-426614174000"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "In Progress"
-                        },
-                        "position": {
-                          "type": "number",
-                          "example": 2
-                        },
-                        "projectId": {
-                          "type": "string",
-                          "example": "123e4567-e89b-12d3-a456-426614174000"
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        }
-                      }
+                    "user": {
+                      "$ref": "#/components/schemas/UserResponseDto"
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid input data",
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/user/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user profile",
+        "description": "Retrieve the authenticated user's profile information",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/UserResponseDto"
+                    }
+                  }
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions (Moderator required)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
@@ -1683,535 +4024,6 @@
         }
       }
     },
-    "/api/v1/{projectId}/epic": {
-      "post": {
-        "summary": "Create a new epic",
-        "tags": [
-          "Epics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateEpicDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Epic created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Epic created successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/EpicResponseDto"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "summary": "Get project epics",
-        "tags": [
-          "Epics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            },
-            "description": "Page number"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer",
-              "default": 20
-            },
-            "description": "Number of items per page"
-          },
-          {
-            "in": "query",
-            "name": "search",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Search term for epic name or description"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Epics retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Epics retrieved successfully"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/EpicResponseDto"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/PaginationMeta"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/{projectId}/epic/{id}": {
-      "get": {
-        "summary": "Get epic by ID",
-        "tags": [
-          "Epics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Epic ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Epic retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Epic retrieved successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/EpicResponseDto"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Epic not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update epic",
-        "tags": [
-          "Epics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Epic ID"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateEpicDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Epic updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Epic updated successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/EpicResponseDto"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Epic not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete epic",
-        "tags": [
-          "Epics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Epic ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Epic deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Epic deleted successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Epic not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/{projectId}/epic/key/{key}": {
-      "get": {
-        "summary": "Get epic by key",
-        "tags": [
-          "Epics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          },
-          {
-            "in": "path",
-            "name": "key",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Epic key (e.g., MAP-EPIC-1)"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Epic retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Epic retrieved successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/EpicResponseDto"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Epic not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/{projectId}/epic/{epicId}/issues": {
       "get": {
         "summary": "Get epic issues",
@@ -2361,254 +4173,6 @@
           },
           "404": {
             "description": "Epic not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/{projectId}/issues": {
-      "post": {
-        "summary": "Create a new issue",
-        "tags": [
-          "Issues"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateIssueDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Issue created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Issue created successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/IssueResponseDto"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "summary": "Get project issues (lightweight/partial)",
-        "tags": [
-          "Issues"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Project ID"
-          },
-          {
-            "in": "query",
-            "name": "sprintId",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Filter by sprint ID"
-          },
-          {
-            "in": "query",
-            "name": "assignee",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Filter by assignee ID"
-          },
-          {
-            "in": "query",
-            "name": "statusId",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Filter by status ID"
-          },
-          {
-            "in": "query",
-            "name": "epicId",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Filter by epic ID"
-          },
-          {
-            "in": "query",
-            "name": "parentId",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Filter by parent issue ID"
-          },
-          {
-            "in": "query",
-            "name": "type",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "TASK",
-                "BUG",
-                "STORY",
-                "EPIC"
-              ]
-            },
-            "description": "Filter by issue type"
-          },
-          {
-            "in": "query",
-            "name": "priority",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "LOW",
-                "MEDIUM",
-                "HIGH",
-                "CRITICAL"
-              ]
-            },
-            "description": "Filter by priority"
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            },
-            "description": "Page number"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer",
-              "default": 20
-            },
-            "description": "Number of items per page"
-          },
-          {
-            "in": "query",
-            "name": "searchTerm",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Search term for issue title or description"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Issues retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Issues retrieved successfully"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/IssueResponseDto"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/PaginationMeta"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
             "content": {
               "application/json": {
                 "schema": {
@@ -3398,87 +4962,35 @@
         }
       }
     },
-    "/api/v1/project": {
-      "post": {
-        "summary": "Create a new project",
-        "tags": [
-          "Projects"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateProjectDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Project created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Project created successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/ProjectResponseDto"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Project key already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/api/v1/project/{projectId}/project-members/{memberId}": {
       "patch": {
-        "summary": "Update project",
+        "summary": "Update project member permission",
         "tags": [
-          "Projects"
+          "Project Members"
         ],
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "memberId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Member ID"
           }
         ],
         "requestBody": {
@@ -3486,27 +4998,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProjectDto"
+                "$ref": "#/components/schemas/UpdateProjectMemberDto"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Project updated successfully",
+            "description": "Member permission updated successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Project updated successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/ProjectResponseDto"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ProjectMembersResponse"
                 }
               }
             }
@@ -3542,7 +5045,7 @@
             }
           },
           "404": {
-            "description": "Project not found",
+            "description": "Member not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3553,88 +5056,10 @@
           }
         }
       },
-      "get": {
-        "summary": "Get user projects",
-        "tags": [
-          "Projects"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            },
-            "description": "Page number"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "integer",
-              "default": 20
-            },
-            "description": "Number of items per page"
-          },
-          {
-            "in": "query",
-            "name": "search",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Search term for project name or key"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Projects retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Projects retrieved successfully"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ProjectResponseDto"
-                      }
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/PaginationMeta"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/project/{id}": {
       "delete": {
-        "summary": "Delete project",
+        "summary": "Remove a member from a project",
         "tags": [
-          "Projects"
+          "Project Members"
         ],
         "security": [
           {
@@ -3644,27 +5069,30 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "projectId",
             "required": true,
             "schema": {
               "type": "string"
             },
             "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "memberId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Member ID"
           }
         ],
         "responses": {
           "200": {
-            "description": "Project deleted successfully",
+            "description": "Member removed successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Project deleted successfully"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ProjectMembersResponse"
                 }
               }
             }
@@ -3681,6 +5109,94 @@
           },
           "403": {
             "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Member not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/project/{projectId}/project-members/check/{userId}": {
+      "get": {
+        "summary": "Check if user is a member and get their permission level",
+        "tags": [
+          "Project Members"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User ID to check"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User permission check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "project_members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "projectId": {
+                            "type": "string"
+                          },
+                          "permission": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "isMember": {
+                            "type": "boolean"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -3980,256 +5496,6 @@
         }
       }
     },
-    "/api/v1/sprint/{id}": {
-      "get": {
-        "summary": "Get sprint by ID",
-        "tags": [
-          "Sprints"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Sprint ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Sprint retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Sprint retrieved successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/SprintResponseDto"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Sprint not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Update sprint",
-        "tags": [
-          "Sprints"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Sprint ID"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateSprintDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Sprint updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Sprint updated successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/SprintResponseDto"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Sprint not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete sprint",
-        "tags": [
-          "Sprints"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Sprint ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Sprint deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Sprint deleted successfully"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Insufficient permissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Sprint not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/sprint/{id}/activate": {
       "post": {
         "summary": "Activate sprint",
@@ -4449,6 +5715,52 @@
               "default": 10
             },
             "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TASK",
+                "BUG",
+                "STORY",
+                "EPIC"
+              ]
+            },
+            "description": "Filter by issue type"
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ]
+            },
+            "description": "Filter by priority"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "Number of items per page"
           }
         ],
         "responses": {
@@ -4511,415 +5823,6 @@
           },
           "404": {
             "description": "Sprint not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/status": {
-      "post": {
-        "summary": "Create a new status",
-        "tags": [
-          "Status"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Status created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Status created successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/StatusResponseDto"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Board column not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "summary": "Get all statuses",
-        "tags": [
-          "Status"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Statuses retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "All statuses retrieved successfully"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/StatusResponseDto"
-                      }
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/status/{id}": {
-      "get": {
-        "summary": "Get status by ID",
-        "tags": [
-          "Status"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Status ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Status retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Status retrieved successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/StatusResponseDto"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Status not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Update status",
-        "tags": [
-          "Status"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Status ID"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Status updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Status updated successfully"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/StatusResponseDto"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Status not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete status",
-        "tags": [
-          "Status"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Status ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Status deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Status deleted successfully"
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Status not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/status/column/{columnId}": {
-      "get": {
-        "summary": "Get statuses by column ID",
-        "tags": [
-          "Status"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "columnId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Board column ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Statuses retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Statuses retrieved successfully"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/StatusResponseDto"
-                      }
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {

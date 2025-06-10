@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, Length, IsUUID, IsEnum } from "class-validator";
 import { Expose, Type } from 'class-transformer'; // Added Expose, Type
-import { IssueType } from "../types";
+import { IssueType, Priority } from "../types";
 
 export class CreateIssueDto {
   @IsString()
@@ -31,10 +31,13 @@ export class CreateIssueDto {
   @IsOptional()
   @IsUUID()
   statusId?: string;
-
   @IsEnum(IssueType)
   @IsOptional()
   type: IssueType = IssueType.TASK;
+
+  @IsEnum(Priority)
+  @IsOptional()
+  priority: Priority = Priority.MEDIUM;
 }
 
 export class UpdateIssueDto {
@@ -66,10 +69,13 @@ export class UpdateIssueDto {
   @IsOptional()
   @IsUUID()
   statusId?: string;
-
   @IsOptional()
   @IsEnum(IssueType)
   type?: IssueType;
+
+  @IsOptional()
+  @IsEnum(Priority)
+  priority?: Priority;
 }
 
 class BasicUserDto {
@@ -117,6 +123,7 @@ export class IssuePartialResponseDto {
   @Expose() sprintId?: string;
   @Expose() projectId!: string;
   @Expose() type!: IssueType;
+  @Expose() priority!: Priority;
   @Expose() createdAt!: Date;
   @Expose() updatedAt!: Date;
   @Expose() deletedAt?: Date;
@@ -143,6 +150,7 @@ export class IssueFullResponseDto {
   @Expose() sprintId?: string;
   @Expose() projectId!: string;
   @Expose() type!: IssueType;
+  @Expose() priority!: Priority;
   @Expose() createdAt!: Date;
   @Expose() updatedAt!: Date;
   @Expose() deletedAt?: Date;

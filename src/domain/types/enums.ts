@@ -13,3 +13,8 @@ export enum ProjectPermission {
   MODERATOR = 1,
   ADMINISTRATOR = 2,
 }
+export enum Priority {
+  LOW = "low",
+  MEDIUM = "medium",
+  HIGH = "high",
+}

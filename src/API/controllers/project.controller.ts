@@ -20,10 +20,9 @@ export class ProjectController {
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/ProjectsResponse'
-   */
-  async create(req: Request, res: Response, next: NextFunction) {
+   */  async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const createProjectDto = (req as any).validatedData as CreateProjectDto;
       createProjectDto.createdBy = userId!;
 
@@ -93,10 +92,9 @@ export class ProjectController {
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/ProjectsResponse'
-   */
-  async find(req: Request, res: Response, next: NextFunction) {
+   */  async find(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const query = req.query;
       const where: FindProjectOptions = {
         ...query,

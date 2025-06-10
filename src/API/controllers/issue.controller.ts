@@ -17,10 +17,9 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/IssuesResponse'
-   */
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const createIssueDto = (req as any).validatedData as CreateIssueDto;
       // No need to manually assign projectId - it's already merged by validateDTOWithParams
 
@@ -43,11 +42,10 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/IssuesResponse'
-   */
-  async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+   */  async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { projectId } = req.params;
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const options = parseIssueQueryParams(req);
 
       const result = await this.issueService.getAll(userId!, projectId, options);
@@ -60,7 +58,7 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
   }  async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
 
       const issue = await this.issueService.getById(userId!, id);
       res.status(200).json({
@@ -72,7 +70,7 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
   }  async getByKey(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { key } = req.params;
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
 
       const issue = await this.issueService.getByKey(userId!, key);
       res.status(200).json({
@@ -84,7 +82,7 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
   }  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const updateIssueDto = (req as any).validatedData as UpdateIssueDto;
 
       const issue = await this.issueService.update(userId!, id, updateIssueDto);
@@ -97,7 +95,7 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
   }  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
 
       await this.issueService.delete(userId!, id);
       res.status(200).json({
@@ -108,7 +106,7 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
     }
   }async getMyAssigned(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const options = parseIssueQueryParams(req);
       const { projectId } = req.query;
 
@@ -127,7 +125,7 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
   }  async getBySprint(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { sprintId } = req.params;
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const options = parseIssueQueryParams(req);
 
       const issues = await this.issueService.getBySprint(userId!, sprintId, options);
@@ -140,7 +138,7 @@ export class IssueController {  constructor(@inject(IssueService) private issueS
   }  async getByEpic(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { epicId } = req.params;
-      const userId = req.user?.userId;
+      const userId = (req as any).user?.id;
       const options = parseIssueQueryParams(req);
 
       const issues = await this.issueService.getByEpic(userId!, epicId, options);
