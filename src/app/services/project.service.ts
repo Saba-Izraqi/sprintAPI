@@ -13,7 +13,7 @@ import { CreateProjectMemberDto } from "../../domain/DTOs/projectMemberDTO";
 export class ProjectService {
   constructor(
     @inject("IProjectRepo") private projectRepo: IProjectRepo,
-    @inject("ProjectMembersService")
+    @inject(ProjectMembersService)
     private memberService: ProjectMembersService
   ) {}
 

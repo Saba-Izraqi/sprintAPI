@@ -1,4 +1,4 @@
-import { injectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import { IProjectMemberRepo } from "../../domain/IRepos/IProjectMemberRepo";
 import {
   CreateProjectMemberDto,
@@ -7,7 +7,7 @@ import {
 
 @injectable()
 export class ProjectMembersService {
-  constructor(private repo: IProjectMemberRepo) {}
+  constructor(@inject("IProjectMemberRepo") private repo: IProjectMemberRepo) {}
 
   async add(newMembership: CreateProjectMemberDto) {
     return this.repo.add(newMembership); // TODO: Fire notification
