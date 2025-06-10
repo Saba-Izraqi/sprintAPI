@@ -9,13 +9,9 @@ import { authenticate } from "../middlewares/auth.middleware";
 export class NotificationRoutes extends BaseRoute {
   public path = "/notifications";
   
-  /**
-   * Initialize notification routes
-   */
   protected initRoutes(): void {
     const controller = container.resolve(NotificationController);
 
-    // Get all notifications for the authenticated user
     this.router.get(
       "/",
       authenticate,
@@ -29,12 +25,6 @@ export class NotificationRoutes extends BaseRoute {
       controller.getUnreadCount.bind(controller)
     );
 
-    // Get specific notification by ID
-    this.router.get(
-      "/:id",
-      authenticate,
-      controller.getNotificationById.bind(controller)
-    );
 
     // Mark notification as read
     this.router.patch(
@@ -55,13 +45,7 @@ export class NotificationRoutes extends BaseRoute {
       "/:id",
       authenticate,
       controller.deleteNotification.bind(controller)
-    );
-
-    // Create notification (admin/system use)
-    // this.router.post(
-    //   "/",
-    //   authenticate,
-    //   controller.createNotification.bind(controller)
-    // );
+    );    // Create notification (admin/system use)
+   
   }
 }

@@ -14,11 +14,11 @@ export class AppServer {
   public app: Application;
   public httpServer: HttpServer;
   private readonly apiPrefix = "/api/v1";
-
   constructor() {
     this.app = express();
     this.httpServer = createServer(this.app);
     this.setupMiddleware();
+    this.setupSocket(); // Initialize Socket.IO server
   }
 
   private setupMiddleware() {
@@ -56,9 +56,8 @@ export class AppServer {
         }
       }
     }  }
-
   private setupSocket(): void {
-    const socketService = container.resolve(SocketService);
+    const socketService = container.resolve<SocketService>("SocketService");
     socketService.initialize(this.httpServer);
   }
 

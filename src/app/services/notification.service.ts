@@ -1,4 +1,4 @@
-import { injectable, inject, container } from "tsyringe";
+import { injectable, inject } from "tsyringe";
 import { INotificationRepo } from "../../domain/IRepos/INotificationRepo";
 import {
   CreateNotificationDto,
@@ -26,7 +26,7 @@ export class NotificationService {
    */
   constructor(
     @inject("INotificationRepo") private notificationRepo: INotificationRepo,
-    @inject(SocketService) private socketService: SocketService
+    @inject("SocketService") private socketService: SocketService
   ) {}
 
   /**
@@ -148,9 +148,7 @@ export class NotificationService {
     try {
       //TODO: Check if recipient is online before emitting
       // Get updated unread count
-      const unreadCount = await this.getUnreadCount(notification.recipientId);
-
-      // Send notification to user
+      const unreadCount = await this.getUnreadCount(notification.recipientId);    
       this.socketService.emitToUser(
         notification.recipientId,
         "notification:new",
@@ -164,6 +162,7 @@ export class NotificationService {
             metadata: notification.metadata,
             actionUrl: notification.actionUrl,
             createdAt: notification.createdAt,
+            isRead: notification.isRead,
           },
           unreadCount,
         }
