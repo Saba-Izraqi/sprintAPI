@@ -6,6 +6,7 @@ import { glob } from "glob";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import errorMiddleware from "./middlewares/error.middleware";
+import cors from "cors";
 
 export class AppServer {
   public app: Application;
@@ -18,6 +19,7 @@ export class AppServer {
 
   private setupMiddleware() {
     this.app.use(express.json());
+    this.app.use(cors());
   }
 
   private async setupRoutes() {
