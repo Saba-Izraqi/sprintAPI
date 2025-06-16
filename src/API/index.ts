@@ -23,11 +23,13 @@ export class AppServer {
 
   private setupMiddleware() {
     this.app.use(express.json());
-    this.app.use(cors({
-      origin: "*", // Allow all origins, adjust as needed for security
-      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-      preflightContinue: false,
-    }))
+    this.app.use(
+      cors({
+        origin: "*", // Allow all origins, adjust as needed for security
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        preflightContinue: false,
+      })
+    );
   }
 
   private async setupRoutes() {
@@ -55,7 +57,8 @@ export class AppServer {
           console.success(`Loaded route: ${routeInstance.path}`);
         }
       }
-    }  }
+    }
+  }
   private setupSocket(): void {
     const socketService = container.resolve<SocketService>("SocketService");
     socketService.initialize(this.httpServer);
@@ -66,5 +69,7 @@ export class AppServer {
     //*this middleware cant be registered in setupMiddlewares because it needs to be the last middleware
     this.app.use(errorMiddleware);
     this.httpServer.listen(port, () =>
-      console.info(`🚀 Server running at http://localhost:${port}`)    );  }
+      console.info(`🚀 Server running at http://localhost:${port}`)
+    );
+  }
 }
