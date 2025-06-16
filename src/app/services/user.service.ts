@@ -30,10 +30,6 @@ export class UserService {
     return new UserResponseDto(user);
   }
 
-  async getAllUsers() {
-    const users = await this.userRepo.getAll();
-    return users.map(user => new UserResponseDto(user));
-  }
   async updateEmailVerification(email: string, isVerified: boolean = true) {
     const user = await this.userRepo.updateEmailVerification(email, isVerified);
     if (!user || !user.isEmailVerified) {

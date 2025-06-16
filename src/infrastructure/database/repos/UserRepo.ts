@@ -26,13 +26,6 @@ export class UserRepo implements IUserRepo {
     return this._userRepo.findOneBy({ email });
   }
 
-  async getAll(): Promise<User[]> {
-    try {
-      return await this._userRepo.find();
-    } catch (error) {
-      throw getDBError(error);
-    }
-  }
 
   async updateEmailVerification(
     email: string,
