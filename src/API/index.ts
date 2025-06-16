@@ -10,6 +10,8 @@ import { createServer, Server as HttpServer } from "http";
 import { container } from "tsyringe";
 import { SocketService } from "../infrastructure/socket/socket.service";
 import cors from "cors";
+
+
 export class AppServer {
   public app: Application;
   public httpServer: HttpServer;
@@ -25,11 +27,12 @@ export class AppServer {
     this.app.use(express.json());
     this.app.use(
       cors({
-        origin: "*", // Allow all origins, adjust as needed for security
+        origin: "*", 
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         preflightContinue: false,
       })
     );
+
   }
 
   private async setupRoutes() {
