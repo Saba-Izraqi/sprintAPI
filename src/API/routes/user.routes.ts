@@ -10,7 +10,6 @@ export class UserRoutes extends BaseRoute {
   protected initRoutes(): void {
     const controller = container.resolve(UserController);
 
-    this.router.get("/all", authenticate, controller.getAllUsers.bind(controller));
     this.router.post("/register", controller.register.bind(controller));
     this.router.post("/login", controller.login.bind(controller));
     this.router.post(
