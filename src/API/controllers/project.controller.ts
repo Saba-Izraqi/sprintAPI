@@ -22,6 +22,7 @@ export class ProjectController {
       ...req.body,
       createdBy: creator,
     });
+    console.debug("Create Project DTO:", dto); // Debugging line to check the DTO
 
     try {
       const errors = await validate(dto);
