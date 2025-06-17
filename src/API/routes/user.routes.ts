@@ -28,5 +28,10 @@ export class UserRoutes extends BaseRoute {
       restrictTokens(Token.RESET_PASSWORD, Token.ACCESS),
       controller.resetPassword.bind(controller),
     );
+    this.router.get(
+      "/search",
+      authenticate,
+      controller.getUserByEmailOrId.bind(controller),
+    );
   }
 }

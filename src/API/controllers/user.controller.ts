@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { UserService } from "../../app/services/user.service";
 import { validate } from "class-validator";
 import { plainToInstance } from "class-transformer";
-import { RegisterUserDto, LoginUserDto } from "../../domain/DTOs/userDTO";
+import { RegisterUserDto, LoginUserDto, UserResponseDto } from "../../domain/DTOs/userDTO";
 import { Token } from "../enums/token";
 import { genToken } from "../utils/token";
 import PostmarkSender from "../../infrastructure/email/postmarkSender";
@@ -148,6 +148,32 @@ export class UserController {
       res.status(200).json({
         success: true,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUserByEmailOrId(req: Request, res: Response, next: NextFunction) {
+    const { email, id } = req.query;
+
+    try {
+      if (!email && !id) {
+        throw new UserError("Either email or id parameter is required", 400);
+      }
+
+      let user = null;
+      if (email) {
+        const foundUser = await this.userService.getByEmail(email as string);
+        user = foundUser ? new UserResponseDto(foundUser) : null;
+      } else if (id) {
+        user = await this.userService.getById(id as string);
+      }
+
+      if (!user) {
+        throw new UserError("User not found", 404);
+      }
+
+      res.status(200).json({ user, success: true });
     } catch (error) {
       next(error);
     }

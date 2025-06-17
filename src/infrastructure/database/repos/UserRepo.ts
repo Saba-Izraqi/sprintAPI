@@ -22,10 +22,14 @@ export class UserRepo implements IUserRepo {
       throw getDBError(error);
     }
   }
-  findByEmail(email: string) {
+
+  async findByEmail(email: string): Promise<User | null> {
     return this._userRepo.findOneBy({ email });
   }
 
+  async findById(id: string): Promise<User | null> {
+    return this._userRepo.findOneBy({ id });
+  }
 
   async updateEmailVerification(
     email: string,

@@ -62,4 +62,9 @@ export class UserService {
   async getByEmail(email: string) {
     return await this.userRepo.findByEmail(email);
   }
+
+  async getById(id: string) {
+    const user = await this.userRepo.findById(id);
+    return user ? new UserResponseDto(user) : null;
+  }
 }
