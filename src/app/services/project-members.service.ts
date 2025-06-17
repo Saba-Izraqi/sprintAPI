@@ -10,10 +10,18 @@ export class ProjectMembersService {
   constructor(@inject("IProjectMemberRepo") private repo: IProjectMemberRepo) {}
 
   async add(newMembership: CreateProjectMemberDto) {
-    return this.repo.add(newMembership); // TODO: Fire notification
+    return this.repo.add(newMembership);
   }
 
   async update(membership: UpdateProjectMemberDto) {
-    this.repo.update(membership); // TODO: Fire notification but check with saba before
+    return this.repo.update(membership);
+  }
+
+  async remove(membershipId: string): Promise<void> {
+    await this.repo.remove(membershipId);
+  }
+  
+  async find(where: Partial<CreateProjectMemberDto>) {
+    return this.repo.find(where);
   }
 }

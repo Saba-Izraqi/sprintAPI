@@ -45,8 +45,12 @@ export class ProjectMemberRepo implements IProjectMemberRepo {
     }
   }
 
-  remove(membershipId: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async remove(membershipId: string): Promise<void> {
+    try {
+      await this._projectMemberRepo.delete(membershipId);
+    } catch (error) {
+      throw getDBError(error);
+    }
   }
 
   async find(where: FindProjectMemberOptions): Promise<ProjectMember[]> {

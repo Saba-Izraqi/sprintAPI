@@ -23,10 +23,9 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 export const authenticate = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void => {
   const token = req.header("Authorization")?.split(" ")[1];
-  console.debug('token => ', req.header('Authorization'))
   if (!token) {
     res
       .status(401)
@@ -38,7 +37,7 @@ export const authenticate = (
   try {
     const decoded = jwt.verify(
       token,
-      "secretKeyPlaceHolderWillReplaceLater",
+      "secretKeyPlaceHolderWillReplaceLater"
     ) as JwtPayload;
 
     if (!decoded || !decoded.email) {
