@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { IssueService } from "../../app/services/issue.service";
 import { CreateIssueDto, UpdateIssueDto } from "../../domain/DTOs/issueDTO";
+import { IssueType, issuePriority } from "../../domain/types";
 import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
 import { injectable, inject } from "tsyringe"; // Added inject
@@ -71,16 +72,14 @@ export class IssueController {
         parentId,
         type,
         priority,
-      } = req.query;
-
-      const options = {
+      } = req.query;      const options = {
         sprintId: sprintId as string | undefined,
         assignee: assignee as string | undefined,
         statusId: statusId as string | undefined,
         epicId: epicId as string | undefined,
         parentId: parentId as string | undefined,
-        type: type as string | undefined,
-        priority: priority as string | undefined,
+        type: type ? (type as IssueType) : undefined,
+        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
       };
   
       const result = await this.issueService.getAll( // Renamed from getPartialIssues
@@ -210,14 +209,10 @@ export class IssueController {
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });
         return;
-      }
-
-      const {
+      }      const {
         projectId, // Optional project filter
         sprintId,
         statusId,
-        page = "1",
-        limit = "20",
         epicId,
         parentId,
         type,
@@ -228,12 +223,10 @@ export class IssueController {
       const options = {
         sprintId: sprintId as string | undefined,
         statusId: statusId as string | undefined,
-        page: parseInt(page as string),
-        limit: parseInt(limit as string),
         epicId: epicId as string | undefined,
         parentId: parentId as string | undefined,
-        type: type as string | undefined,
-        priority: priority as string | undefined,
+        type: type ? (type as IssueType) : undefined,
+        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
         searchTerm: searchTerm as string | undefined,
       };
 
@@ -263,13 +256,10 @@ export class IssueController {
         res.status(401).json({ message: "Unauthorized" });
         return;
       }
-      
-      const {
+        const {
         projectId,
         assignee,
         statusId,
-        page = "1",
-        limit = "20",
         epicId,
         parentId,
         type,
@@ -281,12 +271,10 @@ export class IssueController {
         projectId: projectId as string | undefined,
         assignee: assignee as string | undefined,
         statusId: statusId as string | undefined,
-        page: parseInt(page as string),
-        limit: parseInt(limit as string),
         epicId: epicId as string | undefined,
         parentId: parentId as string | undefined,
-        type: type as string | undefined,
-        priority: priority as string | undefined,
+        type: type ? (type as IssueType) : undefined,
+        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
         searchTerm: searchTerm as string | undefined,
       };
 
@@ -311,14 +299,10 @@ export class IssueController {
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });
         return;
-      }
-
-      const {
+      }      const {
         projectId,
         assignee,
         statusId,
-        page = "1",
-        limit = "20",
         // epicId is a param, so not needed in query for this specific route
         parentId,
         type,
@@ -330,11 +314,9 @@ export class IssueController {
         projectId: projectId as string | undefined,
         assignee: assignee as string | undefined,
         statusId: statusId as string | undefined,
-        page: parseInt(page as string),
-        limit: parseInt(limit as string),
         parentId: parentId as string | undefined,
-        type: type as string | undefined,
-        priority: priority as string | undefined,
+        type: type ? (type as IssueType) : undefined,
+        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
         searchTerm: searchTerm as string | undefined,
       };
 

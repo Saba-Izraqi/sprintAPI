@@ -1,6 +1,7 @@
 import { In, Repository } from "typeorm";
 import { Issue } from "../../../domain/entities/issue.entity";
 import { IIssueRepo } from "../../../domain/IRepos/IIssueRepo";
+import { IssueType } from "../../../domain/types";
 import { AppDataSource } from "../data-source";
 import { FindIssueQueryOptions } from "../../../domain/option/issueQueryOptions"; // Only import FindIssueQueryOptions
 
@@ -33,60 +34,87 @@ export class IssueRepo implements IIssueRepo {
       .leftJoinAndSelect("issue.status", "status")
       .leftJoinAndSelect("issue.assigneeUser", "assigneeUser")
       .leftJoinAndSelect("issue.sprint", "sprint")
-      .leftJoinAndSelect("issue.epic", "epic");
+      .leftJoinAndSelect("issue.epic", "epic");    // Build WHERE conditions with simple, clear logic
+    let hasWhere = false;
 
     if (options?.projectId) {
       query.where("issue.projectId = :projectId", { projectId: options.projectId });
+      hasWhere = true;
     }
-    if (options?.sprintId) {
-      // Ensure 'where' or 'andWhere' is used appropriately based on whether projectId was present
-      const conditionMethod = options?.projectId ? 'andWhere' : 'where';
-      query[conditionMethod]("issue.sprintId = :sprintId", { sprintId: options.sprintId });
-    }
-    if (options?.assignee) {
-      const conditionMethod = (options?.projectId || options?.sprintId) ? 'andWhere' : 'where';
-      query[conditionMethod]("issue.assignee = :assignee", { assignee: options.assignee }); // Changed from issue.assigneeId
-    }
-    if (options?.statusId) {
-      const conditionMethod = (options?.projectId || options?.sprintId || options?.assignee) ? 'andWhere' : 'where';
-      query[conditionMethod]("issue.statusId = :statusId", { statusId: options.statusId });
-    }
-    if (options?.epicId) {
-      const conditionMethod = (options?.projectId || options?.sprintId || options?.assignee || options?.statusId) ? 'andWhere' : 'where';
-      query[conditionMethod]("issue.epicId = :epicId", { epicId: options.epicId });
-    }
-    // Removed parentId filter as it's not defined in the entity
-    // if (options?.parentId) {
-    //   const conditionMethod = (options?.projectId || options?.sprintId || options?.assignee || options?.statusId || options?.epicId) ? 'andWhere' : 'where';
-    //   query[conditionMethod]("issue.parentId = :parentId", { parentId: options.parentId });
-    // }
-    // Removed searchTerm filter as it's not an entity property
-    // if (options?.searchTerm) {
-    //   const conditionMethod = (options?.projectId || options?.sprintId || options?.assignee || options?.statusId || options?.epicId) ? 'andWhere' : 'where';
-    //   query[conditionMethod]("(issue.title ILIKE :searchTerm OR issue.description ILIKE :searchTerm OR issue.key ILIKE :searchTerm)", { searchTerm: `%${options.searchTerm}%` });
-    // }
-
-    const total = await query.getCount();
-
-    // Removed pagination as it's not based on entity properties
-    // if (options?.page && options?.limit) {
-    //   query.skip((options.page - 1) * options.limit).take(options.limit);
-    // }
     
+    if (options?.sprintId) {
+      if (hasWhere) {
+        query.andWhere("issue.sprintId = :sprintId", { sprintId: options.sprintId });
+      } else {
+        query.where("issue.sprintId = :sprintId", { sprintId: options.sprintId });
+        hasWhere = true;
+      }
+    }
+    
+    if (options?.assignee) {
+      if (hasWhere) {
+        query.andWhere("issue.assignee = :assignee", { assignee: options.assignee });
+      } else {
+        query.where("issue.assignee = :assignee", { assignee: options.assignee });
+        hasWhere = true;
+      }
+    }
+    
+    if (options?.statusId) {
+      if (hasWhere) {
+        query.andWhere("issue.statusId = :statusId", { statusId: options.statusId });
+      } else {
+        query.where("issue.statusId = :statusId", { statusId: options.statusId });
+        hasWhere = true;
+      }
+    }
+    
+    if (options?.epicId) {
+      if (hasWhere) {
+        query.andWhere("issue.epicId = :epicId", { epicId: options.epicId });
+      } else {
+        query.where("issue.epicId = :epicId", { epicId: options.epicId });
+        hasWhere = true;
+      }
+    }
+    
+    if (options?.type) {
+      if (hasWhere) {
+        query.andWhere("issue.type = :type", { type: options.type });
+      } else {
+        query.where("issue.type = :type", { type: options.type });
+        hasWhere = true;
+      }
+    }
+      if (options?.priority !== undefined) {
+      if (hasWhere) {
+        query.andWhere("issue.issuePriority = :priority", { priority: options.priority });
+      } else {
+        query.where("issue.issuePriority = :priority", { priority: options.priority });
+        hasWhere = true;
+      }
+    }
+
+    // Get total count
+    const total = await query.getCount();
+    
+    // Select only needed fields for performance
     query.select([
       "issue.id",
       "issue.key",
       "issue.title",
+      "issue.storyPoint",
+      "issue.type",
+      "issue.issuePriority",
       "status.id",
       "status.name",
       "assigneeUser.id",
-      "assigneeUser.fullName", // Changed from name
-      "assigneeUser.image",    // Changed from avatar
+      "assigneeUser.fullName",
+      "assigneeUser.image",
       "sprint.id",
       "sprint.name",
       "epic.id",
-      "epic.title", // Changed from name
-      // "epic.color", // Removed as it does not exist on Epic entity
+      "epic.title"
     ]);
 
     const issues = await query.getMany();

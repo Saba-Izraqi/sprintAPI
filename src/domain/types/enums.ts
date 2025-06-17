@@ -30,3 +30,9 @@ export enum NotificationPriority {
   HIGH = "HIGH",
   URGENT = "URGENT",
 }
+export enum issuePriority {
+  LOW = 0,  
+  MEDIUM = 1,
+  HIGH = 2,
+}
+
