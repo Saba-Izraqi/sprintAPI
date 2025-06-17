@@ -7,7 +7,6 @@ import { Token } from "../enums/token";
 
 export class UserRoutes extends BaseRoute {
   public path = "/user";
-
   protected initRoutes(): void {
     const controller = container.resolve(UserController);
 

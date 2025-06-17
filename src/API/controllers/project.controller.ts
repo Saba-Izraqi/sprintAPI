@@ -67,7 +67,6 @@ export class ProjectController {
       next(error);
     }
   }
-
   async find(req: Request, res: Response, next: NextFunction) {
     const user = req.user?.id;
     const query = req.query;

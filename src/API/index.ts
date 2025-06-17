@@ -6,20 +6,33 @@ import { glob } from "glob";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import errorMiddleware from "./middlewares/error.middleware";
+import { createServer, Server as HttpServer } from "http";
+import { container } from "tsyringe";
+import { SocketService } from "../infrastructure/socket/socket.service";
 import cors from "cors";
+
 
 export class AppServer {
   public app: Application;
+  public httpServer: HttpServer;
   private readonly apiPrefix = "/api/v1";
-
   constructor() {
     this.app = express();
+    this.httpServer = createServer(this.app);
     this.setupMiddleware();
+    this.setupSocket(); // Initialize Socket.IO server
   }
 
   private setupMiddleware() {
     this.app.use(express.json());
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: "*", 
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        preflightContinue: false,
+      })
+    );
+
   }
 
   private async setupRoutes() {
@@ -49,12 +62,16 @@ export class AppServer {
       }
     }
   }
+  private setupSocket(): void {
+    const socketService = container.resolve<SocketService>("SocketService");
+    socketService.initialize(this.httpServer);
+  }
 
-  public async listen(port: number) {
+  public async listen(port: number): Promise<void> {
     await this.setupRoutes();
     //*this middleware cant be registered in setupMiddlewares because it needs to be the last middleware
     this.app.use(errorMiddleware);
-    this.app.listen(port, () =>
+    this.httpServer.listen(port, () =>
       console.info(`🚀 Server running at http://localhost:${port}`)
     );
   }
