@@ -86,6 +86,10 @@ export class UserController {
   async forgetPassword(req: Request, res: Response, next: NextFunction) {
     const { email } = req.body;
 
+    const user = await this.userService.getByEmail(email);
+    if (!user) {
+      throw new UserError("User not found", 404);
+    }
     const token = genToken({
       email: email,
       id: "unknown",
