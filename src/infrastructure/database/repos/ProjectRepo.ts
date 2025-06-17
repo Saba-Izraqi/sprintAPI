@@ -24,6 +24,8 @@ export class ProjectRepo implements IProjectRepo {
 
   async create(project: CreateProjectDto): Promise<Project> {
     try {
+      console.debug("Creating new project:", project);
+      
       const newProject = this._projectRepo.create(project);
       return await this._projectRepo.save(newProject);
     } catch (error) {
@@ -51,7 +53,6 @@ export class ProjectRepo implements IProjectRepo {
       throw getDBError(error);
     }
   }
-
   async find(options: FindProjectOptions, userId?: string): Promise<Project[]> {
     try {
       const queryBuilder = this._projectRepo

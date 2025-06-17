@@ -22,10 +22,10 @@ export class UserRepo implements IUserRepo {
       throw getDBError(error);
     }
   }
-
   findByEmail(email: string) {
     return this._userRepo.findOneBy({ email });
   }
+
 
   async updateEmailVerification(
     email: string,

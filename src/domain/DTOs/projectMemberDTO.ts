@@ -5,6 +5,9 @@ import { ProjectPermission } from "../types";
 import { IsNotAdministrator } from "./customValidators/isNotAdministrator";
 import { Expose } from "class-transformer";
 
+/**
+ * DTO for creating a new project member
+ */
 export class CreateProjectMemberDto {
   @IsNotEmpty()
   @IsUUID()
@@ -22,6 +25,9 @@ export class CreateProjectMemberDto {
   permission!: ProjectPermission;
 }
 
+/**
+ * DTO for updating an existing project member
+ */
 export class UpdateProjectMemberDto {
   @IsNotEmpty()
   @IsUUID()
@@ -39,11 +45,18 @@ export class UpdateProjectMemberDto {
   permission!: ProjectPermission;
 }
 
+/**
+ * DTO for project member response data
+ */
 export class ProjectMemberResponseDto {
   id: string;
   permission: ProjectPermission;
   user?: UserResponseDto | string;
 
+  /**
+   * Constructor for ProjectMemberResponseDto
+   * @param member - The project member entity
+   */
   constructor(member: ProjectMember) {
     this.id = member.id;
     this.permission = member.permission;

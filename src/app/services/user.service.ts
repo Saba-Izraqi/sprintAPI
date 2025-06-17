@@ -20,7 +20,6 @@ export class UserService {
     });
     return new UserResponseDto(user);
   }
-
   async login(dto: LoginUserDto) {
     const user = await this.userRepo.findByEmail(dto.email);
     const isValid = user && (await bcrypt.compare(dto.password, user.password));
@@ -30,6 +29,7 @@ export class UserService {
     }
     return new UserResponseDto(user);
   }
+
   async updateEmailVerification(email: string, isVerified: boolean = true) {
     const user = await this.userRepo.updateEmailVerification(email, isVerified);
     if (!user || !user.isEmailVerified) {

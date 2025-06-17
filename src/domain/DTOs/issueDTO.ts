@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, Length, IsUUID, IsEnum } from "class-validator";
 import { Expose, Type } from 'class-transformer'; // Added Expose, Type
-import { IssueType } from "../types";
+import { IssueType, issuePriority } from "../types";
 
 export class CreateIssueDto {
   @IsString()
@@ -31,10 +31,13 @@ export class CreateIssueDto {
   @IsOptional()
   @IsUUID()
   statusId?: string;
-
   @IsEnum(IssueType)
   @IsOptional()
   type: IssueType = IssueType.TASK;
+
+  @IsEnum(issuePriority)
+  @IsOptional()
+  issuePriority: issuePriority = issuePriority.MEDIUM;
 }
 
 export class UpdateIssueDto {
@@ -66,10 +69,13 @@ export class UpdateIssueDto {
   @IsOptional()
   @IsUUID()
   statusId?: string;
-
   @IsOptional()
   @IsEnum(IssueType)
   type?: IssueType;
+
+  @IsOptional()
+  @IsEnum(issuePriority)
+  issuePriority?: issuePriority;
 }
 
 class BasicUserDto {
@@ -108,11 +114,11 @@ class BasicStatusDto {
 export class IssuePartialResponseDto {
   @Expose() id!: string;
   @Expose() key!: string;
-  @Expose() title!: string;
-  @Expose() storyPoint!: number;
+  @Expose() title!: string;  @Expose() storyPoint!: number;
   @Expose() statusId?: string;
   @Expose() assignee?: string;
   @Expose() projectId!: string;
+  @Expose() issuePriority!: issuePriority;
   
   @Expose()
   @Type(() => BasicUserDto)
@@ -134,12 +140,12 @@ export class IssueFullResponseDto {
   @Expose() description!: string;
   @Expose() storyPoint!: number;
   @Expose() statusId?: string;
-  @Expose() assignee?: string;
-  @Expose() epicId?: string;
+  @Expose() assignee?: string;  @Expose() epicId?: string;
   @Expose() sprintId?: string;
   @Expose() projectId!: string;
   @Expose() createdAt!: Date;
   @Expose() updatedAt!: Date;
+  @Expose() issuePriority!: issuePriority;
   
   @Expose()
   @Type(() => BasicUserDto)

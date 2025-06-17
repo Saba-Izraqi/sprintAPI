@@ -7,9 +7,15 @@ import { restrictTokens } from "../middlewares/tokenTypes.middleware";
 import { Token } from "../enums/token";
 import { ProjectPermission } from '../../domain/types';
 
+/**
+ * Routes for board column management endpoints
+ */
 export class BoardColumnRoutes extends BaseRoute {
   public path = "/board-column";
 
+  /**
+   * Initialize board column routes
+   */
   protected initRoutes(): void {
     const controller = container.resolve(BoardColumnController);
 

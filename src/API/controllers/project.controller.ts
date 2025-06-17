@@ -22,6 +22,7 @@ export class ProjectController {
       ...req.body,
       createdBy: creator,
     });
+    console.debug("Create Project DTO:", dto); // Debugging line to check the DTO
 
     try {
       const errors = await validate(dto);
@@ -66,7 +67,6 @@ export class ProjectController {
       next(error);
     }
   }
-
   async find(req: Request, res: Response, next: NextFunction) {
     const user = req.user?.id;
     const query = req.query;
