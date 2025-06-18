@@ -115,6 +115,26 @@ export class IssueService {
     const { issues } = await this.issueRepo.find(findOptions); 
     return issues.map(issue => plainToInstance(IssuePartialResponseDto, issue, { excludeExtraneousValues: true }));
   }
+  async getAssignedToUser(
+    requestUserId: string,
+    assigneeUserId: string,
+    projectId?: string,
+    options?: FindIssueQueryOptions
+  ): Promise<IssuePartialResponseDto[]> {
+    // Verify the assignee user exists
+    const assigneeUser = await this.userRepo.findById(assigneeUserId);
+    if (!assigneeUser) {
+      throw new NotFoundException("Assignee user not found");
+    }
+
+    const findOptions = {
+      ...options,
+      assignee: assigneeUserId,
+      projectId: projectId,
+    };
+    const { issues } = await this.issueRepo.find(findOptions);
+    return issues.map(issue => plainToInstance(IssuePartialResponseDto, issue, { excludeExtraneousValues: true }));
+  }
 
   async getBySprint( 
     userId: string, 
