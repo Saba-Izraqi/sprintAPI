@@ -15,6 +15,8 @@ import {
 } from "../../domain/types/enums";
 import { SocketService } from "../../infrastructure/socket/socket.service";
 import PostmarkSender from "../../infrastructure/email/postmarkSender";
+import { ProjectMember } from "../../domain";
+import { ProjectMembersService } from "./project-members.service";
 
 /**
  * Service for managing notifications with real-time delivery and email integration
@@ -26,7 +28,9 @@ export class NotificationService {
    */
   constructor(
     @inject("INotificationRepo") private notificationRepo: INotificationRepo,
-    @inject("SocketService") private socketService: SocketService
+    @inject("SocketService") private socketService: SocketService,
+    @inject(ProjectMembersService)
+    private projectMembersService: ProjectMembersService
   ) {}
 
   /**
@@ -148,7 +152,7 @@ export class NotificationService {
     try {
       //TODO: Check if recipient is online before emitting
       // Get updated unread count
-      const unreadCount = await this.getUnreadCount(notification.recipientId);    
+      const unreadCount = await this.getUnreadCount(notification.recipientId);
       this.socketService.emitToUser(
         notification.recipientId,
         "notification:new",
@@ -273,8 +277,11 @@ export class NotificationService {
    * @returns Promise<Notification[]> - Array of created notifications
    */
   async sendNotificationToUsers(
-    dto: SendNotificationToUsersDto
+    dto: SendNotificationToUsersDto,
+    projectId?: string
   ): Promise<Notification[]> {
+    const members = await this.projectMembersService.find({ projectId });
+    dto.recipientIds = members.map((member) => member.userId);
     const promises = dto.recipientIds.map((recipientId) =>
       this.sendNotification({
         ...dto,
@@ -293,8 +300,6 @@ export class NotificationService {
   async sendProjectNotification(
     dto: SendProjectNotificationDto
   ): Promise<void> {
-    //TODO: Send notification to project members with the projectId only
-    // Send to all project members
     await this.sendNotificationToUsers({
       title: dto.title,
       message: dto.message,
@@ -316,4 +321,3 @@ export class NotificationService {
     });
   }
 }
-
