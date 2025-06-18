@@ -52,6 +52,7 @@ export class StatusRepo implements IStatusRepo {
   }
 
   async find(where: FindStatusOptions): Promise<Status[]> {
+    console.log("Finding statuses with options:", where);
     try {
       const queryBuilder = this._repo.createQueryBuilder("status");
 

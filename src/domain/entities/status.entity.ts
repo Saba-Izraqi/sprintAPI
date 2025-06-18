@@ -28,6 +28,9 @@ export class Status extends BaseEntity {
   @Column({ type: "uuid" })
   columnId!: string;
 
+  @Column({ type: "uuid", nullable: true })
+  projectId?: string;
+
   @ManyToOne(() => BoardColumn, (column) => column.statuses, {
     onDelete: "CASCADE",
     nullable: true,
