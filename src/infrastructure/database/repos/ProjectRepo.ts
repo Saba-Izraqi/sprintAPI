@@ -24,8 +24,7 @@ export class ProjectRepo implements IProjectRepo {
 
   async create(project: CreateProjectDto): Promise<Project> {
     try {
-      console.debug("Creating new project:", project);
-      
+
       const newProject = this._projectRepo.create(project);
       return await this._projectRepo.save(newProject);
     } catch (error) {
@@ -58,7 +57,8 @@ export class ProjectRepo implements IProjectRepo {
     try {
       const queryBuilder = this._projectRepo
         .createQueryBuilder("project")
-        .leftJoinAndSelect("project.members", "member");
+        .leftJoinAndSelect("project.members", "member")
+        .leftJoinAndSelect("member.user", "user");
 
       if (userId) {
         queryBuilder.andWhere(
@@ -89,7 +89,8 @@ export class ProjectRepo implements IProjectRepo {
         }
       );
 
-      return await queryBuilder.getMany();
+      const result = await queryBuilder.getMany();
+      return result;
     } catch (error) {
       throw getDBError(error);
     }

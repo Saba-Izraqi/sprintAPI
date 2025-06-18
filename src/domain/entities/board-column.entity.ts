@@ -5,10 +5,12 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
+  Unique,
 } from "typeorm";
 import { BaseEntity, Project, Status } from ".";
 
 @Entity("columns")
+@Unique(["order", "projectId"])
 export class BoardColumn extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;

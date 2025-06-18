@@ -27,10 +27,6 @@ export class IssueController {
 
       const errors = await validate(createIssueDto);
       if (errors.length > 0) {
-        // console.log("Validation errors:", JSON.stringify(errors, null, 2)); // Removed log
-        // Optionally, use console.debug for debugging
-        // console.debug("Validation errors:", JSON.stringify(errors, null, 2));
-        // Instead of sending response, throw error to be handled by error middleware
         const validationError = new Error("Validation failed");
         (validationError as any).status = 400;
         (validationError as any).details = errors.map(error => ({

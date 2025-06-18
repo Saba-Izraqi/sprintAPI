@@ -22,7 +22,6 @@ export class ProjectController {
       ...req.body,
       createdBy: creator,
     });
-    console.debug("Create Project DTO:", dto); // Debugging line to check the DTO
 
     try {
       const errors = await validate(dto);
@@ -42,7 +41,7 @@ export class ProjectController {
   async update(req: Request, res: Response, next: NextFunction) {
     const dto = plainToInstance(UpdateProjectDTO, req.body, {
       excludeExtraneousValues: true,
-    }); // ! Dynamically map only exposed attributes.
+    });
 
     try {
       const errors = await validate(dto);

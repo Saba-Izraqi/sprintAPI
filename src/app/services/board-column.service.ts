@@ -5,7 +5,6 @@ import {
   CreateBoardColumnDto,
   UpdateBoardColumnDto,
 } from "../../domain/DTOs/board-columnDTO";
-import { getDBError } from "../../infrastructure/database/utils/handleDBErrors";
 
 @injectable()
 export class BoardColumnService {
@@ -17,35 +16,23 @@ export class BoardColumnService {
     return await this.boardColumnRepo.create(dto);
   }
 
-  async update(id: string, dto: UpdateBoardColumnDto): Promise<BoardColumn> {
-    return await this.boardColumnRepo.update(id, dto);
+  async update(dto: UpdateBoardColumnDto): Promise<BoardColumn> {
+    return await this.boardColumnRepo.update(dto);
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<boolean> {
     return await this.boardColumnRepo.delete(id);
   }
 
-  async get(projectId: string): Promise<BoardColumn[]> {
-    try {
-      let columns = await this.boardColumnRepo.get(projectId);
-
-      if (!columns.length) {
-        columns = await this.createDefaultColumns(projectId);
-      }
-
-      return columns;
-    } catch (error) {
-      throw getDBError(error);
-    }
+  async getByProject(projectId: string): Promise<BoardColumn[]> {
+    return await this.boardColumnRepo.find({ projectId });
   }
+
   /**
    * Creates default columns (To Do, In Progress, Done)
    * when a project has no existing columns.
    */
-
-async createDefaultColumns(
-    projectId: string
-  ): Promise<BoardColumn[]> {
+  async createDefaultColumns(projectId: string): Promise<BoardColumn[]> {
     const defaults: CreateBoardColumnDto[] = [
       { name: "To Do", order: 0, projectId },
       { name: "In Progress", order: 1, projectId },
@@ -54,10 +41,10 @@ async createDefaultColumns(
 
     const created: BoardColumn[] = [];
 
-    for (const dto of defaults) {
+    defaults.forEach(async (dto, index) => {
       const col = await this.boardColumnRepo.create(dto);
       created.push(col);
-    }
+    });
 
     return created;
   }

@@ -67,7 +67,7 @@ export class SocketService {
       console.error("🔌 Error context:", err.context);
     });
 
-    console.log("🔌 Socket.IO initialized successfully");
+    console.success("🔌 Socket.IO initialized successfully");
   }
 
   /**

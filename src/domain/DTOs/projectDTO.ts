@@ -71,12 +71,12 @@ export class ProjectResponseDto {
     this.createdBy = project.createdBy;
     this.members =
       project.members?.map((member) => {
-        console.debug("Mapping project member:", member);
         if (member.user) {
           return {
             id: member.id,
             permission: member.permission,
             user: new UserResponseDto(member.user),
+            userId: member.user.id,
           };
         } else {
           return {

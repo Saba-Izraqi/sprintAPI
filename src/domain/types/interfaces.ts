@@ -9,3 +9,7 @@ export interface FindProjectMemberOptions {
   userId?: string;
   projectId?: string;
 }
+
+export interface FindBoardColumnOptions {
+  projectId: string;
+}

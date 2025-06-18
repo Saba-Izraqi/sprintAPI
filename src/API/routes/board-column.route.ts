@@ -5,17 +5,11 @@ import { container } from "tsyringe";
 import { restrictTo } from "../middlewares/permissions.middleware";
 import { restrictTokens } from "../middlewares/tokenTypes.middleware";
 import { Token } from "../enums/token";
-import { ProjectPermission } from '../../domain/types';
+import { ProjectPermission } from "../../domain/types";
 
-/**
- * Routes for board column management endpoints
- */
 export class BoardColumnRoutes extends BaseRoute {
-  public path = "/board-column";
+  public path = "/:projectId/board-columns";
 
-  /**
-   * Initialize board column routes
-   */
   protected initRoutes(): void {
     const controller = container.resolve(BoardColumnController);
 
@@ -28,7 +22,7 @@ export class BoardColumnRoutes extends BaseRoute {
     );
 
     this.router.patch(
-      "/:id",
+      "/",
       authenticate,
       restrictTokens(Token.ACCESS),
       restrictTo(ProjectPermission.MODERATOR),
@@ -44,7 +38,7 @@ export class BoardColumnRoutes extends BaseRoute {
     );
 
     this.router.get(
-      "/:projectId",
+      "/",
       authenticate,
       restrictTokens(Token.ACCESS),
       controller.get.bind(controller)
