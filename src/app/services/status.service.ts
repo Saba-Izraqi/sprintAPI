@@ -29,10 +29,10 @@ export class StatusService {
   ): Promise<Status[]> {
     const statuses: Status[] = [];
 
-    defaultStatuses.forEach(async (status) => {
+    for (const status of defaultStatuses) {
       const result = await this.repo.create(status);
       statuses.push(result);
-    });
+    }
 
     return statuses;
   }

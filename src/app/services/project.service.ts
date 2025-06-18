@@ -52,6 +52,7 @@ export class ProjectService {
       statusConfig
     );
 
+
     return { ...project, members: [members] };
   }
 

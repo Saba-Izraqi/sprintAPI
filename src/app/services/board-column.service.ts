@@ -41,10 +41,10 @@ export class BoardColumnService {
 
     const created: BoardColumn[] = [];
 
-    defaults.forEach(async (dto, index) => {
-      const col = await this.boardColumnRepo.create(dto);
-      created.push(col);
-    });
+    for(let config of defaults) {
+      const createdColumn = await this.boardColumnRepo.create(config);
+      created.push(createdColumn);
+    }
 
     return created;
   }
