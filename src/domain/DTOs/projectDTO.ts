@@ -62,6 +62,7 @@ export class ProjectResponseDto {
     id: string;
     permission: ProjectPermission;
     user: UserResponseDto | null;
+    userId?: string;
   }[];
   constructor(project: Project) {
     this.id = project.id;
@@ -82,6 +83,7 @@ export class ProjectResponseDto {
             id: member.id,
             permission: member.permission,
             user: null,
+            userId: member.userId,
           };
         }
       }) ?? [];

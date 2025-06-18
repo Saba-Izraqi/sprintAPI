@@ -53,6 +53,7 @@ export class ProjectRepo implements IProjectRepo {
       throw getDBError(error);
     }
   }
+
   async find(options: FindProjectOptions, userId?: string): Promise<Project[]> {
     try {
       const queryBuilder = this._projectRepo
