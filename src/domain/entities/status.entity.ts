@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { BaseEntity, BoardColumn } from ".";
+import { UUID } from "typeorm/driver/mongodb/bson.typings";
 
 export enum StatusType {
   BACKLOG = 0,
@@ -24,10 +25,13 @@ export class Status extends BaseEntity {
   @Column({ type: "int", default: StatusType.IN_PROGRESS })
   type!: StatusType;
 
+  @Column({ type: "uuid" })
+  columnId!: string;
+
   @ManyToOne(() => BoardColumn, (column) => column.statuses, {
-    onDelete: "SET NULL",
+    onDelete: "CASCADE",
     nullable: true,
   })
-  @JoinColumn({ name: "column_id" })
+  @JoinColumn({ name: "columnId" })
   column?: BoardColumn;
 }
