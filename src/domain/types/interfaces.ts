@@ -13,3 +13,11 @@ export interface FindProjectMemberOptions {
 export interface FindBoardColumnOptions {
   projectId: string;
 }
+
+export interface FindStatusOptions {
+  projectId: string;
+  id?: string;
+  name?: string;
+  type?: string;
+  columnId?: string;
+}

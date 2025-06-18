@@ -9,6 +9,10 @@ export function restrictTo(allowedPermission: ProjectPermission) {
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    if (req.method === "GET") {
+      next();
+      return;
+    }
     const membersRepo: IProjectMemberRepo =
       container.resolve("IProjectMemberRepo");
     const membership = await membersRepo.find({
