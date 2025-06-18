@@ -61,7 +61,10 @@ export class ProjectRepo implements IProjectRepo {
         .leftJoinAndSelect("project.members", "member");
 
       if (userId) {
-        queryBuilder.where("member.userId = :userId", { userId });
+        queryBuilder.andWhere(
+          "project.id IN (SELECT \"projectId\" FROM project_members WHERE \"userId\" = :userId)",
+          { userId }
+        );
       }
 
       if (options.name) {
