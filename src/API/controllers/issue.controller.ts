@@ -243,6 +243,56 @@ export class IssueController {
     }
   }
 
+  // GET /api/issues/assigned/:userId (issues assigned to a specific user)
+  async getAssignedToUser(req: Request, res: Response): Promise<void> {
+    try {
+      const requestUserId = req.user?.id;
+      const { userId: assigneeUserId } = req.params;
+      
+      if (!requestUserId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+      }
+
+      const {
+        projectId, // Optional project filter
+        sprintId,
+        statusId,
+        epicId,
+        parentId,
+        type,
+        priority,
+        searchTerm,
+      } = req.query;
+
+      const options = {
+        sprintId: sprintId as string | undefined,
+        statusId: statusId as string | undefined,
+        epicId: epicId as string | undefined,
+        parentId: parentId as string | undefined,
+        type: type ? (type as IssueType) : undefined,
+        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
+        searchTerm: searchTerm as string | undefined,
+      };
+
+      const issues = await this.issueService.getAssignedToUser(
+        requestUserId,
+        assigneeUserId,
+        projectId as string | undefined,
+        options
+      );
+
+      res.status(200).json({
+        message: "Issues assigned to user retrieved successfully",
+        data: issues,
+      });
+    } catch (error: any) {
+      res.status(error.status || 500).json({
+        message: error.message || "Internal server error",
+      });
+    }
+  }
+
   // GET /api/sprints/:sprintId/issues
   async getBySprint(req: Request, res: Response): Promise<void> { // Renamed from getSprintIssues
     try {
