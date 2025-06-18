@@ -64,5 +64,5 @@ export class Issue extends BaseEntity {
 
   @ManyToOne(() => Status, { onDelete: "SET NULL", nullable: true })
   @JoinColumn({ name: "statusId" })
-  status!: Status;
+  status?: Status;
 }
