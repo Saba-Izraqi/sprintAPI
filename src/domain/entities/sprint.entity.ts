@@ -6,6 +6,10 @@ import {
   JoinColumn,
 } from "typeorm";
 import { BaseEntity, Project } from ".";
+
+/**
+ * Sprint entity representing a project sprint
+ */
 @Entity("sprints")
 export class Sprint extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -19,9 +23,11 @@ export class Sprint extends BaseEntity {
 
   @Column({ type: "date" })
   endDate!: Date;
-
   @Column()
   projectId!: string;
+
+  @Column({ default: false })
+  archived!: boolean;
 
   @ManyToOne(() => Project, { onDelete: "CASCADE" })
   @JoinColumn({ name: "projectId", referencedColumnName: "id" })

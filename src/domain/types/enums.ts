@@ -1,7 +1,7 @@
 export enum IssueType {
-  BUG = "bug",
-  STORY = "story",
-  TASK = "task",
+  BUG = "Bug",
+  STORY = "Story",
+  TASK = "Task",
 }
 
 export enum StatusType {
@@ -31,8 +31,8 @@ export enum NotificationPriority {
   URGENT = "URGENT",
 }
 export enum issuePriority {
-  LOW = 0,  
-  MEDIUM = 1,
-  HIGH = 2,
+  LOW = "LOW",  
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
 }
 

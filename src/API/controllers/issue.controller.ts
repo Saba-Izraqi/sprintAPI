@@ -292,11 +292,10 @@ export class IssueController {
       });
     }
   }
-
-  // GET /api/sprints/:sprintId/issues
+  // GET /api/sprints/:id/issues
   async getBySprint(req: Request, res: Response): Promise<void> { // Renamed from getSprintIssues
     try {
-      const { sprintId } = req.params;
+      const { id: sprintId } = req.params;
       const userId = req.user?.id;
       if (!userId) {
         res.status(401).json({ message: "Unauthorized" });

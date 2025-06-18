@@ -39,10 +39,8 @@ export class Issue extends BaseEntity {
 
   @Column()
   projectId!: string;
-  
-  @Column({nullable: false })
+    @Column({ type: "enum", enum: issuePriority, default: issuePriority.MEDIUM, nullable: false })
   issuePriority!: issuePriority;
-
   @Column({ type: "enum", enum: IssueType, default: IssueType.TASK })
   type!: IssueType;
 

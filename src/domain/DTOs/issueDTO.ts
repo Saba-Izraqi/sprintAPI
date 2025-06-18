@@ -114,15 +114,27 @@ class BasicStatusDto {
 export class IssuePartialResponseDto {
   @Expose() id!: string;
   @Expose() key!: string;
-  @Expose() title!: string;  @Expose() storyPoint!: number;
+  @Expose() title!: string;
+  @Expose() description!: string;
+  @Expose() storyPoint!: number;
   @Expose() statusId?: string;
   @Expose() assignee?: string;
+  @Expose() epicId?: string;
+  @Expose() sprintId?: string;
   @Expose() projectId!: string;
   @Expose() issuePriority!: issuePriority;
   
   @Expose()
   @Type(() => BasicUserDto)
   assigneeUser?: BasicUserDto;
+
+  @Expose()
+  @Type(() => BasicEpicDto)
+  epic?: BasicEpicDto;
+
+  @Expose()
+  @Type(() => BasicSprintDto)
+  sprint?: BasicSprintDto;
 
   @Expose()
   @Type(() => BasicStatusDto)
