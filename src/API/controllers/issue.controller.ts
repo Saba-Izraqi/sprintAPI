@@ -5,6 +5,7 @@ import { IssueType, issuePriority } from "../../domain/types";
 import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
 import { injectable, inject } from "tsyringe"; // Added inject
+import "../types"; // Import types to extend Request interface
 
 @injectable() // Added injectable decorator
 export class IssueController {
@@ -75,7 +76,7 @@ export class IssueController {
         epicId: epicId as string | undefined,
         parentId: parentId as string | undefined,
         type: type ? (type as IssueType) : undefined,
-        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
+        priority: priority ? (priority as issuePriority) : undefined,
       };
   
       const result = await this.issueService.getAll( // Renamed from getPartialIssues
@@ -212,8 +213,7 @@ export class IssueController {
         epicId,
         parentId,
         type,
-        priority,
-        searchTerm,
+        priority,        searchTerm,
       } = req.query;
 
       const options = {
@@ -222,7 +222,7 @@ export class IssueController {
         epicId: epicId as string | undefined,
         parentId: parentId as string | undefined,
         type: type ? (type as IssueType) : undefined,
-        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
+        priority: priority ? (priority as issuePriority) : undefined,
         searchTerm: searchTerm as string | undefined,
       };
 
@@ -263,15 +263,13 @@ export class IssueController {
         type,
         priority,
         searchTerm,
-      } = req.query;
-
-      const options = {
+      } = req.query;      const options = {
         sprintId: sprintId as string | undefined,
         statusId: statusId as string | undefined,
         epicId: epicId as string | undefined,
         parentId: parentId as string | undefined,
         type: type ? (type as IssueType) : undefined,
-        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
+        priority: priority ? (priority as issuePriority) : undefined,
         searchTerm: searchTerm as string | undefined,
       };
 
@@ -310,16 +308,14 @@ export class IssueController {
         type,
         priority,
         searchTerm,
-      } = req.query;
-
-      const options = {
+      } = req.query;      const options = {
         projectId: projectId as string | undefined,
         assignee: assignee as string | undefined,
         statusId: statusId as string | undefined,
         epicId: epicId as string | undefined,
         parentId: parentId as string | undefined,
         type: type ? (type as IssueType) : undefined,
-        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
+        priority: priority ? (priority as issuePriority) : undefined,
         searchTerm: searchTerm as string | undefined,
       };
 
@@ -353,15 +349,13 @@ export class IssueController {
         type,
         priority,
         searchTerm,
-      } = req.query;
-
-      const options = {
+      } = req.query;      const options = {
         projectId: projectId as string | undefined,
         assignee: assignee as string | undefined,
         statusId: statusId as string | undefined,
         parentId: parentId as string | undefined,
         type: type ? (type as IssueType) : undefined,
-        priority: priority ? (parseInt(priority as string) as issuePriority) : undefined,
+        priority: priority ? (priority as issuePriority) : undefined,
         searchTerm: searchTerm as string | undefined,
       };
 
