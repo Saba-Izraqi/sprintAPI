@@ -5,16 +5,25 @@ import {
   UpdateProjectDTO,
 } from "../../domain/DTOs/projectDTO";
 import { Project } from "../../domain/entities";
-import { FindProjectOptions, ProjectPermission } from "../../domain/types";
+import {
+  FindProjectOptions,
+  ProjectPermission,
+  StatusType,
+} from "../../domain/types";
 import { ProjectMembersService } from "./project-members.service";
 import { CreateProjectMemberDto } from "../../domain/DTOs/projectMemberDTO";
+import { BoardColumnService } from "./board-column.service";
+import { StatusService } from "./status.service";
+import { CreateStatusDto } from "../../domain/DTOs/statusDTO";
 
 @injectable()
 export class ProjectService {
   constructor(
     @inject("IProjectRepo") private projectRepo: IProjectRepo,
     @inject(ProjectMembersService)
-    private memberService: ProjectMembersService
+    private memberService: ProjectMembersService,
+    @inject(BoardColumnService) private boardColumnService: BoardColumnService,
+    @inject(StatusService) private statusService: StatusService
   ) {}
 
   async create(dto: CreateProjectDto): Promise<Project> {
@@ -27,8 +36,22 @@ export class ProjectService {
     };
     const members = await this.memberService.add(newMembership);
 
-    // TODO: Should create the default status, columns and sprint for the project
-    // * Cannot address this [todo] until the status, columns and sprint services are implemented
+    const columns = await this.boardColumnService.createDefaultColumns(
+      project.id
+    );
+    const statusConfig: CreateStatusDto[] = [
+      { name: "To Do", type: StatusType.BACKLOG, columnId: columns[0].id },
+      {
+        name: "In Progress",
+        type: StatusType.IN_PROGRESS,
+        columnId: columns[1].id,
+      },
+      { name: "Done", type: StatusType.DONE, columnId: columns[2].id },
+    ];
+    const statuses = await this.statusService.createDefaultStatuses(
+      statusConfig
+    );
+
     return { ...project, members: [members] };
   }
 

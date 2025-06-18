@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
 import { IStatusRepo } from "../../domain/IRepos/IStatusRepo";
-import { Status } from '../../domain';
-import { CreateStatusDto, UpdateStatusDto } from '../../domain/DTOs/statusDTO';
-import { FindStatusOptions } from '../../domain/types';
+import { BoardColumn, Status, StatusType } from "../../domain";
+import { CreateStatusDto, UpdateStatusDto } from "../../domain/DTOs/statusDTO";
+import { FindStatusOptions } from "../../domain/types";
 
 @injectable()
 export class StatusService {
@@ -22,5 +22,18 @@ export class StatusService {
 
   async find(where: FindStatusOptions): Promise<Status[]> {
     return await this.repo.find(where);
+  }
+
+  async createDefaultStatuses(
+    defaultStatuses: CreateStatusDto[]
+  ): Promise<Status[]> {
+    const statuses: Status[] = [];
+
+    defaultStatuses.forEach(async (status) => {
+      const result = await this.repo.create(status);
+      statuses.push(result);
+    });
+
+    return statuses;
   }
 }
